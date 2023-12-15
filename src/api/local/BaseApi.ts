@@ -26,4 +26,12 @@ export abstract class BaseApi<T> {
    * @returns Todos itens da lista
    */
   public abstract readAll(): { status: number; data: T[] }
+
+  /**
+   * Atualiza uma entidade
+   * @param ent - entidade a ser substituida
+   * @param newEnt - nova entidade
+   * @returns A resposta da requisicao
+   */
+  public abstract update(ent: T, newEnt: T): IResponse
 }
