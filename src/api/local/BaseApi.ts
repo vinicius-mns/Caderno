@@ -8,6 +8,11 @@ export interface IResponse {
  */
 export abstract class BaseApi<T> {
   /**
+   * Chave da entidade no localStorage
+   */
+  abstract key: string
+
+  /**
    * Aidiciona um nova entidade no localStorage
    * @param ent - Entidade a ser criada
    * @returns A resposta da requisição
