@@ -34,4 +34,11 @@ export abstract class BaseApi<T> {
    * @returns A resposta da requisicao
    */
   public abstract update(ent: T, newEnt: T): IResponse
+
+  /**
+   * Deleta uma entidade
+   * @param id - Identicador da entidade
+   * @returns - A resposta de requisicao
+   */
+  public abstract delete(obj: string): IResponse
 }
