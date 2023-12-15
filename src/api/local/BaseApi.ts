@@ -15,7 +15,7 @@ export abstract class BaseApi<T> {
   public abstract create(ent: T): IResponse
 
   /**
-   * Retona uma entidade do localStorage
+   * Retorna uma entidade do localStorage
    * @param id - Identicador da entidade
    * @returns A resposta da requisição
    */
