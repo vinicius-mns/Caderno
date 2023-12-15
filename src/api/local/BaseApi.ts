@@ -20,4 +20,10 @@ export abstract class BaseApi<T> {
    * @returns A resposta da requisição
    */
   public abstract readOne(id: string): IResponse
+
+  /**
+   * Retorna todas entidades do localStorage
+   * @returns Todos itens da lista
+   */
+  public abstract readAll(): { status: number; data: T[] }
 }
