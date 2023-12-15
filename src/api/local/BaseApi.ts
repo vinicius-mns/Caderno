@@ -3,4 +3,14 @@ export interface IResponse {
   data: string
 }
 
-export abstract class BaseApi<T> {}
+/**
+ * Classe base para criar uma entidade
+ */
+export abstract class BaseApi<T> {
+  /**
+   * Aidiciona um nova entidade no localStorage
+   * @param ent - Entidade a ser criada
+   * @returns A resposta da requisição
+   */
+  public abstract create(ent: T): IResponse
+}
