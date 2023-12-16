@@ -21,4 +21,12 @@ export class Card implements BaseApi<ICard> {
   public key = 'Card_local'
 
   constructor(private _card = initialCard) {}
+
+  private _validationSchema(card: ICard, schema = cardSchema) {
+    const parse = schema.safeParse(card)
+
+    if (!parse.success) {
+      throw new Error(JSON.stringify(parse.error))
+    }
+  }
 }
