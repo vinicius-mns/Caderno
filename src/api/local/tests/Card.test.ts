@@ -31,5 +31,18 @@ describe('Card', () => {
       expect(manualAcessLocalStorage.length).toBe(1)
       expect(manualAcessLocalStorage[0].content).toBe('first')
     })
+
+    test('Falha com sucesso ao criar card incorreto', () => {
+      const card = new Card()
+
+      const contentIsNumber = card.create(mockCards.fail.contentNumber as unknown as ICard)
+      const contentIsEmpty = card.create(mockCards.fail.contentEmpty as unknown as ICard)
+
+      const manualAcessLocalStorage = JSON.parse(localStorage.getItem(card.key)!)
+
+      expect(contentIsNumber.status).toBe(400)
+      expect(contentIsEmpty.status).toBe(400)
+      expect(manualAcessLocalStorage).toBe(null)
+    })
   })
 })
