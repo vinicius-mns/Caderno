@@ -1,5 +1,6 @@
-import type { BaseApi } from './BaseApi'
+import type { BaseApi, IResponse } from './BaseApi'
 import { z } from 'zod'
+import { v4 as uuidv4 } from 'uuid'
 
 const cardSchema = z.object({
   id: z.string(),
