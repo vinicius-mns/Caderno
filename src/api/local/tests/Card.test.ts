@@ -75,5 +75,15 @@ describe('Card', () => {
         expect(status).toBe(200)
       })
     })
+
+    test('Falha com sucesso ao passar card inexistente', () => {
+      const card = new Card()
+
+      const fakeId = '000001'
+      const readCard = card.readOne(fakeId)
+
+      expect(readCard.status).toBe(404)
+      expect(readCard.data).toBe('not found')
+    })
   })
 })
