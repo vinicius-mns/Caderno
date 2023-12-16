@@ -34,4 +34,26 @@ export class Card implements BaseApi<ICard> {
       throw new Error(JSON.stringify(parse.error))
     }
   }
+
+  /**
+   * Adiciona ou Cria um novo card no localStorage
+   * Caso nao exista nenhum card, crie um
+   * Caso exista, o adicione
+   * @param card Card a ser adicionado ou criado no localStorage
+   */
+  private _addOrCreateOnLocalStorage(card: ICard) {
+    const key = this.key
+    const cardsLocalStorage = localStorage.getItem(key)
+
+    if (!cardsLocalStorage) {
+      const newCardsLocalStorage = JSON.stringify([card])
+
+      localStorage.setItem(key, newCardsLocalStorage)
+    } else {
+      const atualCards = JSON.parse(cardsLocalStorage)
+      const newCardsLocalStorage = JSON.stringify([...atualCards, card])
+
+      localStorage.setItem(key, newCardsLocalStorage)
+    }
+  }
 }
