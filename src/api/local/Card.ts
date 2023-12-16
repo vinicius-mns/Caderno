@@ -56,4 +56,22 @@ export class Card implements BaseApi<ICard> {
       localStorage.setItem(key, newCardsLocalStorage)
     }
   }
+
+  public create(ent: ICard): IResponse {
+    const defineCard: ICard = {
+      ...ent,
+      id: uuidv4(),
+      date: new Date()
+    }
+
+    try {
+      this._validationSchema(defineCard)
+      this._addOrCreateOnLocalStorage(defineCard)
+
+      return { status: 201, data: 'created' }
+    } catch (e) {
+      if (e instanceof Error) return { status: 400, data: e.message }
+      return { status: 400, data: 'erro inesperado ao criar' }
+    }
+  }
 }
