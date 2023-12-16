@@ -75,4 +75,20 @@ export class Card implements BaseApi<ICard> {
       return { status: 400, data: 'erro inesperado ao criar' }
     }
   }
+
+  public readOne(id: string): IResponse {
+    const cards = JSON.parse(localStorage.getItem(this.key)!) as ICard[]
+
+    if (!cards) {
+      return { status: 404, data: 'not found' }
+    }
+
+    const card = cards.find((c) => c.id === id)
+
+    if (!card) {
+      return { status: 404, data: 'not found' }
+    }
+
+    return { status: 200, data: JSON.stringify(card) }
+  }
 }
