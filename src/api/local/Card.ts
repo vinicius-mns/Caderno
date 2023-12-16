@@ -17,4 +17,8 @@ const initialCard: ICard = {
   tags: []
 }
 
-export class Card implements BaseApi<ICard> {}
+export class Card implements BaseApi<ICard> {
+  public key = 'Card_local'
+
+  constructor(private _card = initialCard) {}
+}
