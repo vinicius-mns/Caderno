@@ -8,8 +8,8 @@ const mockCards = {
     three: { id: '3', content: 'third', date: new Date(), tags: [] }
   },
   fail: {
-    contentNumber: { id: '0', content: 'first', date: new Date(), tags: [] },
-    contentEmpty: { id: '0', content: 'second', date: new Date(), tags: [] }
+    contentNumber: { id: '0', content: 1, date: new Date(), tags: [] },
+    contentEmpty: { id: '0', content: '', date: new Date(), tags: [] }
   }
 }
 
