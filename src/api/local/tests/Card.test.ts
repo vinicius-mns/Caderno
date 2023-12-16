@@ -14,4 +14,22 @@ const mockCards = {
 }
 
 describe('Card', () => {
+  describe('Create', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Cria um card com sucesso', () => {
+      const card = new Card()
+
+      const create = card.create(mockCards.sucess.one as ICard)
+
+      const manualAcessLocalStorage = JSON.parse(localStorage.getItem(card.key)!)
+
+      expect(create.data).toBe('created')
+      expect(create.status).toBe(201)
+      expect(manualAcessLocalStorage.length).toBe(1)
+      expect(manualAcessLocalStorage[0].content).toBe('first')
+    })
+  })
 })
