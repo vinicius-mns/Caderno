@@ -10,4 +10,11 @@ const cardSchema = z.object({
 
 export type ICard = z.infer<typeof cardSchema>
 
+const initialCard: ICard = {
+  id: '0',
+  content: 'Card inicial',
+  date: new Date(),
+  tags: []
+}
+
 export class Card implements BaseApi<ICard> {}
