@@ -45,4 +45,35 @@ describe('Card', () => {
       expect(manualAcessLocalStorage).toBe(null)
     })
   })
+
+  describe('ReadOne', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Le um card com sucesso', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+
+      // acesso manual ao localStorage
+      const manualAcessLocalStorage = JSON.parse(localStorage.getItem(card.key)!)
+
+      expect(manualAcessLocalStorage.length).toBe(2)
+
+      // percorre o array de cards
+      // para cada card, captura o id, chama a funcao finOne pelo id, e compara as informacoes
+      manualAcessLocalStorage.forEach((c: ICard) => {
+        const readCard = card.readOne(c.id)
+        const data = JSON.parse(readCard.data!)
+        const status = readCard.status
+
+        expect(data.content).toBe(c.content)
+        expect(data.id).toBe(c.id)
+        expect(status).toBe(200)
+      })
+    })
+  })
 })
