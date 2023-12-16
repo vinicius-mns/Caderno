@@ -22,6 +22,11 @@ export class Card implements BaseApi<ICard> {
 
   constructor(private _card = initialCard) {}
 
+  /**
+   * Valida se o card segue todos os contratos estabelecidos
+   * @param card Card a ser validade
+   * @param schema contrato a ser respeitado
+   */
   private _validationSchema(card: ICard, schema = cardSchema) {
     const parse = schema.safeParse(card)
 
