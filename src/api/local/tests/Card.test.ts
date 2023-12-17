@@ -143,5 +143,20 @@ describe('Card', () => {
       expect(fistCardUpdate.content).toBe('updateContent')
       expect(update.status).toBe(200)
     })
+
+    test('Retorna erro com sucesso ao passar card com id inexistente', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+
+      const errorCard: ICard = { id: 'error', content: 'first', date: new Date(), tags: [] }
+
+      const update = card.update(errorCard, { ...errorCard, content: 'new' })
+
+      expect(update.status).toBe(404)
+      expect(update.data).toBe('not found Card')
+    })
   })
 })
