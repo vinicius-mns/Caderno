@@ -159,4 +159,30 @@ describe('Card', () => {
       expect(update.data).toBe('not found Card')
     })
   })
+
+  describe('Delete', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Deleta um card com sucesso', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+      card.create(mockCards.sucess.three)
+
+      const cardsLocalStorage = JSON.parse(localStorage.getItem(card.key)!) as ICard[]
+
+      const secondCard = cardsLocalStorage[1]
+      const removeSecondCard = card.delete(secondCard.id)
+
+      const cardsLocalStorageUpdated = JSON.parse(localStorage.getItem(card.key)!) as ICard[]
+
+      expect(cardsLocalStorage.length).toBe(3)
+      expect(removeSecondCard.status).toBe(200)
+      expect(cardsLocalStorageUpdated.length).toBe(2)
+    })
+  })
 })
