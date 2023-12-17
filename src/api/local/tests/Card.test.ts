@@ -184,5 +184,25 @@ describe('Card', () => {
       expect(removeSecondCard.status).toBe(200)
       expect(cardsLocalStorageUpdated.length).toBe(2)
     })
+
+    test('Retorna erro com sucesso ao passar id inexistente', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+      card.create(mockCards.sucess.three)
+
+      const cardsLocalStorage = JSON.parse(localStorage.getItem(card.key)!) as ICard[]
+
+      const removeSecondCard = card.delete('error')
+
+      const cardsLocalStorageUpdated = JSON.parse(localStorage.getItem(card.key)!) as ICard[]
+
+      expect(cardsLocalStorage.length).toBe(3)
+      expect(removeSecondCard.status).toBe(404)
+      expect(removeSecondCard.data).toBe('not found')
+      expect(cardsLocalStorageUpdated.length).toBe(3)
+    })
   })
 })
