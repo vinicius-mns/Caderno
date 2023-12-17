@@ -128,4 +128,22 @@ export class Card implements BaseApi<ICard> {
 
     return { status: 200, data: 'updated' }
   }
+
+  public delete(id: string): IResponse {
+    const cards = JSON.parse(localStorage.getItem(this.key)!) as ICard[]
+
+    if (!cards) {
+      return { status: 404, data: 'not found cards' }
+    }
+
+    const removed = cards.filter((c) => c.id !== id)
+
+    if (cards.length === removed.length) {
+      return { status: 404, data: 'not found' }
+    }
+
+    localStorage.setItem(this.key, JSON.stringify(removed))
+
+    return { status: 200, data: 'deleted' }
+  }
 }
