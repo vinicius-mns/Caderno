@@ -91,4 +91,15 @@ export class Card implements BaseApi<ICard> {
 
     return { status: 200, data: JSON.stringify(card) }
   }
+
+  public readAll(): IResponse {
+    const key = this.key
+    const cards = localStorage.getItem(key)
+
+    if (!cards) {
+      return { status: 200, data: JSON.stringify([this._card]) }
+    }
+
+    return { status: 200, data: cards }
+  }
 }
