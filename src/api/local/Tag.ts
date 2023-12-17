@@ -18,6 +18,21 @@ export class Tags implements BaseApi<ITag> {
     }
   }
 
+  private _addOrInsertInLocalStorage(tag: ITag) {
+    const storage = localStorage.getItem(this.key)
+
+    if (!storage) {
+      const tags = JSON.stringify([tag])
+
+      localStorage.setItem(this.key, tags)
+    } else {
+      const atualTags = JSON.parse(storage)
+      const tags = JSON.stringify([...atualTags, tag])
+
+      localStorage.setItem(this.key, tags)
+    }
+  }
+
   public create(ent: string): IResponse {
     return { status: 200, data: ent }
   }
