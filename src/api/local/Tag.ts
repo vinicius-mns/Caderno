@@ -10,6 +10,14 @@ export class Tags implements BaseApi<ITag> {
 
   constructor(private _schema = TagSchema) {}
 
+  private _validationSchema(tag: ITag) {
+    const verify = this._schema.safeParse(tag)
+
+    if (!verify.success) {
+      throw new Error(JSON.stringify(verify.error))
+    }
+  }
+
   public create(ent: string): IResponse {
     return { status: 200, data: ent }
   }
