@@ -22,6 +22,10 @@ export class Tags implements BaseApi<ITag> {
     }
   }
 
+  /**
+   * Cria uma tag caso nao exista ou insira caso exista no localStorage
+   * @param tag Tag a ser criada ou adicionada
+   */
   private _addOrInsertInLocalStorage(tag: ITag) {
     const storage = localStorage.getItem(this.key)
 
