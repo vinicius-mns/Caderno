@@ -116,4 +116,32 @@ describe('Card', () => {
       expect(JSON.parse(all.data)[0].id).toBe('0')
     })
   })
+
+  describe('Update', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Atualiza com sucesso', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+      card.create(mockCards.sucess.three)
+
+      // capturando primeiro card
+      const fistCard = JSON.parse(localStorage.getItem(card.key)!)[0] as ICard
+
+      // atailizando
+      const update = card.update(fistCard, { ...fistCard, content: 'updateContent' })
+
+      // capturando primeiro card novamente
+      const fistCardUpdate = JSON.parse(localStorage.getItem(card.key)!)[0] as ICard
+
+      expect(fistCard.content).toBe(mockCards.sucess.one.content)
+      expect(fistCardUpdate.content).toBe('updateContent')
+      expect(update.status).toBe(200)
+    })
+  })
 })
