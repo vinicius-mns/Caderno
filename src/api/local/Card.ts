@@ -102,4 +102,30 @@ export class Card implements BaseApi<ICard> {
 
     return { status: 200, data: cards }
   }
+
+  public update(ent: ICard, newEnt: ICard): IResponse {
+    const newCard: ICard = {
+      ...ent,
+      content: newEnt.content,
+      tags: newEnt.tags
+    }
+
+    const cards = JSON.parse(localStorage.getItem(this.key)!) as ICard[]
+
+    if (!cards) {
+      return { status: 404, data: 'not found Cards' }
+    }
+
+    const cardIndex = cards.findIndex((card) => card.id === newCard.id)
+
+    if (cardIndex === -1) {
+      return { status: 404, data: 'not found Card' }
+    }
+
+    cards[cardIndex] = newCard
+
+    localStorage.setItem(this.key, JSON.stringify(cards))
+
+    return { status: 200, data: 'updated' }
+  }
 }
