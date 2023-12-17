@@ -45,4 +45,26 @@ describe('Tags', () => {
       )
     })
   })
+
+  describe('ReadAll', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Le todos com sucesso', () => {
+      const tag = new Tags()
+
+      //adicionando
+      tag.create('first')
+      tag.create('second')
+
+      const allTags = tag.readAll()
+      const parsedTags = JSON.parse(allTags.data)
+
+      expect(allTags.status).toBe(200)
+      expect(parsedTags.length).toBe(2)
+      expect(parsedTags[0]).toBe('first')
+      expect(parsedTags[1]).toBe('second')
+    })
+  })
 })
