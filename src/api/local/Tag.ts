@@ -34,7 +34,17 @@ export class Tags implements BaseApi<ITag> {
   }
 
   public create(ent: string): IResponse {
-    return { status: 200, data: ent }
+    try {
+      this._validationSchema(ent)
+
+      this._addOrInsertInLocalStorage(ent)
+
+      return { status: 201, data: 'created' }
+    } catch (e) {
+      if (e instanceof Error) return { status: 400, data: e.message }
+
+      return { status: 400, data: 'erro inesperado ao criar' }
+    }
   }
 
   public readOne(id: string): IResponse {
