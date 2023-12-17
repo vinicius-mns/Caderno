@@ -30,7 +30,7 @@ export abstract class BaseApi<T> {
    * Retorna todas entidades do localStorage
    * @returns Todos itens da lista
    */
-  public abstract readAll(): { status: number; data: T[] }
+  public abstract readAll(): IResponse
 
   /**
    * Atualiza uma entidade
