@@ -60,7 +60,13 @@ export class Tags implements BaseApi<ITag> {
   }
 
   public readAll(): IResponse {
-    return { status: 200, data: 'ok' }
+    const tags = localStorage.getItem(this.key)
+
+    if (!tags) {
+      return { status: 404, data: 'not found tags' }
+    }
+
+    return { status: 200, data: tags }
   }
 
   public update(ent: string, newEnt: string): IResponse {
