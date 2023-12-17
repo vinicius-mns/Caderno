@@ -86,4 +86,34 @@ describe('Card', () => {
       expect(readCard.data).toBe('not found')
     })
   })
+
+  describe('readAll', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Retorna todos com sucesso', () => {
+      const card = new Card()
+
+      // adicionar cards no localStorage
+      card.create(mockCards.sucess.one)
+      card.create(mockCards.sucess.two)
+
+      const all = card.readAll()
+
+      expect(all.status).toBe(200)
+      expect(JSON.parse(all.data).length).toBe(2)
+      expect(JSON.parse(all.data)[0].content).toBe(mockCards.sucess.one.content)
+    })
+
+    test('Retorna card inicial, caso nenhum criado', () => {
+      const card = new Card()
+
+      const all = card.readAll()
+
+      expect(all.status).toBe(200)
+      expect(JSON.parse(all.data).length).toBe(1)
+      expect(JSON.parse(all.data)[0].id).toBe('0')
+    })
+  })
 })
