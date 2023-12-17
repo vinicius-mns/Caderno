@@ -1,14 +1,14 @@
 import type { BaseApi, IResponse } from './BaseApi'
 import { z } from 'zod'
 
-const TagsSchema = z.string().min(3).max(25)
+const TagSchema = z.string().min(3).max(25)
 
-export type ITags = z.infer<typeof TagsSchema>
+export type ITag = z.infer<typeof TagSchema>
 
-export class Tags implements BaseApi<ITags> {
-  public key = 'TagsTest'
+export class Tags implements BaseApi<ITag> {
+  public key = 'Tags_local'
 
-  constructor(private _schema = TagsSchema) {}
+  constructor(private _schema = TagSchema) {}
 
   public create(ent: string): IResponse {
     return { status: 200, data: ent }
