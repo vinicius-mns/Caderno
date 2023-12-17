@@ -10,6 +10,10 @@ export class Tags implements BaseApi<ITag> {
 
   constructor(private _schema = TagSchema) {}
 
+  /**
+   * Verifica se as regras de negocio correspondem
+   * @param tag Tag a ser veficada
+   */
   private _validationSchema(tag: ITag) {
     const verify = this._schema.safeParse(tag)
 
