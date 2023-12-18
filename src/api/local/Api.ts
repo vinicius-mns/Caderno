@@ -22,7 +22,19 @@ export class Api<T> implements BaseApi<T> {
   private _validationSchema(ent: T) {
     const verify = this._schema.safeParse(ent)
 
-    if (!verify.success) throw new Error(JSON.stringify(verify.error))
+    if (!verify.success) {
+      const erros = () => {
+        const zodErrors = JSON.parse(verify.error.message)
+
+        const minimizeErrors = zodErrors.map((e: { path: string; message: string }) => {
+          return { where: e.path, message: e.message }
+        })
+
+        return JSON.stringify(minimizeErrors)
+      }
+
+      throw new Error(erros())
+    }
   }
 
   /**
