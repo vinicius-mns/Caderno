@@ -4,6 +4,14 @@ export interface IResponse {
 }
 
 /**
+ * Funcao para gerar um objeto do tipo IResponse
+ * @status numero status http
+ * @data string resposta
+ * @returns IResponse
+ */
+export const response = (status: string, data: string) => ({ status, data })
+
+/**
  * Classe base para criar uma entidade
  */
 export abstract class BaseApi<T> {
