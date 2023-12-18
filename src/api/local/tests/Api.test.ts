@@ -32,5 +32,27 @@ describe('Testando a Api - base', () => {
       expect(storage.length).toBe(4)
       expect(storage[3].content).toBe('its work4')
     })
+
+    test('Falha com sucesso ao passar entidade invalida', () => {
+      const apiExample = myApiExample()
+
+      const create1 = apiExample.create({ content: '', number: 1 })
+
+      expect(create1.status).toBe(400)
+      expect(create1.data).toBe(
+        '[{"where":["content"],"message":"String must contain at least 3 character(s)"}]'
+      )
+    })
+
+    test('Falha com sucesso ao passar varias propriedades de uma entidade invalida', () => {
+      const apiExample = myApiExample()
+
+      const create1 = apiExample.create({ content: '', number: '1' as unknown as number })
+
+      expect(create1.status).toBe(400)
+      expect(create1.data).toBe(
+        '[{"where":["number"],"message":"Expected number, received string"},{"where":["content"],"message":"String must contain at least 3 character(s)"}]'
+      )
+    })
   })
 })
