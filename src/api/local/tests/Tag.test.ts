@@ -66,5 +66,16 @@ describe('Tags', () => {
       expect(parsedTags[0]).toBe('first')
       expect(parsedTags[1]).toBe('second')
     })
+
+    test('Retorna 404 caso vazio', () => {
+      const tag = new Tags()
+
+      const allTags = tag.readAll()
+
+      console.log(allTags.data)
+
+      expect(allTags.status).toBe(404)
+      expect(allTags.data).toBe('not found tags')
+    })
   })
 })
