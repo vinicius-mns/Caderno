@@ -55,4 +55,41 @@ describe('Testando a Api - base', () => {
       )
     })
   })
+
+  describe('ReadOne', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Le um com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'its work1', number: 1 })
+      apiExample.create({ content: 'its work2', number: 2 })
+      apiExample.create({ content: 'its work3', number: 3 })
+
+      const all = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      const id2 = all[1].id
+
+      const find2 = apiExample.readOne(id2!)
+      const data2 = find2.data as unknown as IMyApiExample
+
+      expect(find2.status).toBe(200)
+      expect(data2.content).toBe('its work2')
+    })
+
+    test('Fala ao passar id inexistente', () => {
+      const apiExample = myApiExample()
+
+      const fakeId = '1234'
+
+      const find2 = apiExample.readOne(fakeId)
+      const data2 = find2.data as unknown as IMyApiExample
+
+      expect(find2.status).toBe(404)
+      expect(find2.data).toBe('not found')
+      expect(data2.content).toBe(undefined)
+    })
+  })
 })
