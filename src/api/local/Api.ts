@@ -36,4 +36,23 @@ export class Api<T> implements BaseApi<T> {
       localStorage.setItem(this.key, entity)
     }
   }
+
+  public create(ent: T): IResponse {
+    const entity = {
+      ...ent,
+      id: this._idGenetate(),
+      date: new Date()
+    }
+
+    try {
+      this._validationSchema(ent)
+
+      this._addOrInsertInLocalStorage(entity)
+
+      return this._response(201, 'created')
+    } catch (e) {
+      if (e instanceof Error) return this._response(400, e.message)
+      return this._response(400, 'erro inesperado')
+    }
+  }
 }
