@@ -9,7 +9,7 @@ export interface IResponse {
  * @data string resposta
  * @returns IResponse
  */
-export const response = (status: string, data: string) => ({ status, data })
+export const response = (status: number, data: string) => ({ status, data })
 
 /**
  * Classe base para criar uma entidade
