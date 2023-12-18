@@ -74,4 +74,18 @@ export class Api<T> implements BaseApi<T> {
       return this._response(400, 'erro inesperado')
     }
   }
+
+  public readOne(UnicId: string): IResponse {
+    const storage = localStorage.getItem(this.key)
+
+    if (!storage) return this._response(404, 'not found')
+
+    const all = JSON.parse(storage) as { id: string }[]
+
+    const find = all.find(({ id }) => id === UnicId)
+
+    if (!find) return this._response(404, 'not found')
+
+    return this._response(200, find)
+  }
 }
