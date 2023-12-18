@@ -70,7 +70,21 @@ export class Tags implements BaseApi<ITag> {
   }
 
   public update(ent: string, newEnt: string): IResponse {
-    return { status: 200, data: JSON.stringify([ent, newEnt]) }
+    const tagsInStorage = localStorage.getItem(this.key)
+
+    if (!tagsInStorage) return { status: 404, data: 'not found tags' }
+
+    const tags = JSON.parse(tagsInStorage) as ITag[]
+
+    const indexTag = tags.findIndex((tag) => tag === ent)
+
+    if (indexTag === -1) return { status: 404, data: 'not found tag' }
+
+    tags[indexTag] = newEnt
+
+    localStorage.setItem(this.key, JSON.stringify(tags))
+
+    return { status: 200, data: 'updated' }
   }
 
   public delete(ent: string): IResponse {
