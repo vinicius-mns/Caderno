@@ -88,7 +88,7 @@ export class Api<T> implements BaseApi<T> {
 
     if (!find) return this._response(404, 'not found')
 
-    return this._response(200, find)
+    return this._response(200, JSON.stringify(find))
   }
 
   public readAll(): IResponse {
