@@ -1,4 +1,6 @@
-import type { BaseApi } from './BaseApi'
+import { response, type BaseApi, type IResponse } from './BaseApi'
+import { v4 as uuidv4 } from 'uuid'
+import { z } from 'zod'
 
 export class Api<T> implements BaseApi<T> {
   /**
