@@ -42,11 +42,11 @@ export abstract class BaseApi<T> {
 
   /**
    * Atualiza uma entidade
-   * @param ent - entidade a ser substituida
+   * @param id - Id da entidade a ser substituida
    * @param newEnt - nova entidade
    * @returns A resposta da requisicao
    */
-  public abstract update(ent: T, newEnt: T): IResponse
+  public abstract update(id: string, newEnt: T): IResponse
 
   /**
    * Deleta uma entidade
