@@ -109,5 +109,14 @@ describe('Testando a Api - base', () => {
       expect(all.status).toBe(200)
       expect(JSON.parse(all.data).length).toBe(2)
     })
+
+    test('Retornar array vazio caso nenhum criado', () => {
+      const apiExample = myApiExample()
+
+      const all = apiExample.readAll()
+
+      expect(all.status).toBe(200)
+      expect(JSON.parse(all.data).length).toBe(0)
+    })
   })
 })
