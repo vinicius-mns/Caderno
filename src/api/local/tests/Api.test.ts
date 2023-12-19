@@ -73,7 +73,7 @@ describe('Testando a Api - base', () => {
       const id2 = all[1].id
 
       const find2 = apiExample.readOne(id2!)
-      const data2 = find2.data as unknown as IMyApiExample
+      const data2 = JSON.parse(find2.data) as unknown as IMyApiExample
 
       expect(find2.status).toBe(200)
       expect(data2.content).toBe('its work2')
