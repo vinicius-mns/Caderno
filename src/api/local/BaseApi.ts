@@ -4,6 +4,14 @@ export interface IResponse {
 }
 
 /**
+ * Funcao para gerar um objeto do tipo IResponse
+ * @status numero status http
+ * @data string resposta
+ * @returns IResponse
+ */
+export const response = (status: number, data: string) => ({ status, data })
+
+/**
  * Classe base para criar uma entidade
  */
 export abstract class BaseApi<T> {
@@ -34,16 +42,16 @@ export abstract class BaseApi<T> {
 
   /**
    * Atualiza uma entidade
-   * @param ent - entidade a ser substituida
+   * @param id - Id da entidade a ser substituida
    * @param newEnt - nova entidade
    * @returns A resposta da requisicao
    */
-  public abstract update(ent: T, newEnt: T): IResponse
+  public abstract update(id: string, newEnt: T): IResponse
 
   /**
    * Deleta uma entidade
    * @param id - Identicador da entidade
    * @returns - A resposta de requisicao
    */
-  public abstract delete(obj: string): IResponse
+  public abstract delete(id: string): IResponse
 }
