@@ -92,4 +92,22 @@ describe('Testando a Api - base', () => {
       expect(data2.content).toBe(undefined)
     })
   })
+
+  describe('ReadAll', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Le todos com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'its work1', number: 1 })
+      apiExample.create({ content: 'its work2', number: 2 })
+
+      const all = apiExample.readAll()
+
+      expect(all.status).toBe(200)
+      expect(JSON.parse(all.data).length).toBe(2)
+    })
+  })
 })
