@@ -123,4 +123,20 @@ export class Api<T> implements BaseApi<T> {
       return this._response(400, 'erro inesperado')
     }
   }
+
+  public delete(id: string): IResponse {
+    const storage = localStorage.getItem(this.key)
+
+    if (!storage) return this._response(404, 'not found')
+
+    const all = JSON.parse(storage) as T & { id: string }[]
+
+    const newStorage = all.filter((entity) => entity.id !== id)
+
+    if (all.length === newStorage.length) return this._response(404, 'not found')
+
+    localStorage.setItem(this.key, JSON.stringify(newStorage))
+
+    return this._response(200, 'deleted')
+  }
 }
