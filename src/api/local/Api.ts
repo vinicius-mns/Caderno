@@ -88,4 +88,12 @@ export class Api<T> implements BaseApi<T> {
 
     return this._response(200, find)
   }
+
+  public readAll(): IResponse {
+    const storage = localStorage.getItem(this.key)
+
+    if (!storage) return this._response(200, JSON.stringify([]))
+
+    return this._response(200, storage)
+  }
 }
