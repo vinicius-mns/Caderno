@@ -53,5 +53,5 @@ export abstract class BaseApi<T> {
    * @param id - Identicador da entidade
    * @returns - A resposta de requisicao
    */
-  public abstract delete(obj: string): IResponse
+  public abstract delete(id: string): IResponse
 }
