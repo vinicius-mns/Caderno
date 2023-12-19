@@ -61,8 +61,7 @@ export class Api<T> implements BaseApi<T> {
   public create(ent: T): IResponse {
     const entity = {
       ...ent,
-      id: this._idGenetate(),
-      date: new Date()
+      id: this._idGenetate()
     }
 
     try {

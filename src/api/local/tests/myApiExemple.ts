@@ -3,7 +3,6 @@ import { z } from 'zod'
 
 const myApiSchemaExample = z.object({
   id: z.string().optional(),
-  date: z.date().optional(),
   number: z.number(),
   content: z.string().min(3)
 })
