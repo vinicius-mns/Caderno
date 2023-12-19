@@ -119,4 +119,32 @@ describe('Testando a Api - base', () => {
       expect(JSON.parse(all.data).length).toBe(0)
     })
   })
+
+  describe('Update', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Atualiza com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'its work1', number: 1 })
+      apiExample.create({ content: 'its work2', number: 2 })
+
+      const all = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      const seconde = all[1]
+
+      const update = apiExample.update(seconde.id!, {
+        content: 'updated sucess',
+        number: 9
+      })
+
+      const allUpdated = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      expect(update.status).toBe(200)
+      expect(all[1].content).toBe('its work2')
+      expect(allUpdated[1].content).toBe('updated sucess')
+    })
+  })
 })
