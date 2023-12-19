@@ -167,4 +167,28 @@ describe('Testando a Api - base', () => {
       )
     })
   })
+
+  describe('Delete', () => {
+    beforeEach(() => {
+      localStorage.clear()
+    })
+
+    test('Deleta com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'its work1', number: 1 })
+      apiExample.create({ content: 'its work2', number: 2 })
+
+      const all = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      const deleteSecond = apiExample.delete(all[1].id!)
+
+      const allUpdated = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      expect(all.length).toBe(2)
+      expect(allUpdated.length).toBe(1)
+      expect(deleteSecond.status).toBe(200)
+      expect(deleteSecond.data).toBe('deleted')
+    })
+  })
 })
