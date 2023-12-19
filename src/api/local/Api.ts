@@ -96,4 +96,29 @@ export class Api<T> implements BaseApi<T> {
 
     return this._response(200, storage)
   }
+
+  public update(UnicId: string, newEnt: T): IResponse {
+    try {
+      this._validationSchema(newEnt)
+
+      const storage = localStorage.getItem(this.key)
+
+      if (!storage) return this._response(404, 'not found')
+
+      const all = JSON.parse(storage) as T & { id: string }[]
+
+      const index = all.findIndex(({ id }) => id === UnicId)
+
+      const entity = { ...all[index], ...newEnt }
+
+      all[index] = entity
+
+      localStorage.setItem(this.key, JSON.stringify(all))
+
+      return this._response(200, 'updated')
+    } catch (e) {
+      if (e instanceof Error) return this._response(400, e.message)
+      return this._response(400, 'erro inesperado')
+    }
+  }
 }
