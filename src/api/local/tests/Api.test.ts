@@ -146,5 +146,25 @@ describe('Testando a Api - base', () => {
       expect(all[1].content).toBe('its work2')
       expect(allUpdated[1].content).toBe('updated sucess')
     })
+
+    test('Falha com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'abcd', number: 1 })
+
+      const fakeId = '123'
+      const updateErrorId = apiExample.update(fakeId, { content: 'aaa', number: 1 })
+
+      const entity = JSON.parse(localStorage.getItem(apiExample.key)!)[0] as IMyApiExample
+      const updateErrorEntity = apiExample.update(entity.id!, { content: '', number: 1 })
+
+      expect(updateErrorId.status).toBe(404)
+      expect(updateErrorId.data).toBe('not found')
+
+      expect(updateErrorEntity.status).toBe(400)
+      expect(updateErrorEntity.data).toBe(
+        '[{"where":["content"],"message":"String must contain at least 3 character(s)"}]'
+      )
+    })
   })
 })
