@@ -109,6 +109,8 @@ export class Api<T> implements BaseApi<T> {
 
       const index = all.findIndex(({ id }) => id === UnicId)
 
+      if (index === -1) return this._response(404, 'not found')
+
       const entity = { ...all[index], ...newEnt }
 
       all[index] = entity
