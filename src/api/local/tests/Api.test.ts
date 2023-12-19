@@ -190,5 +190,23 @@ describe('Testando a Api - base', () => {
       expect(deleteSecond.status).toBe(200)
       expect(deleteSecond.data).toBe('deleted')
     })
+
+    test('Falha com sucesso', () => {
+      const apiExample = myApiExample()
+
+      apiExample.create({ content: 'its work1', number: 1 })
+      apiExample.create({ content: 'its work2', number: 2 })
+
+      const all = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      const deleteSecond = apiExample.delete('fakeID')
+
+      const allUpdated = JSON.parse(localStorage.getItem(apiExample.key)!) as IMyApiExample[]
+
+      expect(all.length).toBe(2)
+      expect(allUpdated.length).toBe(2)
+      expect(deleteSecond.status).toBe(404)
+      expect(deleteSecond.data).toBe('not found')
+    })
   })
 })
