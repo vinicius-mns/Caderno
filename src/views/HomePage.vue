@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 
@@ -21,7 +22,7 @@ const minimize = () => {
     </aside>
     <main :style="{ width: `${100 - sideBarWidth}%` }">
       <header>
-        <p>topbar</p>
+        <TopBarContainer />
       </header>
       <article>
         <p>pages</p>
