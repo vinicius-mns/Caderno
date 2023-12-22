@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideBarContainer from '@/components/sideBar/SideBarContainer.vue';
 import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
@@ -18,7 +19,7 @@ const minimize = () => {
   <div class="home-page">
     <aside :style="{ width: `${sideBarWidth}%` }">
       <button class="minimize-sideBar" @click="minimize"><p>⏪</p></button>
-      <p>sideBar</p>
+      <SideBarContainer />
     </aside>
     <main :style="{ width: `${100 - sideBarWidth}%` }">
       <header>
