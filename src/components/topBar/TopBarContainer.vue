@@ -2,9 +2,9 @@
 
 <template>
   <div class="topbar-container">
-    <div>Data</div>
-    <div>Criar card</div>
-    <div>Pesquisa</div>
+    <div class="date-container">Data</div>
+    <div class="create-card-container">Criar card</div>
+    <div class="search-container">Pesquisa</div>
   </div>
 </template>
 
