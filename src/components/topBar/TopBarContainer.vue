@@ -1,10 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <div class="topbar-container">
-    <div class="date-container">Data</div>
-    <div class="create-card-container">Criar card</div>
-    <div class="search-container">Pesquisa</div>
+    <div class="date-container container"></div>
+    <div class="create-card-container container"></div>
+    <div class="search-container container">Pesquisa</div>
   </div>
 </template>
 
@@ -17,5 +18,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+
+  & .container {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
