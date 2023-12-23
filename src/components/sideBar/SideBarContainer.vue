@@ -1,15 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import UserArea from './UserArea.vue'
+import ButtonAddTag from './ButtonAddTag.vue'
+import TagsList from './TagsList.vue'
+</script>
 
 <template>
   <div class="sidebar-container">
     <div class="user-area-container">
-      <p>user-area-container</p>
+      <UserArea />
     </div>
     <div class="tags-list-container">
-      <p>tags-list-container</p>
+      <TagsList />
     </div>
     <div class="create-tag-container">
-      <p>tags-list-create-button</p>
+      <ButtonAddTag />
     </div>
   </div>
 </template>
@@ -23,8 +27,6 @@
   // display
   display: flex;
   flex-direction: column;
-  // estilo
-  background-color: red;
 
   & .user-area-container {
     // medidas
@@ -32,16 +34,13 @@
     height: 120px;
     min-height: 120px;
     //estilo
-    background-color: blue;
+    background-color: rgb(178, 39, 95);
   }
 
   & .tags-list-container {
     // medidas
     width: 100%;
     max-height: 60%;
-    overflow: auto;
-    // estilo
-    background-color: palegreen;
   }
 
   & .create-tag-container {
@@ -49,6 +48,11 @@
     width: 100%;
     height: 32px;
     min-height: 32px;
+    margin-top: 5px;
+    // display
+    display: flex;
+    align-items: center;
+    justify-content: center;
     // estilo
     background-color: burlywood;
   }
