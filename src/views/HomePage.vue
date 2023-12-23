@@ -89,6 +89,8 @@ const minimize = () => {
     & article {
       // medidas
       width: 100%;
+      height: 100%;
+      overflow: auto;
       // estilo
       background-color: purple;
     }
