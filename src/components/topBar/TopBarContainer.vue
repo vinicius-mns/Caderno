@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import AtualDate from './AtualDate.vue'
 </script>
 
 <template>
   <div class="topbar-container">
-    <div class="date-container container"></div>
+    <div class="date-container container">
+      <AtualDate />
+    </div>
     <div class="create-card-container container"></div>
     <div class="search-container container">Pesquisa</div>
   </div>
