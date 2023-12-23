@@ -14,7 +14,7 @@ watchEffect(() => {
   <div class="date">
     <p>{{ date.getHours() }}</p>
     :
-    <p>{{ date.getMinutes() }}</p>
+    <p>{{ date.getMinutes().toString().padStart(2, '0') }}</p>
     :
     <p>{{ date.getSeconds() }}</p>
   </div>
