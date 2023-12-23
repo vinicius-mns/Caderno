@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SearchCard from './SearchCard.vue'
 import CreateCard from './CreateCard.vue'
 import AtualDate from './AtualDate.vue'
 </script>
@@ -11,7 +12,9 @@ import AtualDate from './AtualDate.vue'
     <div class="create-card-container container">
       <CreateCard />
     </div>
-    <div class="search-container container">Pesquisa</div>
+    <div class="search-container container">
+      <SearchCard />
+    </div>
   </div>
 </template>
 
