@@ -1,31 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useTags } from '@/stores/local/tags'
+import { computed, onMounted } from 'vue'
 
-const tagsList = ref<HTMLElement>().value?.clientWidth
+const tags = useTags()
 
-const tags = ref([
-  { ico: '⭐️', text: 'mock' },
-  { ico: '🤓', text: 'mock mock mock' },
-  { ico: '🥰', text: 'mock' },
-  { ico: '🌼', text: 'mock' },
-  { ico: '👑', text: 'mock mock mock mock mock' },
-  { ico: '🫀', text: 'mock' },
-  { ico: '🐦', text: 'mock' },
-  { ico: '💅', text: 'mock' },
-  { ico: '🥰', text: 'mock' },
-  { ico: '👑', text: 'mock' },
-  { ico: '💙', text: 'mock mock mock mock mock' },
-  { ico: '💰', text: 'mock' }
-])
+const all = computed(() => tags.getAll)
 
-console.log(tagsList)
+const myTags = () => {
+  console.log(all)
+}
+
+onMounted(myTags)
 </script>
 
 <template>
-  <ul class="tags-list" ref="tagsList">
-    <li class="tag" v-for="(tag, i) in tags" :key="i" :title="tag.text">
-      <p class="ico">{{ tag.ico }}</p>
-      <p class="text">{{ tag.text }}</p>
+  <ul class="tags-list">
+    <li class="tag" v-for="(tag, i) in all" :key="i" :title="tag.content">
+      <p class="ico">{{ tag.img }}</p>
+      <p class="text">{{ tag.content }}</p>
     </li>
   </ul>
 </template>
