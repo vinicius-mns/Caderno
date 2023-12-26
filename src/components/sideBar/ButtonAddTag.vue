@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import TagEditor from '../modal/TagEditor.vue'
 
-const showModal = ref(true)
+const showModal = ref(false)
 const toggleModal = () => (showModal.value = !showModal.value)
 </script>
 
