@@ -6,6 +6,6 @@ const tagsSchema = z.object({
   content: z.string()
 })
 
-type ITag = z.infer<typeof tagsSchema>
+export type ITag = z.infer<typeof tagsSchema>
 
 export const tagsApi = () => new Api<ITag>('tags_local', tagsSchema)
