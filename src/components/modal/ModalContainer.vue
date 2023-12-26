@@ -1,13 +1,15 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string
+  width: string
+  height: string
   toggleShow: () => void
 }>()
 </script>
 
 <template>
   <div class="modal-container">
-    <div class="modal">
+    <div class="modal" :style="{ width: props.width, height: props.height }">
       <header>
         <p>{{ props.title }}</p>
         <button @click="props.toggleShow">X</button>
