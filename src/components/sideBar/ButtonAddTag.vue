@@ -1,9 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+import TagEditor from '../modal/TagEditor.vue'
+
+const showModal = ref(true)
+const toggleModal = () => (showModal.value = !showModal.value)
+</script>
 
 <template>
-  <button class="button-add-tag">
-    <p>Criar uma nova tag</p>
-  </button>
+  <div class="button-add-tag">
+    <button @click="toggleModal">
+      <p>Criar uma nova tag</p>
+    </button>
+    <TagEditor :toggle-show="toggleModal" v-show="showModal" />
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -11,11 +20,17 @@
   // medidas
   height: 30px;
   width: 90%;
-  // estilo
-  background-color: red;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  border: none;
-  cursor: pointer;
+
+  & button {
+    // medidas
+    width: 100%;
+    height: 100%;
+    // estilo
+    background-color: red;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+  }
 }
 </style>
