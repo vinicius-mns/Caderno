@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
-  toggleModal: () => void
   title: string
+  toggleShow: () => void
 }>()
 </script>
 
@@ -9,8 +9,8 @@ const props = defineProps<{
   <div class="modal-container">
     <div class="modal">
       <header>
-        <p>{{ title }}</p>
-        <button @click="props.toggleModal">X</button>
+        <p>{{ props.title }}</p>
+        <button @click="props.toggleShow">X</button>
       </header>
       <div class="content">
         <slot></slot>
