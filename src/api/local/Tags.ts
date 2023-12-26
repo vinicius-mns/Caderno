@@ -8,4 +8,4 @@ const tagsSchema = z.object({
 
 type ITag = z.infer<typeof tagsSchema>
 
-export const tagsApi = new Api<ITag>('tags_local', tagsSchema)
+export const tagsApi = () => new Api<ITag>('tags_local', tagsSchema)
