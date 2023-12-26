@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import ModalContainer from './ModalContainer.vue'
+import { useTags } from '@/stores/local/tags'
+
+const tags = useTags()
 
 const props = defineProps<{
   toggleShow: () => void
@@ -12,17 +15,18 @@ const style = reactive({
 })
 
 const form = reactive({
-  emoji: '',
+  img: '',
   content: ''
 })
 
 const setEmoji = (emoji: string) => {
-  form.emoji = emoji
+  form.img = emoji
   toggleShowEmojis()
 }
 
 const send = () => {
-  console.log(form)
+  tags.create(form)
+  props.toggleShow()
 }
 
 const showEmojis = ref(false)
@@ -40,13 +44,13 @@ const emojis = ['⭐️', '🤓', '🥰', '🌼', '👑', '🫀', '🐦', '💅'
   >
     <div class="tag-editor-container">
       <div class="emojis-list" v-show="showEmojis">
-        <button @click="setEmoji(emoji)" v-for="(emoji, i) in emojis" :key="i">
+        <button @click="() => setEmoji(emoji)" v-for="(emoji, i) in emojis" :key="i">
           <p>{{ emoji }}</p>
         </button>
       </div>
       <div class="tag-editor">
         <button @click="toggleShowEmojis" class="emoji">
-          <p>{{ form.emoji }}</p>
+          <p>{{ form.img }}</p>
         </button>
         <input type="text" class="name" v-model="form.content" />
       </div>
