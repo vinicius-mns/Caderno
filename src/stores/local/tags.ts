@@ -9,7 +9,6 @@ export const useTags = defineStore('tagsLocal', () => {
 
   const _updateTags = () => {
     const all = api.readAll()
-
     if (all.status !== 200) {
       console.log('erro ao capturar tags')
     } else {
@@ -20,7 +19,6 @@ export const useTags = defineStore('tagsLocal', () => {
   const create = (tag: ITag) => {
     try {
       api.create(tag)
-
       _updateTags()
     } catch (e) {
       console.log(e)

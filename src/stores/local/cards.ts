@@ -9,7 +9,6 @@ export const useLocalCards = defineStore('localCards', () => {
 
   const _updateCards = () => {
     const all = api.readAll()
-
     if (all.status !== 200) {
       console.log('erro ao capturar cards')
     } else {
@@ -20,11 +19,9 @@ export const useLocalCards = defineStore('localCards', () => {
   const create = (tag: ICard) => {
     try {
       const createCard = api.create(tag)
-
       if (createCard.status !== 201) {
         console.log(createCard.data)
       }
-
       _updateCards()
     } catch (e) {
       console.log(e)
