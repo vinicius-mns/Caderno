@@ -1,7 +1,7 @@
 import { Api } from './Api'
 import { z } from 'zod'
 
-const tagsSchema = z.object({
+export const tagsSchema = z.object({
   img: z.string(),
   content: z.string()
 })
