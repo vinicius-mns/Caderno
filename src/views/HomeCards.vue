@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ICard } from '../api/local/Card'
-import CardComponent from '@/components/CardComponent.vue'
+import CardComponent from '@/components/widgets/CardComponent.vue'
 import { useLocalCards } from '@/stores/local/cards'
 import { computed, onMounted, ref, onUnmounted } from 'vue'
 
