@@ -51,7 +51,8 @@ const title = () => JSON.stringify(props.tags.map(({ content }) => content))
 <style scoped lang="scss">
 .card-component {
   // medidas
-  width: 92%;
+  width: 94%;
+  max-width: 350px;
   margin-top: 4%;
   word-wrap: break-word;
   overflow: hidden;

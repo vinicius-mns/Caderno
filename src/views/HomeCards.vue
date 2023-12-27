@@ -74,7 +74,8 @@ onUnmounted(() => {
 .cards-container {
   //medidas
   width: 100%;
-  height: 1900px;
+  max-width: 3080px;
+  margin-bottom: 50px;
   // display
   display: flex;
   //estilo
