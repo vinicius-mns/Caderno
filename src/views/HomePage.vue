@@ -1,32 +1,80 @@
 <script setup lang="ts">
-import SideBarContainer from '@/components/sideBar/SideBarContainer.vue';
+import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
 import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { RouterView } from 'vue-router'
 
-const sideBarWidth = ref(18)
+const miniSideBar = ref(false)
 
-const minimize = () => {
-  if (sideBarWidth.value === 18) {
-    sideBarWidth.value = 0
-  } else if (sideBarWidth.value >= 0) {
-    sideBarWidth.value = 18
+const sideBar = reactive({
+  atualSize: '0',
+  desktopSize: '280px',
+  tableSize: '180px',
+  mobileSize: '40px'
+})
+
+const defineSizeSideBar = () => {
+  const widthScreen = window.innerWidth
+
+  // mobile
+  if (widthScreen < 768) {
+    sideBar.atualSize = sideBar.mobileSize
+  }
+
+  // teblet
+  if (widthScreen >= 768) {
+    sideBar.atualSize = sideBar.tableSize
+  }
+
+  // desktop
+  if (widthScreen >= 1024) {
+    sideBar.atualSize = sideBar.desktopSize
   }
 }
+
+const minimizeSideBar = () => {
+  if (!miniSideBar.value) {
+    sideBar.atualSize = '30px'
+    miniSideBar.value = true
+  } else {
+    defineSizeSideBar()
+    miniSideBar.value = false
+  }
+}
+
+const focusInSideBar = () => {
+  if (miniSideBar.value) {
+    defineSizeSideBar()
+  }
+}
+
+const focusOutSideBar = () => {
+  if (miniSideBar.value) {
+    sideBar.atualSize = '30px'
+  }
+}
+
+onMounted(() => {
+  addEventListener('resize', defineSizeSideBar)
+  defineSizeSideBar()
+})
+
+onUnmounted(() => {
+  removeEventListener('resize', defineSizeSideBar)
+})
 </script>
 
 <template>
   <div class="home-page">
-    <aside :style="{ width: `${sideBarWidth}%` }">
-      <button class="minimize-sideBar" @click="minimize"><p>⏪</p></button>
+    <aside @mouseenter="focusInSideBar" @mouseleave="focusOutSideBar">
+      <button class="minimize-sideBar-button" @click="minimizeSideBar"><p>⏪</p></button>
       <SideBarContainer />
     </aside>
-    <main :style="{ width: `${100 - sideBarWidth}%` }">
+    <main>
       <header>
         <TopBarContainer />
       </header>
       <article>
-        <p>pages</p>
         <RouterView />
       </article>
     </main>
@@ -43,16 +91,19 @@ const minimize = () => {
   // estilo
   background-color: red;
 
+  $widhSidebar: 18;
+
   & aside {
     // medidas
     height: 100%;
-    min-width: 30px;
+    width: v-bind('sideBar.atualSize');
+    min-width: v-bind('sideBar.atualSize');
     //posicionamento
     position: relative;
     // estilo
     background-color: blue;
 
-    & .minimize-sideBar {
+    & .minimize-sideBar-button {
       // medidas
       height: 30px;
       aspect-ratio: 1;
@@ -68,14 +119,13 @@ const minimize = () => {
   & main {
     // medidas
     height: 100%;
+    width: 100%;
     overflow: auto;
     //display
     display: flex;
     flex-direction: column;
     // estilo
     background-color: aqua;
-
-    $headerHeight: 6;
 
     & header {
       // medidas
