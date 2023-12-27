@@ -64,6 +64,7 @@ onUnmounted(() => {
         :key="ii"
         :content="card.content"
         :tags="card.tags"
+        :date="new Date(card.date)"
       />
     </div>
   </div>
