@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
 import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, watchEffect } from 'vue'
 import { RouterView } from 'vue-router'
-
-const miniSideBar = ref(false)
+import { useSize } from '@/stores/style'
 
 const sideBar = reactive({
   atualSize: '0',
@@ -13,61 +12,30 @@ const sideBar = reactive({
   mobileSize: '40px'
 })
 
+const size = useSize()
+const screen = computed(() => size.store.screen)
+
 const defineSizeSideBar = () => {
-  const widthScreen = window.innerWidth
-
-  // mobile
-  if (widthScreen < 768) {
-    sideBar.atualSize = sideBar.mobileSize
-  }
-
-  // teblet
-  if (widthScreen >= 768) {
-    sideBar.atualSize = sideBar.tableSize
-  }
-
-  // desktop
-  if (widthScreen >= 1024) {
-    sideBar.atualSize = sideBar.desktopSize
-  }
+  if (screen.value === 'mobile') sideBar.atualSize = sideBar.mobileSize
+  if (screen.value === 'tablet') sideBar.atualSize = sideBar.tableSize
+  if (screen.value === 'desktop') sideBar.atualSize = sideBar.desktopSize
 }
 
-const minimizeSideBar = () => {
-  if (!miniSideBar.value) {
-    sideBar.atualSize = '30px'
-    miniSideBar.value = true
-  } else {
-    defineSizeSideBar()
-    miniSideBar.value = false
-  }
-}
-
-const focusInSideBar = () => {
-  if (miniSideBar.value) {
-    defineSizeSideBar()
-  }
-}
-
-const focusOutSideBar = () => {
-  if (miniSideBar.value) {
-    sideBar.atualSize = '30px'
-  }
-}
+watchEffect(defineSizeSideBar)
 
 onMounted(() => {
-  addEventListener('resize', defineSizeSideBar)
-  defineSizeSideBar()
+  addEventListener('resize', size.defineSizeScreen)
+  size.defineSizeScreen()
 })
 
 onUnmounted(() => {
-  removeEventListener('resize', defineSizeSideBar)
+  removeEventListener('resize', size.defineSizeScreen)
 })
 </script>
 
 <template>
   <div class="home-page">
-    <aside @mouseenter="focusInSideBar" @mouseleave="focusOutSideBar">
-      <button class="minimize-sideBar-button" @click="minimizeSideBar"><p>⏪</p></button>
+    <aside>
       <SideBarContainer />
     </aside>
     <main>
@@ -88,10 +56,6 @@ onUnmounted(() => {
   height: 100vh;
   // displa
   display: flex;
-  // estilo
-  background-color: red;
-
-  $widhSidebar: 18;
 
   & aside {
     // medidas
