@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
+const sideBarWidth = ref('250px')
+
+const toggleSidebar = () => {
+  if (sideBarWidth.value === '28px') {
+    sideBarWidth.value = '250px'
+  } else {
+    sideBarWidth.value = '28px'
+  }
+}
 </script>
 
 <template>
@@ -7,6 +18,7 @@
       <!-- <TopBarContainer /> -->
     </header>
     <aside>
+      <button class="toggleSidebar" @click="toggleSidebar">x</button>
       <!-- <SideBarContainer /> -->
     </aside>
     <main>
@@ -24,7 +36,7 @@
     // estilo
     background-color: white;
 
-    $sideBarWidth: 250px;
+    $sideBarWidth: v-bind(sideBarWidth);
     $headerHeigth: 40px;
     $transition: all 0.3s;
 
@@ -50,6 +62,16 @@
       width: $sideBarWidth;
       // estilo
       background-color: blue;
+
+      & .toggleSidebar {
+        // posicionamento
+        position: absolute;
+        right: 0;
+        // medidas
+        height: 28px;
+        width: 28px;
+        border: none;
+      }
 
       transition: $transition;
     }
@@ -79,6 +101,7 @@
     // estilo
     background-color: white;
 
+    $sideBarWidth: v-bind(sideBarWidth);
     $heigth: 50px;
     $transition: all 0.3s;
 
