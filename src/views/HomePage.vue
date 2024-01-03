@@ -1,115 +1,128 @@
 <script setup lang="ts">
-import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
-import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
-import { computed, onMounted, onUnmounted, reactive, watchEffect } from 'vue'
-import { RouterView } from 'vue-router'
-import { useSize } from '@/stores/style'
-
-const sideBar = reactive({
-  atualSize: '0',
-  desktopSize: '280px',
-  tableSize: '180px',
-  mobileSize: '40px'
-})
-
-const size = useSize()
-const screen = computed(() => size.store.screen)
-
-const defineSizeSideBar = () => {
-  if (screen.value === 'mobile') sideBar.atualSize = sideBar.mobileSize
-  if (screen.value === 'tablet') sideBar.atualSize = sideBar.tableSize
-  if (screen.value === 'desktop') sideBar.atualSize = sideBar.desktopSize
-}
-
-watchEffect(defineSizeSideBar)
-
-onMounted(() => {
-  addEventListener('resize', size.defineSizeScreen)
-  size.defineSizeScreen()
-})
-
-onUnmounted(() => {
-  removeEventListener('resize', size.defineSizeScreen)
-})
 </script>
 
 <template>
-  <div class="home-page">
+  <div class="home-page-container">
+    <header>
+      <!-- <TopBarContainer /> -->
+    </header>
     <aside>
-      <SideBarContainer />
+      <!-- <SideBarContainer /> -->
     </aside>
     <main>
-      <header>
-        <TopBarContainer />
-      </header>
-      <article>
-        <RouterView />
-      </article>
+      <!-- <RouterView /> -->
     </main>
   </div>
 </template>
 
 <style scoped lang="scss">
-.home-page {
-  // medidas
-  width: 100%;
-  height: 100vh;
-  // displa
-  display: flex;
-
-  & aside {
-    // medidas
-    height: 100%;
-    width: v-bind('sideBar.atualSize');
-    min-width: v-bind('sideBar.atualSize');
-    //posicionamento
-    position: relative;
-    // estilo
-    background-color: blue;
-
-    & .minimize-sideBar-button {
-      // medidas
-      height: 30px;
-      aspect-ratio: 1;
-      //posicionamento
-      position: absolute;
-      // estilo
-      right: 0;
-    }
-
-    transition: all 0.3s;
-  }
-
-  & main {
-    // medidas
-    height: 100%;
+@media screen and (min-width: 768px) {
+  .home-page-container {
+    //medidas
+    height: 100dvh;
     width: 100%;
-    overflow: auto;
-    //display
-    display: flex;
-    flex-direction: column;
     // estilo
-    background-color: aqua;
+    background-color: white;
+
+    $sideBarWidth: 250px;
+    $headerHeigth: 40px;
+    $transition: all 0.3s;
 
     & header {
+      // posicionamento
+      position: fixed;
+      right: 0%;
       // medidas
-      width: 100%;
-      height: 44px;
-      min-height: 44px;
+      width: calc(100% - $sideBarWidth - 10px);
+      height: $headerHeigth;
       // estilo
-      background-color: pink;
+      background-color: red;
+
+      transition: $transition;
     }
 
-    & article {
+    & aside {
+      // posicionamento
+      position: fixed;
+      left: 0;
       // medidas
-      width: 100%;
-      height: 100%;
+      height: 100dvh;
+      width: $sideBarWidth;
+      // estilo
+      background-color: blue;
+
+      transition: $transition;
+    }
+
+    & main {
+      // posicionamento
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      // medidas
+      height: calc(100dvh - $headerHeigth - 10px);
+      width: calc(100% - $sideBarWidth - 10px);
       overflow: auto;
       // estilo
-      background-color: purple;
+      background-color: green;
+
+      transition: $transition;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .home-page-container {
+    // medidas
+    width: 100%;
+    height: 100dvh;
+    // estilo
+    background-color: white;
+
+    $heigth: 50px;
+    $transition: all 0.3s;
+
+    & .toggleSidebar {
+      display: none;
     }
 
-    transition: all 0.3s;
+    & header {
+      // posicionamnto
+      position: fixed;
+      bottom: calc($heigth + 5px);
+      // medidas
+      width: 100%;
+      height: $heigth;
+      // estilo
+      background-color: red;
+
+      transition: $transition;
+    }
+
+    & aside {
+      //posicionamento
+      position: fixed;
+      bottom: 0;
+      // medidas
+      width: 100%;
+      height: $heigth;
+      overflow: auto;
+      // estilo
+      background-color: blue;
+
+      transition: $transition;
+    }
+
+    & main {
+      // medidas
+      width: 100%;
+      min-height: calc(100dvh - ($heigth * 2) - 10px);
+      overflow: auto;
+      // estilo
+      background-color: green;
+
+      transition: $transition;
+    }
   }
 }
 </style>
