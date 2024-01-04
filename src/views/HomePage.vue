@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
+
 import { ref } from 'vue'
 
 const sideBarWidth = ref('250px')
+const showSidebar = ref(true)
 
 const toggleSidebar = () => {
   if (sideBarWidth.value === '28px') {
     sideBarWidth.value = '250px'
+    showSidebar.value = true
   } else {
     sideBarWidth.value = '28px'
+    showSidebar.value = false
   }
 }
 </script>
@@ -19,7 +24,7 @@ const toggleSidebar = () => {
     </header>
     <aside>
       <button class="toggleSidebar" @click="toggleSidebar">x</button>
-      <!-- <SideBarContainer /> -->
+      <SideBarContainer v-show="showSidebar" />
     </aside>
     <main>
       <!-- <RouterView /> -->
