@@ -33,7 +33,7 @@ const mockTags = [
 </template>
 
 <style scoped lang="scss">
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 769px) {
   .tags-list {
     // medidas
     width: 100%;

@@ -33,7 +33,7 @@ const toggleSidebar = () => {
 </template>
 
 <style scoped lang="scss">
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 769px) {
   .home-page-container {
     //medidas
     height: 100dvh;

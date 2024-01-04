@@ -11,7 +11,7 @@ import TagsList from './TagsList.vue'
 </template>
 
 <style scoped lang="scss">
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 769px) {
   .sidebar-container {
     // medidas
     width: 100%;
