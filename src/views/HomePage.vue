@@ -27,7 +27,7 @@ const toggleSidebar = () => {
       <SideBarContainer v-show="showSidebar" />
     </aside>
     <main>
-      <!-- <RouterView /> -->
+      <RouterView />
     </main>
   </div>
 </template>
