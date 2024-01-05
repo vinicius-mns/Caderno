@@ -6,25 +6,35 @@ import { ref } from 'vue'
 
 const sideBarWidth = ref('250px')
 const showSidebar = ref(true)
+const sideBarIsClosed = ref(false)
 
-const toggleSidebar = () => {
-  if (sideBarWidth.value === '28px') {
-    sideBarWidth.value = '250px'
-    showSidebar.value = true
-  } else {
-    sideBarWidth.value = '28px'
+const openSidebar = () => {
+  sideBarWidth.value = '250px'
+  showSidebar.value = true
+}
+
+const closeSidebar = () => {
+  if (sideBarIsClosed.value) {
+    sideBarWidth.value = '8px'
     showSidebar.value = false
   }
+}
+
+const toggleSidebar = () => {
+  const closed = sideBarIsClosed.value
+  sideBarIsClosed.value = !closed
+  closed ? openSidebar() : closeSidebar()
 }
 </script>
 
 <template>
   <div class="home-page-container">
     <header>
+      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
       <TopBarContainer />
     </header>
-    <aside>
-      <button class="toggleSidebar" @click="toggleSidebar">x</button>
+    <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
+      <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
       <SideBarContainer v-show="showSidebar" />
     </aside>
     <main>
@@ -55,6 +65,16 @@ const toggleSidebar = () => {
       height: $headerHeigth;
       // estilo
       background-color: red;
+
+      & .toggleSidebar {
+        // posicionamento
+        position: absolute;
+        left: 0;
+        // medidas
+        height: 100%;
+        aspect-ratio: 1;
+        border: none;
+      }
 
       transition: $transition;
     }
