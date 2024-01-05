@@ -51,7 +51,7 @@ const toggleSidebar = () => {
       position: fixed;
       right: 0%;
       // medidas
-      width: calc(100% - $sideBarWidth - 10px);
+      width: 100%;
       height: $headerHeigth;
       // estilo
       background-color: red;
@@ -63,8 +63,9 @@ const toggleSidebar = () => {
       // posicionamento
       position: fixed;
       left: 0;
+      top: calc($headerHeigth + 10px);
       // medidas
-      height: 100dvh;
+      height: calc(100dvh - $headerHeigth - 10px);
       width: $sideBarWidth;
       // estilo
       background-color: blue;
