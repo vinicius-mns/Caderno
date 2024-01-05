@@ -120,9 +120,14 @@ const mockTags = [
     & .tag {
       // medidas
       max-width: 150px;
-      height: 32px;
+      height: 38px;
       margin-left: 10px;
+      flex-shrink: 0;
+      overflow: hidden;
+      // estilo
+      border: solid 0.5px black;
       list-style-type: none;
+      border-radius: 50px;
 
       & button {
         // medidas
@@ -134,8 +139,7 @@ const mockTags = [
         align-items: center;
         // estilo
         background-color: white;
-        border: solid 0.5px black;
-        border-radius: 16px;
+        border: none;
 
         & .ico {
           font-size: 24px;
@@ -154,14 +158,19 @@ const mockTags = [
     & .add-tag-button {
       // medidas
       margin-right: 20dvw;
+      border: solid red 1px;
+      background-color: rgba(255, 0, 0, 0.3);
+      // center
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       & button {
         // medidas
         width: 50dvw;
         // estilo
-        background-color: white;
-        border: solid red 1px;
-        background-color: rgba(255, 0, 0, 0.3);
+        border: none;
+        background-color: transparent;
         // center
         display: flex;
         align-items: center;
