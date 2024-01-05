@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
+import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
 
 import { ref } from 'vue'
 
@@ -20,7 +21,7 @@ const toggleSidebar = () => {
 <template>
   <div class="home-page-container">
     <header>
-      <!-- <TopBarContainer /> -->
+      <TopBarContainer />
     </header>
     <aside>
       <button class="toggleSidebar" @click="toggleSidebar">x</button>
@@ -107,7 +108,7 @@ const toggleSidebar = () => {
     background-color: white;
 
     $sideBarWidth: v-bind(sideBarWidth);
-    $heigth: 50px;
+    $heigth: 60px;
     $transition: all 0.3s;
 
     & .toggleSidebar {
@@ -117,7 +118,7 @@ const toggleSidebar = () => {
     & header {
       // posicionamnto
       position: fixed;
-      bottom: calc($heigth + 5px);
+      bottom: 0;
       // medidas
       width: 100%;
       height: $heigth;
@@ -130,7 +131,7 @@ const toggleSidebar = () => {
     & aside {
       //posicionamento
       position: fixed;
-      bottom: 0;
+      bottom: $heigth;
       // medidas
       width: 100%;
       height: $heigth;
@@ -144,7 +145,7 @@ const toggleSidebar = () => {
     & main {
       // medidas
       width: 100%;
-      min-height: calc(100dvh - ($heigth * 2) - 10px);
+      height: calc(100dvh - ($heigth * 2) - 10px);
       overflow: auto;
       // estilo
       background-color: green;
