@@ -43,7 +43,7 @@ const toggleSidebar = () => {
     background-color: white;
 
     $sideBarWidth: v-bind(sideBarWidth);
-    $headerHeigth: 40px;
+    $headerHeigth: 50px;
     $transition: all 0.3s;
 
     & header {
