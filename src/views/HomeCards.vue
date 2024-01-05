@@ -46,15 +46,13 @@ const cardsInColumns = computed(() => renderCards(numberOfColumns(), cards))
   //medidas
   width: 100%;
   max-width: 3080px;
-  margin-bottom: 140px;
   // display
   display: flex;
-  //estilo
-  background-color: green;
 
   & .colum {
     //medidas
     width: 100%;
+    padding-bottom: 40px;
     overflow: hidden;
     //display
     display: flex;
