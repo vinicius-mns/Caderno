@@ -29,10 +29,6 @@ const toggleSidebar = () => {
 
 <template>
   <div class="home-page-container">
-    <header>
-      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
-      <TopBarContainer />
-    </header>
     <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
       <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
       <SideBarContainer v-show="showSidebar" />
@@ -40,6 +36,10 @@ const toggleSidebar = () => {
     <main>
       <RouterView />
     </main>
+    <header>
+      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
+      <TopBarContainer />
+    </header>
   </div>
 </template>
 
