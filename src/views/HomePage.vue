@@ -150,23 +150,13 @@ const toggleSidebar = () => {
     }
 
     & aside {
-      //posicionamento
-      position: fixed;
-      bottom: $heigth;
-      // medidas
-      width: 100%;
-      height: $heigth;
-      overflow: auto;
-      // estilo
-      background-color: blue;
-
-      transition: $transition;
+      display: none;
     }
 
     & main {
       // medidas
       width: 100%;
-      height: calc(100dvh - ($heigth * 2) - 10px);
+      height: calc(100dvh - $heigth - 10px);
       overflow: auto;
       // estilo
       background-color: green;
