@@ -61,8 +61,8 @@ const title = () => JSON.stringify(props.tags.map(({ content }) => content))
   flex-direction: column;
   align-items: center;
   //estilo
-  background-color: #d9d9d9;
   background-color: white;
+  box-shadow: 0 0 5px rgb(121, 121, 121);
   border-radius: 16px;
 
   & header {
