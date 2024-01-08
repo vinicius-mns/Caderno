@@ -1,64 +1,35 @@
 <script setup lang="ts">
-import type { ICard } from '../api/local/Card'
+import { computed } from 'vue'
 import CardComponent from '@/components/widgets/CardComponent.vue'
-import { useLocalCards } from '@/stores/local/cards'
-import { computed, onMounted, ref, onUnmounted } from 'vue'
+import { mockCards } from './mockCards'
+import type { ICard } from '../api/local/Card'
 
-const useCards = useLocalCards()
-
-const myCards = computed(() => useCards.getAll)
-
-const renderCards = (coluns: number, cards: ICard[]) => {
-  const colunsList = () => {
-    const list = []
-
-    for (let i = 0; i < coluns; i++) {
-      list.push([])
-    }
-
-    return list as ICard[][]
-  }
-
-  const addCardsOnLists = () => {
-    const lists = colunsList()
-
-    for (let i = 0; i < coluns; i++) {
-      const listOfCardsSize = cards.length
-
-      for (let ii = i; ii < listOfCardsSize; ii += coluns) {
-        lists[i].push(cards[ii])
-      }
-    }
-
-    return lists
-  }
-
-  return addCardsOnLists()
+const numberOfColumns = () => {
+  const screen = window.innerWidth
+  if (screen < 768) return 1
+  if (screen >= 768 && screen < 1024) return 2
+  return 3
 }
 
-const coluns = ref(3)
-const ColumOfCards = computed(() => renderCards(coluns.value, myCards.value))
-
-const defineNumberOfColuns = () => {
-  const withScreen = window.innerWidth
-  if (withScreen < 768) coluns.value = 1
-  if (withScreen >= 768) coluns.value = 2
-  if (withScreen >= 1024) coluns.value = 3
+const renderCards = (numberOfColumns: number, cards: ICard[]) => {
+  const addCardsOnColum = (colum: ICard[], columnIndex: number) => {
+    for (let i = columnIndex; i < cards.length; i += numberOfColumns) {
+      colum.push(cards[i])
+    }
+    return colum
+  }
+  const columnsEmpty = new Array(numberOfColumns).fill(0).map(() => [])
+  const columns = columnsEmpty.map((colum, index) => addCardsOnColum(colum, index))
+  return columns
 }
 
-onMounted(() => {
-  defineNumberOfColuns()
-  window.addEventListener('resize', defineNumberOfColuns)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', defineNumberOfColuns)
-})
+const cards = mockCards.map((card) => ({ ...card, date: new Date(card.date) }))
+const cardsInColumns = computed(() => renderCards(numberOfColumns(), cards))
 </script>
 
 <template>
   <div class="cards-container">
-    <div class="colum" v-for="(colum, i) in ColumOfCards" :key="i">
+    <div class="colum" v-for="(colum, i) in cardsInColumns" :key="i">
       <CardComponent
         v-for="(card, ii) in colum"
         :key="ii"
@@ -75,15 +46,13 @@ onUnmounted(() => {
   //medidas
   width: 100%;
   max-width: 3080px;
-  margin-bottom: 50px;
   // display
   display: flex;
-  //estilo
-  background-color: rgb(239, 201, 104);
 
   & .colum {
     //medidas
     width: 100%;
+    padding-bottom: 40px;
     overflow: hidden;
     //display
     display: flex;

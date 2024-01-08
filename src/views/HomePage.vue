@@ -1,151 +1,168 @@
 <script setup lang="ts">
 import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
 import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
-import { RouterView } from 'vue-router'
 
-const miniSideBar = ref(false)
+import { ref } from 'vue'
 
-const sideBar = reactive({
-  atualSize: '0',
-  desktopSize: '280px',
-  tableSize: '180px',
-  mobileSize: '40px'
-})
+const sideBarWidth = ref('250px')
+const showSidebar = ref(true)
+const sideBarIsClosed = ref(false)
 
-const defineSizeSideBar = () => {
-  const widthScreen = window.innerWidth
+const openSidebar = () => {
+  sideBarWidth.value = '250px'
+  showSidebar.value = true
+}
 
-  // mobile
-  if (widthScreen < 768) {
-    sideBar.atualSize = sideBar.mobileSize
-  }
-
-  // teblet
-  if (widthScreen >= 768) {
-    sideBar.atualSize = sideBar.tableSize
-  }
-
-  // desktop
-  if (widthScreen >= 1024) {
-    sideBar.atualSize = sideBar.desktopSize
+const closeSidebar = () => {
+  if (sideBarIsClosed.value) {
+    sideBarWidth.value = '8px'
+    showSidebar.value = false
   }
 }
 
-const minimizeSideBar = () => {
-  if (!miniSideBar.value) {
-    sideBar.atualSize = '30px'
-    miniSideBar.value = true
-  } else {
-    defineSizeSideBar()
-    miniSideBar.value = false
-  }
+const toggleSidebar = () => {
+  const closed = sideBarIsClosed.value
+  sideBarIsClosed.value = !closed
+  closed ? openSidebar() : closeSidebar()
 }
-
-const focusInSideBar = () => {
-  if (miniSideBar.value) {
-    defineSizeSideBar()
-  }
-}
-
-const focusOutSideBar = () => {
-  if (miniSideBar.value) {
-    sideBar.atualSize = '30px'
-  }
-}
-
-onMounted(() => {
-  addEventListener('resize', defineSizeSideBar)
-  defineSizeSideBar()
-})
-
-onUnmounted(() => {
-  removeEventListener('resize', defineSizeSideBar)
-})
 </script>
 
 <template>
-  <div class="home-page">
-    <aside @mouseenter="focusInSideBar" @mouseleave="focusOutSideBar">
-      <button class="minimize-sideBar-button" @click="minimizeSideBar"><p>⏪</p></button>
-      <SideBarContainer />
+  <div class="home-page-container">
+    <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
+      <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
+      <SideBarContainer v-show="showSidebar" />
     </aside>
     <main>
-      <header>
-        <TopBarContainer />
-      </header>
-      <article>
-        <RouterView />
-      </article>
+      <RouterView />
     </main>
+    <header>
+      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
+      <TopBarContainer />
+    </header>
   </div>
 </template>
 
 <style scoped lang="scss">
-.home-page {
-  // medidas
-  width: 100%;
-  height: 100vh;
-  // displa
-  display: flex;
-  // estilo
-  background-color: red;
-
-  $widhSidebar: 18;
-
-  & aside {
-    // medidas
-    height: 100%;
-    width: v-bind('sideBar.atualSize');
-    min-width: v-bind('sideBar.atualSize');
-    //posicionamento
-    position: relative;
-    // estilo
-    background-color: blue;
-
-    & .minimize-sideBar-button {
-      // medidas
-      height: 30px;
-      aspect-ratio: 1;
-      //posicionamento
-      position: absolute;
-      // estilo
-      right: 0;
-    }
-
-    transition: all 0.3s;
-  }
-
-  & main {
-    // medidas
-    height: 100%;
+@media screen and (min-width: 769px) {
+  .home-page-container {
+    //medidas
+    height: 100dvh;
     width: 100%;
-    overflow: auto;
-    //display
-    display: flex;
-    flex-direction: column;
     // estilo
-    background-color: aqua;
+    background-color: white;
+
+    $sideBarWidth: v-bind(sideBarWidth);
+    $headerHeigth: 50px;
+    $transition: all 0.3s;
 
     & header {
+      // posicionamento
+      position: fixed;
+      right: 0%;
       // medidas
       width: 100%;
-      height: 44px;
-      min-height: 44px;
+      height: $headerHeigth;
       // estilo
-      background-color: pink;
+      background-color: red;
+
+      & .toggleSidebar {
+        // posicionamento
+        position: absolute;
+        left: 0;
+        // medidas
+        height: 100%;
+        aspect-ratio: 1;
+        border: none;
+      }
+
+      transition: $transition;
     }
 
-    & article {
+    & aside {
+      // posicionamento
+      position: fixed;
+      left: 0;
+      top: calc($headerHeigth + 10px);
       // medidas
-      width: 100%;
-      height: 100%;
+      height: calc(100dvh - $headerHeigth - 10px);
+      width: $sideBarWidth;
+      // estilo
+      background-color: blue;
+
+      & .toggleSidebar {
+        // posicionamento
+        position: absolute;
+        right: 0;
+        // medidas
+        height: 28px;
+        width: 28px;
+        border: none;
+      }
+
+      transition: $transition;
+    }
+
+    & main {
+      // posicionamento
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      // medidas
+      height: calc(100dvh - $headerHeigth - 10px);
+      width: calc(100% - $sideBarWidth - 10px);
       overflow: auto;
       // estilo
-      background-color: purple;
+      background-color: green;
+
+      transition: $transition;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .home-page-container {
+    // medidas
+    width: 100%;
+    height: 100dvh;
+    // estilo
+    background-color: white;
+
+    $sideBarWidth: v-bind(sideBarWidth);
+    $heigth: 60px;
+    $transition: all 0.3s;
+
+    & .toggleSidebar {
+      display: none;
     }
 
-    transition: all 0.3s;
+    & header {
+      // posicionamnto
+      position: fixed;
+      bottom: 0;
+      // medidas
+      width: 100%;
+      height: $heigth;
+      // estilo
+      background-color: red;
+
+      transition: $transition;
+    }
+
+    & aside {
+      display: none;
+    }
+
+    & main {
+      // medidas
+      width: 100%;
+      height: calc(100dvh - $heigth - 10px);
+      overflow: auto;
+      // estilo
+      background-color: green;
+
+      transition: $transition;
+    }
   }
 }
 </style>

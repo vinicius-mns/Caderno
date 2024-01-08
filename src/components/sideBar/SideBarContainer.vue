@@ -1,60 +1,43 @@
 <script setup lang="ts">
-import UserArea from './UserArea.vue'
-import ButtonAddTag from './ButtonAddTag.vue'
 import TagsList from './TagsList.vue'
 </script>
 
 <template>
   <div class="sidebar-container">
-    <div class="user-area-container">
-      <UserArea />
-    </div>
-    <div class="tags-list-container">
+    <div class="tags-container">
       <TagsList />
-    </div>
-    <div class="create-tag-container">
-      <ButtonAddTag />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.sidebar-container {
-  // medidas
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  // display
-  display: flex;
-  flex-direction: column;
-
-  & .user-area-container {
+@media screen and (min-width: 769px) {
+  .sidebar-container {
     // medidas
     width: 100%;
-    height: 120px;
-    min-height: 120px;
-    //estilo
-    background-color: rgb(178, 39, 95);
+    height: 100%;
+
+    & .tags-container {
+      // medidas
+      width: 100%;
+      height: 90%;
+      max-height: 90%;
+      margin-top: 30px;
+    }
   }
+}
 
-  & .tags-list-container {
+@media screen and (max-width: 768px) {
+  .sidebar-container {
     // medidas
     width: 100%;
-    max-height: 60%;
-  }
+    height: 100%;
 
-  & .create-tag-container {
-    // medidas
-    width: 100%;
-    height: 32px;
-    min-height: 32px;
-    margin-top: 5px;
-    // display
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // estilo
-    background-color: burlywood;
+    & .tags-container {
+      // medidas
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>

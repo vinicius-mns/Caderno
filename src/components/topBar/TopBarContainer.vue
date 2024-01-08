@@ -1,36 +1,27 @@
 <script setup lang="ts">
-import SearchCard from './SearchCard.vue'
-import CreateCard from './CreateCard.vue'
-import AtualDate from './AtualDate.vue'
+import DesktopContainer from './DesktopContainer.vue'
+import MobileContainer from './MobileContainer.vue'
+import { onMounted, ref } from 'vue'
+
+const isMobile = ref(true)
+
+onMounted(() => {
+  const screen = window.innerWidth
+  const mobileDevice = screen < 769
+  mobileDevice ? (isMobile.value = true) : (isMobile.value = false)
+})
 </script>
 
 <template>
   <div class="topbar-container">
-    <div class="date-container container">
-      <AtualDate />
-    </div>
-    <div class="create-card-container container">
-      <CreateCard />
-    </div>
-    <div class="search-container container">
-      <SearchCard />
-    </div>
+    <DesktopContainer v-show="!isMobile" />
+    <MobileContainer v-show="isMobile" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .topbar-container {
-  // medidas
   width: 100%;
   height: 100%;
-  // display
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-
-  & .container {
-    width: 100%;
-    height: 100%;
-  }
 }
 </style>

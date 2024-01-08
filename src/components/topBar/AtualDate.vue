@@ -51,27 +51,53 @@ const defineAmPm = () => {
 </template>
 
 <style scoped lang="scss">
-.date-container {
-  // medidas
-  width: 100%;
-  height: 100%;
-  // display
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & .date {
+@media screen and (min-width: 769px) {
+  .date-container {
     // medidas
-    width: 50%;
-    height: 32px;
+    width: 100%;
+    height: 100%;
     // display
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-    // estilo
-    background-color: white;
-    border-radius: 50px;
+
+    & .date {
+      // medidas
+      width: 50%;
+      height: 32px;
+      // display
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      // estilo
+      background-color: white;
+      border-radius: 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .date-container {
+    // medidas
+    width: 90%;
+    height: 100%;
+    // display
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .date {
+      // medidas
+      width: 100%;
+      height: 100%;
+      // display
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+    }
   }
 }
 </style>
