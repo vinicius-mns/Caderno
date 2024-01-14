@@ -29,6 +29,7 @@ const toggleSidebar = () => {
     <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
       <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
     </aside>
+    <footer></footer>
     <main>
       <RouterView />
     </main>
@@ -50,6 +51,10 @@ const toggleSidebar = () => {
     $sideBarWidth: v-bind(sideBarWidth);
     $headerHeigth: 50px;
     $transition: all 0.3s;
+
+    & footer {
+      display: none;
+    }
 
     & header {
       // posicionamento
@@ -131,7 +136,7 @@ const toggleSidebar = () => {
       display: none;
     }
 
-    & header {
+    & footer {
       // posicionamnto
       position: fixed;
       bottom: 0;
@@ -139,9 +144,13 @@ const toggleSidebar = () => {
       width: 100%;
       height: $heigth;
       // estilo
-      background-color: red;
+      background-color: rgb(20, 220, 203);
 
       transition: $transition;
+    }
+
+    & header {
+      display: none;
     }
 
     & aside {
