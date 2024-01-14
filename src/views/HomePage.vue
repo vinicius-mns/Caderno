@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import SideBar from '@/components/template/SideBar.vue'
 
 const sideBarWidth = ref('250px')
 const showSidebar = ref(true)
@@ -28,6 +29,7 @@ const toggleSidebar = () => {
   <div class="home-page-container">
     <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
       <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
+      <SideBar />
     </aside>
     <footer></footer>
     <main>
