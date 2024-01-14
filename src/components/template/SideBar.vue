@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CreateTagButton from '../organism/CreateTagButton.vue'
+</script>
 
 <template>
   <div class="side-bar">
@@ -6,7 +8,7 @@
       <p>tags list aqui</p>
     </div>
     <div class="container-button-create-tag">
-      <p>button create card aqui</p>
+      <CreateTagButton />
     </div>
   </div>
 </template>
