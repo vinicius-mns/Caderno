@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import CardComponent from '@/components/widgets/CardComponent.vue'
 import { mockCards } from './mockCards'
 import type { ICard } from '../api/local/Card'
 
@@ -29,15 +28,7 @@ const cardsInColumns = computed(() => renderCards(numberOfColumns(), cards))
 
 <template>
   <div class="cards-container">
-    <div class="colum" v-for="(colum, i) in cardsInColumns" :key="i">
-      <CardComponent
-        v-for="(card, ii) in colum"
-        :key="ii"
-        :content="card.content"
-        :tags="card.tags"
-        :date="new Date(card.date)"
-      />
-    </div>
+    <div class="colum" v-for="(colum, i) in cardsInColumns" :key="i"></div>
   </div>
 </template>
 

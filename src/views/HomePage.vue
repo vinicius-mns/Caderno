@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
-import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
-
 import { ref } from 'vue'
 
 const sideBarWidth = ref('250px')
@@ -31,14 +28,12 @@ const toggleSidebar = () => {
   <div class="home-page-container">
     <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
       <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
-      <SideBarContainer v-show="showSidebar" />
     </aside>
     <main>
       <RouterView />
     </main>
     <header>
       <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
-      <TopBarContainer />
     </header>
   </div>
 </template>
