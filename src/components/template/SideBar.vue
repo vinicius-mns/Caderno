@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useStyle } from '@/stores/style'
 import CreateTagButton from '../organism/CreateTagButton.vue'
+
+const { style } = useStyle()
 </script>
 
 <template>
@@ -14,27 +17,20 @@ import CreateTagButton from '../organism/CreateTagButton.vue'
 </template>
 
 <style scoped lang="scss">
-@media screen and (min-width: 769px) {
-  .side-bar {
+.side-bar {
+  width: 100%;
+  height: 100%;
+  & .container-tags-list {
     width: 100%;
-    height: 100%;
-    background-color: grey;
-
-    & .container-tags-list {
-      width: 100%;
-      height: 80%;
-      background-color: blue;
-    }
-
-    & .container-button-create-tag {
-      margin-top: 5px;
-      width: 100%;
-      height: 38px;
-      background-color: blue;
-    }
+    height: 80%;
   }
-}
 
-@media screen and (max-width: 768px) {
+  & .container-button-create-tag {
+    margin-top: 5px;
+    width: 100%;
+    height: v-bind('style.button.size.m');
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>
