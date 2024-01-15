@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SideBar from '@/components/template/SideBar.vue'
+import { useStyle } from '@/stores/style'
+
+const { style } = useStyle()
 
 const sideBarWidth = ref('250px')
 const showSidebar = ref(true)
@@ -48,7 +51,7 @@ const toggleSidebar = () => {
     height: 100dvh;
     width: 100%;
     // estilo
-    background-color: white;
+    background-color: v-bind('style.page.bgColor');
 
     $sideBarWidth: v-bind(sideBarWidth);
     $headerHeigth: 50px;
@@ -66,7 +69,7 @@ const toggleSidebar = () => {
       width: 100%;
       height: $headerHeigth;
       // estilo
-      background-color: red;
+      background-color: v-bind('style.component.bgColor');
 
       & .toggleSidebar {
         // posicionamento
@@ -91,7 +94,7 @@ const toggleSidebar = () => {
       height: calc(100dvh - $headerHeigth - 10px);
       width: $sideBarWidth;
       // estilo
-      background-color: blue;
+      background-color: v-bind('style.component.bgColor');
 
       & .toggleSidebar {
         // posicionamento
@@ -116,7 +119,7 @@ const toggleSidebar = () => {
       width: calc(100% - $sideBarWidth - 10px);
       overflow: auto;
       // estilo
-      background-color: green;
+      background-color: v-bind('style.component.bgColor');
 
       transition: $transition;
     }
@@ -129,7 +132,7 @@ const toggleSidebar = () => {
     width: 100%;
     height: 100dvh;
     // estilo
-    background-color: white;
+    background-color: v-bind('style.page.bgColor');
 
     $sideBarWidth: v-bind(sideBarWidth);
     $heigth: 60px;
@@ -147,7 +150,7 @@ const toggleSidebar = () => {
       width: 100%;
       height: $heigth;
       // estilo
-      background-color: rgb(20, 220, 203);
+      background-color: v-bind('style.component.bgColor');
 
       transition: $transition;
     }
@@ -166,7 +169,7 @@ const toggleSidebar = () => {
       height: calc(100dvh - $heigth - 10px);
       overflow: auto;
       // estilo
-      background-color: green;
+      background-color: v-bind('style.component.bgColor');
 
       transition: $transition;
     }
