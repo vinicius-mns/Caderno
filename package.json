@@ -14,7 +14,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@types/node-emoji": "^2.1.0",
     "@types/uuid": "^9.0.7",
+    "node-emoji": "^2.1.3",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
     "uuid": "^9.0.1",
