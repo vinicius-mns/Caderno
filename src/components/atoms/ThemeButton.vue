@@ -18,6 +18,7 @@ $buttonTextColor: v-bind('style.button.textColor');
 $buttonBorderRadius: v-bind('style.button.borderRadius');
 $buttonBgColor: v-bind('style.button.bgColor');
 .button {
+  height: $buttonSize;
   box-shadow: $boxShadow;
   background-color: $buttonBgColor;
   border-radius: $buttonBorderRadius;
