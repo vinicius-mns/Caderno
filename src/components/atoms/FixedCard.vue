@@ -1,19 +1,40 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const { style } = useStyle()
 
 const props = defineProps<{
-  cursorPosition: { x: string; y: string }
+  cursorPosition: { x: number; y: number }
 }>()
 
-const x = ref(props.cursorPosition.x)
-const y = ref(props.cursorPosition.y)
+const card = ref<HTMLElement>()
+
+const topCard = ref(`${props.cursorPosition.y}px`)
+const leftCard = ref(`${props.cursorPosition.x}px`)
+
+const cardRepositionX = () => {
+  const cardWidth = card.value?.clientWidth as number
+  const cardInRightSide = props.cursorPosition.x > window.innerWidth / 2
+  const cardTranslateToLeft = `${props.cursorPosition.x - cardWidth}px`
+  if (cardInRightSide) leftCard.value = cardTranslateToLeft
+}
+
+const cardRepositionY = () => {
+  const cardHeight = card.value?.clientHeight as number
+  const cardInBottonSide = props.cursorPosition.y > window.innerHeight / 2
+  const cardTranslateToTop = `${props.cursorPosition.y - cardHeight}px`
+  if (cardInBottonSide) topCard.value = cardTranslateToTop
+}
+
+onMounted(() => {
+  cardRepositionX()
+  cardRepositionY()
+})
 </script>
 
 <template>
-  <div class="float-card" @click.stop>
+  <div class="float-card translatex translatey" @click.stop ref="card">
     <slot class="slot"></slot>
   </div>
 </template>
@@ -27,13 +48,11 @@ $boxShadow: v-bind('style.boxShadow');
   z-index: 1;
   position: fixed;
   padding: 10px;
-  left: v-bind(x);
-  top: v-bind(y);
   border-radius: 8px;
   background-color: $cardColor;
   box-shadow: $boxShadow;
-  // @media screen and (max-width: 768px) {
-  //   left: calc(v-bind(x) - 200px);
-  // }
+
+  left: v-bind(leftCard);
+  top: v-bind(topCard);
 }
 </style>
