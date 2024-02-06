@@ -14,7 +14,7 @@ const calcDiffDate = (name: string, calc: Diff) => {
   const atualDate = moment(new Date())
   const targetDate = moment(new Date(props.date))
   const diff = atualDate.diff(targetDate, calc)
-  if (diff > 1) {
+  if (diff >= 1) {
     dateString.value = `${diff} ${name} atrás`
     return 'sucess'
   }
@@ -35,9 +35,7 @@ const setDateString = () => {
   ]
   for (const temp of temps) {
     const match = calcDiffDate(temp[0], temp[1] as Diff)
-    if (match === 'sucess') {
-      return null
-    }
+    if (match === 'sucess') return null
   }
   dateString.value = 'agora'
 }
