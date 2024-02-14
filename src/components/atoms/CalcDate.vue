@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUpdated, ref } from 'vue'
 import moment from 'moment'
 
 type Diff = 'months' | 'weeks' | 'days' | 'hours' | 'minutes'
 
 const props = defineProps<{
-  date: Date
+  date: Date | string
 }>()
 
 const dateString = ref('')
@@ -41,6 +41,7 @@ const setDateString = () => {
 }
 
 onMounted(setDateString)
+onUpdated(setDateString)
 </script>
 
 <template>
@@ -54,5 +55,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 50%;
+  // devo fazer um estilo aqui
 }
 </style>
