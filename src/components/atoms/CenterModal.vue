@@ -64,9 +64,11 @@ $closeButton: $headerHeight;
       display: flex;
       justify-content: space-between;
       & p {
+        margin: 0;
+        padding: 0;
         width: calc(100% - $closeButton);
         height: 100%;
-        color: white;
+        color: $buttonTextColor;
         display: flex;
         align-items: center;
         justify-content: center;
