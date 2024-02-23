@@ -12,11 +12,11 @@ img {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(130, 130, 130, 0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(130, 130, 130, 0.8);
   border-radius: 20px; 
   cursor: pointer;
 }
