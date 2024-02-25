@@ -28,10 +28,10 @@ $buttonSize: v-bind('style.button.size');
   align-items: center;
   overflow: hidden;
   & .tag {
-    height: calc($buttonSize - 3px);
-    min-width: calc($buttonSize - 3px);
+    height: 100%;
+    aspect-ratio: 1;
     border-radius: $buttonSize;
-    font-size: calc($buttonSize - 11px);
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
