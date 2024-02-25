@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
-import CreateTagButton from '../organism/CreateTagButton.vue'
-
-const { style } = useStyle()
+import TagCreate from '../organisms/tag/TagCreate.vue'
+import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
 </script>
 
 <template>
   <div class="side-bar">
-    <div class="container-tags-list">
-      <p>tags list aqui</p>
-    </div>
-    <div class="container-button-create-tag">
-      <CreateTagButton />
-    </div>
+    <TagWithOptionsList class="tags" />
+    <TagCreate class="create-tag" />
   </div>
 </template>
 
@@ -20,17 +14,15 @@ const { style } = useStyle()
 .side-bar {
   width: 100%;
   height: 100%;
-  & .container-tags-list {
-    width: 100%;
-    height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  & .tags {
+    max-height: 73dvh;
+    margin-top: 30px;
   }
-
-  & .container-button-create-tag {
-    margin-top: 5px;
-    width: 100%;
-    height: v-bind('style.button.size.m');
-    display: flex;
-    justify-content: center;
+  & .create-tag {
+    margin-top: 10px;
   }
 }
 </style>
