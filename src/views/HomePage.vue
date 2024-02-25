@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import SideBar from '@/components/template/SideBar.vue'
 import { useStyle } from '@/stores/style'
+import MobileBar from '@/components/template/MobileBar.vue'
+import TopBar from '@/components/template/TopBar.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
 const { style } = useStyle()
 
@@ -31,15 +34,22 @@ const toggleSidebar = () => {
 <template>
   <div class="home-page-container">
     <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
-      <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
-      <SideBar />
+      <ThemeButton class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">
+        x
+      </ThemeButton>
+      <SideBar v-if="showSidebar" />
     </aside>
-    <footer></footer>
+    <footer>
+      <MobileBar />
+    </footer>
     <main>
       <RouterView />
     </main>
     <header>
-      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
+      <ThemeButton class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">
+        x
+      </ThemeButton>
+      <TopBar />
     </header>
   </div>
 </template>
@@ -79,6 +89,11 @@ const toggleSidebar = () => {
         height: 100%;
         aspect-ratio: 1;
         border: none;
+        box-shadow: none;
+      }
+
+      &:hover {
+        z-index: 200;
       }
 
       transition: $transition;
@@ -86,8 +101,8 @@ const toggleSidebar = () => {
 
     & aside {
       // posicionamento
+      z-index: 100;
       position: fixed;
-      z-index: 1;
       left: 0;
       top: calc($headerHeigth + 10px);
       // medidas
@@ -104,6 +119,11 @@ const toggleSidebar = () => {
         height: 28px;
         width: 28px;
         border: none;
+        box-shadow: none;
+      }
+
+      &:hover {
+        z-index: 200;
       }
 
       transition: $transition;
@@ -119,7 +139,10 @@ const toggleSidebar = () => {
       width: calc(100% - $sideBarWidth - 10px);
       overflow: auto;
       // estilo
-      background-color: v-bind('style.component.bgColor');
+
+      &:hover {
+        z-index: 200;
+      }
 
       transition: $transition;
     }
@@ -144,6 +167,7 @@ const toggleSidebar = () => {
 
     & footer {
       // posicionamnto
+      z-index: 1;
       position: fixed;
       bottom: 0;
       // medidas
