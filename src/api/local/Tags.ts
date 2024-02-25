@@ -2,7 +2,8 @@ import { Api } from './Api'
 import { z } from 'zod'
 
 export const tagsSchema = z.object({
-  img: z.string(),
+  id: z.string(),
+  emoji: z.string(),
   content: z.string()
 })
 
