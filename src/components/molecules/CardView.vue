@@ -51,7 +51,6 @@ $borderRadius: 8px;
   box-shadow: none;
   height: auto;
   border-radius: $borderRadius;
-
   & header {
     width: 100%;
     height: calc($buttonSize / 1.3);

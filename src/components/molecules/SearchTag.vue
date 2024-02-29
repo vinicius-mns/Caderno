@@ -1,30 +1,41 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import InputTextAtom from '../atoms/InputTextAtom.vue'
+import type { ITag } from '@/api/local'
 
 const { style } = useStyle()
 
 const props = defineProps<{
-  content: string
-  placeholder: string
+  searchTag: string
+  tags: ITag[]
   keyId: string
 }>()
 
 const emit = defineEmits<{
-  (e: 'emitContent', v: string): void
+  (e: 'filtredTags', v: ITag[]): void
 }>()
 
-const emitContent = (e: string) => emit('emitContent', e)
+const filter = (text: string) => {
+  const lower = (str: string) => str.toLocaleLowerCase()
+  const tagFiltred = props.tags.filter((tag) => lower(tag.content).includes(lower(text)))
+  return tagFiltred
+}
+
+const emitFiltredTags = () => {
+  const text = props.searchTag
+  const filtredTags = filter(text)
+  emit('filtredTags', filtredTags)
+}
 </script>
 
 <template>
   <div class="search-by-text">
     <span>🔎</span>
     <InputTextAtom
-      :placeholder="props.placeholder"
-      :content="props.content"
+      placeholder="Pesquisar tag"
+      :content="props.searchTag"
       :key-id="props.keyId"
-      @emit-content="emitContent"
+      @emit-content="emitFiltredTags"
       class="text-input"
     />
   </div>
@@ -39,7 +50,7 @@ $margin: 5px;
   width: 100%;
   display: flex;
   align-items: center;
-  margin: $margin 0 $margin;
+  // margin: $margin 0 $margin;
   & span {
     position: absolute;
     left: $margin;

@@ -3,6 +3,10 @@ import { reactive } from 'vue'
 import FixedCard from '../atoms/FixedCard.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 
+const props = defineProps<{
+  visible: boolean
+}>()
+
 const popUp = reactive({
   show: false,
   open: () => (popUp.show = true),
@@ -24,7 +28,9 @@ const openPopUp = (e: MouseEvent) => {
 
 <template>
   <div class="button-container">
-    <ThemeButton class="button" @click="openPopUp">+</ThemeButton>
+    <ThemeButton :class="[!props.visible ? 'transparent' : '', 'button']" @click="openPopUp"
+      >+</ThemeButton
+    >
     <FixedCard v-if="popUp.show" :cursor-position="cursor">
       <slot></slot>
     </FixedCard>
@@ -35,5 +41,14 @@ const openPopUp = (e: MouseEvent) => {
 .button {
   height: 100%;
   width: 100%;
+  background-color: rgba(110, 110, 110, 0.4);
+}
+.transparent {
+  background-color: transparent;
+  color: transparent;
+  &:hover {
+    background-color: transparent;
+    color: transparent;
+  }
 }
 </style>

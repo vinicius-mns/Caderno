@@ -5,6 +5,7 @@ import CenterModal from '../../atoms/CenterModal.vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import ThemeIco from '@/components/atoms/ThemeIco.vue'
 
 const cardsTags = useHandleCardsTags()
 
@@ -36,19 +37,11 @@ const createCard = (e: ICard) => {
 
 <template>
   <div class="tag-create">
-    <ThemeButton @click="modal.open" class="button">Criar novo card</ThemeButton>
+    <ThemeIco ico="✍️" size="24px" content="Criar card" @click="modal.open" />
     <CenterModal title-modal="Criar novo Card" v-if="modal.show" @close="modal.close">
       <CardEditor :card="initialCard" @emit-card="createCard" :tags="tags" />
     </CenterModal>
   </div>
 </template>
 
-<style scoped lang="scss">
-.tag-create {
-  width: 200px;
-  & .button {
-    width: 100%;
-    max-width: 200px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

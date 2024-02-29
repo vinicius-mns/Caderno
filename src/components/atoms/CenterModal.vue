@@ -48,7 +48,7 @@ $closeButton: $headerHeight;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(123, 123, 123, 0.2);
+  background: rgba(119, 119, 119, 0.5);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   color: white;

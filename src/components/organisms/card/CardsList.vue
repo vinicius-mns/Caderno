@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import CardWithOptions from './CardWithOptions.vue'
-import { computed, onMounted, onUnmounted, reactive, watchEffect } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import type { ICard } from '@/api/local'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import ThemeRange from '@/components/atoms/ThemeRange.vue'
+// import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
+import { useConfig } from '@/stores/config'
+
+const { columnsCard } = useConfig()
 
 const cardsTags = useHandleCardsTags()
 
@@ -11,21 +16,17 @@ const { style } = useStyle()
 
 const allCards = computed(() => cardsTags.cardsReactive.value)
 
-const columns = reactive({
-  value: 0,
-  update: () => {
-    const screen = window.innerWidth
-    if (screen < 768) columns.value = 1 // mobile
-    if (screen >= 768 && screen < 1024) columns.value = 2 // tablet
-    if (screen >= 1024) columns.value = 3 // desktop
-  }
-})
+const columnsNumber = computed(() => columnsCard.value)
+
+const setColumns = (n: number) => {
+  columnsCard.setColumns(n)
+  cardsInColumns.update()
+}
 
 const cardsInColumns = reactive({
   value: [] as ICard[][],
   update: () => {
-    columns.update()
-    cardsInColumns.value = setCardsInColumns(columns.value, allCards.value)
+    cardsInColumns.value = setCardsInColumns(columnsNumber.value, allCards.value)
   }
 })
 
@@ -41,30 +42,32 @@ const setCardsInColumns = (numberOfColumns: number, cards: ICard[]) => {
   return columns
 }
 
-watchEffect(() => {
-  cardsInColumns.update()
-})
-
 onMounted(() => {
   cardsInColumns.update()
-  window.addEventListener('resize', cardsInColumns.update)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', cardsInColumns.update)
 })
 </script>
 
 <template>
-  <div class="container-cards-list">
-    <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
-      <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
+  <div class="container-cards">
+    <ThemeRange :init-value="columnsNumber" @emit-value="setColumns" class="range" />
+    <div class="container-cards-list">
+      <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
+        <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 $buttonSize: v-bind('style.button.size');
+.container-cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  & .range {
+    width: 50%;
+  }
+}
 .container-cards-list {
   width: 100%;
   max-width: 1228px;

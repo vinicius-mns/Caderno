@@ -36,7 +36,7 @@ const assets = reactive({
           <DarkMode />
         </div>
       </div>
-      <CardsFilter />
+      <!-- <CardsFilter /> -->
     </FloatModal>
   </div>
 </template>
@@ -44,8 +44,6 @@ const assets = reactive({
 <style scoped lang="scss">
 $buttonSize: v-bind('style.button.size');
 .config-global-button {
-  height: $buttonSize;
-  width: $buttonSize;
   .config-global-container {
     max-height: 50dvh;
     width: 400px;

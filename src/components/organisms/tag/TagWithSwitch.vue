@@ -63,9 +63,6 @@ const clickInTagChecked = () => {
     position: absolute;
     top: 2.5px;
     right: 10px;
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
   }
   & .checked {
     background-color: rgb(128, 184, 128);

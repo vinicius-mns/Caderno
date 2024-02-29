@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import TagWithOptions from './TagWithOptions.vue'
-import TagsList from './TagsList.vue'
 import type { ITag } from '@/api/local'
+import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+
+const { tagsReactive } = useHandleCardsTags()
+
+const allTags = computed(() => tagsReactive.value)
 
 const tags = reactive({
   value: [] as ITag[],
@@ -13,9 +17,17 @@ const tags = reactive({
 </script>
 
 <template>
-  <TagsList @emit-tags="tags.setTags" search-id="search-tags-with-options" class="tags">
-    <TagWithOptions v-for="(tag, i) in tags.value" :key="i" :tag="tag" />
-  </TagsList>
+  <div class="tag-with-options-list">
+    <TagWithOptions v-for="(tag, i) in allTags" :key="i" :tag="tag" />
+  </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.tag-with-options-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+</style>

@@ -2,7 +2,6 @@
 import { reactive } from 'vue'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import TagWithSwitch from '../tag/TagWithSwitch.vue'
-import TagsList from '../tag/TagsList.vue'
 import type { ITag } from '@/api/local'
 
 const cardsTags = useHandleCardsTags()
@@ -40,32 +39,25 @@ const modal = reactive({
 </script>
 
 <template>
-  <div class="card-filter-options">
-    <TagsList search-id="cards-filter-by-tag" @emit-tags="tags.setValue" class="tags-list">
-      <TagWithSwitch
-        class="tag"
-        v-for="(tag, i) in tags.value"
-        :key="i"
-        :tag="tag"
-        :checked="tagsChecked.isChecked(tag.id)"
-        unic-name="filter-by-tag"
-        @emit-tag="tagsChecked.handle"
-      />
-    </TagsList>
+  <div class="card-filter-tag-list">
+    <TagWithSwitch
+      class="tag"
+      v-for="(tag, i) in tags.value"
+      :key="i"
+      :tag="tag"
+      :checked="tagsChecked.isChecked(tag.id)"
+      unic-name="filter-by-tag"
+      @emit-tag="tagsChecked.handle"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
-.card-filter-button {
-  height: 40px;
-  width: 40px;
-  & .card-filter-options {
-    width: 400px;
-    height: 80dvh;
-    & .tags-list {
-      height: 100%;
-      width: 100%;
-    }
-  }
+.card-filter-tags-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
 }
 </style>
