@@ -4,11 +4,7 @@ import CardCreate from '../organisms/card/CardCreate.vue'
 import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
 import TagCreate from '../organisms/tag/TagCreate.vue'
 import ConfigGlobal from '../organisms/ConfigGlobal.vue'
-import CardsFilter from '../organisms/card/CardsFilter.vue'
-import { reactive } from 'vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
-import ThemeEmoji from '../atoms/ThemeEmoji.vue'
-import ThemeIco from '../atoms/ThemeIco.vue'
+import ShowFilterCards from '../organisms/tag/ShowFilterTags.vue'
 
 const { style } = useStyle()
 
@@ -17,13 +13,6 @@ const emit = defineEmits<{
 }>()
 
 const close = () => emit('closePanel')
-
-const filter = reactive({
-  value: false,
-  toggle: () => {
-    filter.value = !filter.value
-  }
-})
 </script>
 
 <template>
@@ -35,18 +24,10 @@ const filter = reactive({
     </div>
     <div class="container row">
       <TagCreate class="create-card" />
-      <ThemeIco
-        ico="📌"
-        content="filtro"
-        size="24px"
-        @click="filter.toggle"
-        class="config"
-        :colored="filter.value"
-      />
+      <ShowFilterCards class="config" />
     </div>
     <div class="container tags">
-      <CardsFilter v-if="filter.value" />
-      <TagWithOptionsList v-else />
+      <TagWithOptionsList />
     </div>
   </main>
 </template>
