@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import type { ICard, ITag } from '@/api/local'
+import type { ICard } from '@/api/local'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import TagWithSwitch from './TagWithSwitch.vue'
 
