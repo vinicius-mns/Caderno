@@ -44,7 +44,7 @@ const filter = reactive({
         :colored="filter.value"
       />
     </div>
-    <div class="container">
+    <div class="container tags">
       <CardsFilter v-if="filter.value" />
       <TagWithOptionsList v-else />
     </div>
@@ -72,7 +72,9 @@ $container-3-h: calc(100% - $container-1-h - $container-2-h);
   }
   & .container {
     width: 100%;
-    max-height: 380px;
+  }
+  & .tags {
+    overflow: hidden;
   }
   & .row {
     display: flex;
