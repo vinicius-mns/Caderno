@@ -42,28 +42,18 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="container-cards">
-    <div class="container-cards-list">
-      <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
-        <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
-      </div>
+  <div class="container-cards-list">
+    <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
+      <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 $buttonSize: v-bind('style.button.size');
-.container-cards {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  & .range {
-    width: 50%;
-  }
-}
 .container-cards-list {
   width: 100%;
-  max-width: 1228px;
+  max-width: 1428px;
   min-height: 600px;
   display: flex;
   justify-content: space-evenly;
