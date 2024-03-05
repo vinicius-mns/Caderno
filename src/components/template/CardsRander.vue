@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import CardsList from '../organisms/card/CardsList.vue'
+import CardsRange from '../organisms/card/CardsRange.vue';
 </script>
 
 <template>
   <div class="cards-container">
+    <CardsRange />
     <CardsList />
   </div>
 </template>
@@ -11,12 +13,8 @@ import CardsList from '../organisms/card/CardsList.vue'
 <style scoped lang="scss">
 .cards-container {
   width: 95%;
-  // box-sizing: border-box;
-  // padding: 10px;
-  // width: 100%;
-  // display: flex;
-  // justify-content: center;
-  // width: calc(98dvw - 24.5dvw);
-  // margin-left: 24.5dvw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
