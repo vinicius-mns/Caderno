@@ -3,7 +3,6 @@ import { reactive } from 'vue'
 import FloatModal from '../molecules/FloatModal.vue'
 import DarkMode from './DarkMode.vue'
 import { useStyle } from '@/stores/style'
-import CardsFilter from './card/CardsFilter.vue'
 
 const { style } = useStyle()
 

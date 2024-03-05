@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import FixedCard from '../atoms/FixedCard.vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
 import { useStyle } from '@/stores/style'
 import ThemeIco from '../atoms/ThemeIco.vue'
 

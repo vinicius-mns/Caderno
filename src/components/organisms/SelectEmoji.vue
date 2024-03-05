@@ -24,10 +24,6 @@ const showModal = ref(false)
 const openModal = () => (showModal.value = true)
 const closeModal = () => (showModal.value = false)
 
-const search = (e: string) => {
-  allEmojis.value = emojis.getAll(e)
-}
-
 const sendSelected = (e: string) => {
   emit('changeEmoji', e)
   closeModal()

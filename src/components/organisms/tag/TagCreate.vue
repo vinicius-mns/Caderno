@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import ThemeButton from '../../atoms/ThemeButton.vue'
 import CenterModal from '../../atoms/CenterModal.vue'
 import TagEditor from '../../molecules/TagEditor.vue'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'

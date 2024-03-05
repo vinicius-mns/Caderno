@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import ThemeButton from '../../atoms/ThemeButton.vue'
 import CenterModal from '../../atoms/CenterModal.vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useStyle } from '@/stores/style'
-import TopBar from '@/components/template/TopBar.vue'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import ControlPanel from '@/components/template/ControlPanel.vue'
 import MobileBar from '@/components/template/MobileBar.vue'
 

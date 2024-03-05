@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+// import { useStyle } from '@/stores/style'
 import { computed } from 'vue'
 
-const { style } = useStyle()
+// const { style } = useStyle()
 
 const props = defineProps<{
   emoji: string
