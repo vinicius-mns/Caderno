@@ -13,7 +13,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="glass" @click="() => emit('close', null)">
+  <div class="glass">
     <div class="modal" @click.stop>
       <header>
         <p>{{ props.titleModal }}</p>
