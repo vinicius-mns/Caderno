@@ -17,7 +17,7 @@ const tags = reactive({
 </script>
 
 <template>
-  <div class="tag-with-options-list">
+  <div class="tag-with-options-list dinamic-scroll">
     <TagWithOptions v-for="(tag, i) in allTags" :key="i" :tag="tag" />
   </div>
 </template>
@@ -28,6 +28,16 @@ const tags = reactive({
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   overflow: auto;
+}
+@media screen and (min-width: 768px) {
+  .dinamic-scroll {
+    scrollbar-gutter: stable;
+    overflow: hidden;
+    &:hover {
+      overflow: auto;
+    }
+  }
 }
 </style>
