@@ -39,6 +39,7 @@ $size: calc($buttonSize + 10px);
   overflow: hidden;
   margin-bottom: 4px;
   & .button {
+    transition: all 0.1s;
     width: 100%;
     height: $size;
     background-color: $buttonBgColor;
@@ -51,7 +52,10 @@ $size: calc($buttonSize + 10px);
     filter: grayscale(100%);
     &:hover {
       filter: grayscale(0%);
-      background-color: rgb(154, 218, 154);
+      background-color: rgba(154, 218, 154, 0.6);
+    }
+    &:active {
+      transform: scale(0.9);
     }
   }
   & .content {
