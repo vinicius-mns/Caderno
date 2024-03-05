@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import CardWithOptions from './CardWithOptions.vue'
-import { computed, onMounted, reactive } from 'vue'
+import { computed, reactive, watchEffect } from 'vue'
 import type { ICard } from '@/api/local'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
-import ThemeRange from '@/components/atoms/ThemeRange.vue'
-// import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
 import { useConfig } from '@/stores/config'
 
 const { columnsCard } = useConfig()
@@ -17,11 +15,6 @@ const { style } = useStyle()
 const allCards = computed(() => cardsTags.cardsReactive.value)
 
 const columnsNumber = computed(() => columnsCard.value)
-
-const setColumns = (n: number) => {
-  columnsCard.setColumns(n)
-  cardsInColumns.update()
-}
 
 const cardsInColumns = reactive({
   value: [] as ICard[][],
@@ -42,14 +35,14 @@ const setCardsInColumns = (numberOfColumns: number, cards: ICard[]) => {
   return columns
 }
 
-onMounted(() => {
+watchEffect(() => {
+  columnsCard.setColumns(columnsNumber.value)
   cardsInColumns.update()
 })
 </script>
 
 <template>
   <div class="container-cards">
-    <ThemeRange :init-value="columnsNumber" @emit-value="setColumns" class="range" />
     <div class="container-cards-list">
       <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
         <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
