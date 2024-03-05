@@ -7,7 +7,8 @@ export const useConfig = defineStore('config', () => {
 
   const defaultValuesConfig: IConfig = {
     darkmode: true,
-    columnsCard: window.innerWidth < 768 ? 1 : 2
+    columnsCard: window.innerWidth < 768 ? 1 : 2,
+    showFilterCards: false
   }
 
   const config = reactive({
@@ -34,9 +35,22 @@ export const useConfig = defineStore('config', () => {
     }
   })
 
+  const showFilterCards = reactive({
+    value: config.value.showFilterCards,
+    setValue: (v?: boolean) => {
+      if (v === undefined) {
+        const newValue = !showFilterCards.value
+        showFilterCards.value = newValue
+        const atualConfig = configStorage.get(defaultValuesConfig)
+        configStorage.createOrUpdate({ ...atualConfig, showFilterCards: newValue })
+      }
+    }
+  })
+
   return {
     config,
     darkmode,
-    columnsCard
+    columnsCard,
+    showFilterCards
   }
 })
