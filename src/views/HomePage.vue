@@ -1,168 +1,83 @@
 <script setup lang="ts">
-import SideBarContainer from '@/components/sideBar/SideBarContainer.vue'
-import TopBarContainer from '@/components/topBar/TopBarContainer.vue'
+import { onMounted, reactive, ref } from 'vue'
+import SideBar from '@/components/template/SideBar.vue'
+import { useStyle } from '@/stores/style'
+import TopBar from '@/components/template/TopBar.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import ControlPanel from '@/components/template/ControlPanel.vue'
+import MobileBar from '@/components/template/MobileBar.vue'
 
-import { ref } from 'vue'
+const { style } = useStyle()
 
-const sideBarWidth = ref('250px')
-const showSidebar = ref(true)
-const sideBarIsClosed = ref(false)
+const show = reactive({
+  value: true,
+  open: () => (show.value = true),
+  close: () => (show.value = false)
+})
 
-const openSidebar = () => {
-  sideBarWidth.value = '250px'
-  showSidebar.value = true
-}
-
-const closeSidebar = () => {
-  if (sideBarIsClosed.value) {
-    sideBarWidth.value = '8px'
-    showSidebar.value = false
-  }
-}
-
-const toggleSidebar = () => {
-  const closed = sideBarIsClosed.value
-  sideBarIsClosed.value = !closed
-  closed ? openSidebar() : closeSidebar()
-}
+// onMounted(() => {
+//   if (window.innerWidth < 768) show.close()
+// })
 </script>
 
 <template>
   <div class="home-page-container">
-    <aside @mouseenter="openSidebar" @mouseleave="closeSidebar">
-      <button class="toggleSidebar" @click="toggleSidebar" v-show="!sideBarIsClosed">x</button>
-      <SideBarContainer v-show="showSidebar" />
-    </aside>
-    <main>
+    <div class="router">
       <RouterView />
-    </main>
-    <header>
-      <button class="toggleSidebar" @click="toggleSidebar" v-show="sideBarIsClosed">x</button>
-      <TopBarContainer />
-    </header>
+    </div>
+    <MobileBar @openPanel="show.open" />
+    <div :class="[show.value ? 'panel' : 'minimize', '']" @mouseenter="show.open">
+      <ControlPanel @closePanel="show.close" v-show="show.value" />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@media screen and (min-width: 769px) {
-  .home-page-container {
-    //medidas
+$transition: all 0.5s;
+$panelW: 290px;
+$routerW: 100%;
+.home-page-container {
+  transition: $transition;
+  height: 100dvh;
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: v-bind('style.page.bgColor');
+  & .panel {
+    transition: $transition;
+    width: $panelW;
     height: 100dvh;
-    width: 100%;
-    // estilo
-    background-color: white;
-
-    $sideBarWidth: v-bind(sideBarWidth);
-    $headerHeigth: 50px;
-    $transition: all 0.3s;
-
-    & header {
-      // posicionamento
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    // &:active {
+    //   z-index: 200;
+    // }
+    @media screen and (max-width: 768px) {
       position: fixed;
-      right: 0%;
-      // medidas
       width: 100%;
-      height: $headerHeigth;
-      // estilo
-      background-color: red;
-
-      & .toggleSidebar {
-        // posicionamento
-        position: absolute;
-        left: 0;
-        // medidas
-        height: 100%;
-        aspect-ratio: 1;
-        border: none;
-      }
-
-      transition: $transition;
-    }
-
-    & aside {
-      // posicionamento
-      position: fixed;
-      left: 0;
-      top: calc($headerHeigth + 10px);
-      // medidas
-      height: calc(100dvh - $headerHeigth - 10px);
-      width: $sideBarWidth;
-      // estilo
-      background-color: blue;
-
-      & .toggleSidebar {
-        // posicionamento
-        position: absolute;
-        right: 0;
-        // medidas
-        height: 28px;
-        width: 28px;
-        border: none;
-      }
-
-      transition: $transition;
-    }
-
-    & main {
-      // posicionamento
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      // medidas
-      height: calc(100dvh - $headerHeigth - 10px);
-      width: calc(100% - $sideBarWidth - 10px);
-      overflow: auto;
-      // estilo
-      background-color: green;
-
-      transition: $transition;
+      background-color: rgb(89, 89, 89);
     }
   }
-}
-
-@media screen and (max-width: 768px) {
-  .home-page-container {
-    // medidas
-    width: 100%;
-    height: 100dvh;
-    // estilo
-    background-color: white;
-
-    $sideBarWidth: v-bind(sideBarWidth);
-    $heigth: 60px;
-    $transition: all 0.3s;
-
-    & .toggleSidebar {
-      display: none;
-    }
-
-    & header {
-      // posicionamnto
-      position: fixed;
-      bottom: 0;
-      // medidas
-      width: 100%;
-      height: $heigth;
-      // estilo
-      background-color: red;
-
-      transition: $transition;
-    }
-
-    & aside {
-      display: none;
-    }
-
-    & main {
-      // medidas
-      width: 100%;
-      height: calc(100dvh - $heigth - 10px);
-      overflow: auto;
-      // estilo
-      background-color: green;
-
-      transition: $transition;
+  & .minimize {
+    transition: $transition;
+    width: 20px;
+    background-color: rgba(125, 125, 125, 0.3);
+    @media screen and (max-width: 768px) {
+      width: 0;
     }
   }
+  & .router {
+    transition: $transition;
+    width: $routerW;
+    height: 100dvh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
+// @media screen and (max-width: 768px) {
+// }
 </style>

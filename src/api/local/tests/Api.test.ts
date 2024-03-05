@@ -145,6 +145,7 @@ describe('Testando a Api - base', () => {
       expect(update.status).toBe(200)
       expect(all[1].content).toBe('its work2')
       expect(allUpdated[1].content).toBe('updated sucess')
+      expect(all[1].id === allUpdated[1].id).toBe(true)
     })
 
     test('Falha com sucesso', () => {
