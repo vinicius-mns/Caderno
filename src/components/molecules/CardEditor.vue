@@ -53,7 +53,7 @@ const send = () => {
           :emit-tags="true"
           class="tags-list"
         />
-        <CreateTag />
+        <CreateTag class="create-tag" />
       </div>
     </div>
   </div>
@@ -94,6 +94,9 @@ $margin: 10px;
         box-sizing: border-box;
         height: calc(100% - $butonsize - $margin);
         overflow: auto;
+      }
+      & .create-tag {
+        height: $butonsize;
       }
     }
 

@@ -6,7 +6,6 @@ import { useStyle } from '@/stores/style'
 import CenterModal from '../atoms/CenterModal.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import { useEmoji } from '@/stores/emojis'
-import SearchByText from '../molecules/SearchByText.vue'
 
 const { style } = useStyle()
 
@@ -40,13 +39,6 @@ const sendSelected = (e: string) => {
     <ThemeButton class="button" @click="openModal">{{ props.seletedEmoji }}</ThemeButton>
     <CenterModal title-modal="Selecione um emoji" v-if="showModal" @close="closeModal">
       <div class="modal-selec-emoji">
-        <SearchByText
-          content=""
-          placeholder="pesquisar emoji"
-          key-id="search-emoji"
-          @emit-content="search"
-          class="search"
-        />
         <div class="emoji-selector-container">
           <EmojiSelector
             :emojis="allEmojis"

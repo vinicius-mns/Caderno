@@ -2,8 +2,11 @@
 import { onMounted, onUnmounted } from 'vue'
 import { RouterView } from 'vue-router'
 import { useStyle } from './stores/style'
+import { useConfig } from './stores/config'
 
-const { defineButtonSize, style } = useStyle()
+const { defineButtonSize, style, styleDarkMode } = useStyle()
+
+const config = useConfig()
 
 const resizeButton = () => {
   const screen = window.innerWidth
@@ -14,6 +17,7 @@ const resizeButton = () => {
 onMounted(() => {
   resizeButton()
   window.addEventListener('resize', resizeButton)
+  styleDarkMode(config.darkmode.value)
 })
 
 onUnmounted(() => {

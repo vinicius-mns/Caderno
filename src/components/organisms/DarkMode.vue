@@ -1,36 +1,31 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
-import { reactive } from 'vue'
+import { computed } from 'vue'
 import SwitchButton from '../atoms/SwitchButton.vue'
+import { useConfig } from '@/stores/config'
 
 const { style } = useStyle()
 
-const { darkMode } = useStyle()
+const { styleDarkMode } = useStyle()
 
-const darkModeR = reactive({
-  ico: {
-    value: '🌚',
-    true: '🌚',
-    false: '🌝'
-  },
-  value: true,
-  toggle: (v: { checked: boolean }) => {
-    darkModeR.value = v.checked
-    darkModeR.ico.value = darkModeR.ico[String(v.checked) as 'true' | 'false']
-    darkMode(!darkModeR.value)
-  }
-})
+const { darkmode } = useConfig()
+
+const value = computed(() => darkmode.value)
+
+const toggle = () => {
+  darkmode.toggle()
+  styleDarkMode(value.value)
+}
 </script>
 
 <template>
   <div class="dark-mode">
-    <p class="text">Modo escuro:</p>
+    <!-- <p class="text">Modo escuro:</p> -->
     <SwitchButton
       id="dark-mode-id"
-      :check-value="darkModeR.value"
+      :check-value="value"
       unic-name="dark-mode"
-      :ico="darkModeR.ico.value"
-      @emit-checked="darkModeR.toggle"
+      @emit-checked="toggle"
     />
   </div>
 </template>

@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import FixedCard from '../atoms/FixedCard.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import { useStyle } from '@/stores/style'
+import ThemeIco from '../atoms/ThemeIco.vue'
 
 const { style } = useStyle()
 
@@ -36,7 +37,7 @@ const closePopUp = () => {
 
 <template>
   <div class="button-container">
-    <ThemeButton class="button" @click="openPopUp">{{ props.ico }}</ThemeButton>
+    <ThemeIco :ico="props.ico" :colored="false" size="24px" :content="title" @click="openPopUp" />
     <FixedCard v-if="props.show" :cursor-position="cursor" class="relative-fixed-card">
       <header>
         <p>{{ title }}</p>
@@ -51,16 +52,6 @@ const closePopUp = () => {
 $size: v-bind('style.button.size');
 $textColor: v-bind('style.button.textColor');
 .button-container {
-  height: 100%;
-  width: 100%;
-  .button {
-    font-size: calc($size / 1.5);
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
   & .relative-fixed-card {
     & header {
       position: relative;

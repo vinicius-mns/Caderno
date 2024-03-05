@@ -27,7 +27,7 @@ const options = reactive({
 <template>
   <div class="card" @mouseenter="options.open" @mouseleave="options.close">
     <CardView :card="cardsWithTag" />
-    <MoreOptions class="more-options" v-if="options.show">
+    <MoreOptions class="more-options" v-if="options.show" :visible="true">
       <div class="options-container">
         <TagWithSwitchList
           :card="props.card"
