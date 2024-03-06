@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card-filter-tags-list" v-show="show">
+  <div class="card-filter-tags-list dinamic-scroll" v-show="show">
     <TagWithSwitch
       v-for="(tag, i) in tags.value"
       :key="i"
@@ -71,10 +71,16 @@ onMounted(() => {
   height: 100%;
   max-width: 1428px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow: auto;
-  & .tag {
-    margin: 4px;
+}
+@media screen and (min-width: 768px) {
+  .dinamic-scroll {
+    scrollbar-gutter: stable;
+    overflow: hidden;
+    &:hover {
+      overflow: auto;
+    }
   }
 }
 </style>
