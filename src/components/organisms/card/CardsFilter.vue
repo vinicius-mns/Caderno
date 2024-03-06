@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, watchPostEffect } from 'vue'
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import TagWithSwitch from '../tag/TagWithSwitch.vue'
 import type { ITag } from '@/api/local'
@@ -41,6 +41,10 @@ const modal = reactive({
 })
 
 const show = computed(() => config.showFilterCards.value)
+
+watchPostEffect(() => {
+  tags.setValue(cardsTags.tagsReactive.value)
+})
 
 onMounted(() => {
   tags.setValue(cardsTags.tagsReactive.value)
