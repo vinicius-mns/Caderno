@@ -1,6 +1,7 @@
 import { cardLocal, tagsApi, type ICard, type ITag } from '@/api/local'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
+import lzString from 'lz-string'
 
 export interface ICardTag {
   id: string
@@ -157,9 +158,33 @@ export const useHandleCardsTags = defineStore('handle cards tags', () => {
     }
   })
 
+  const exportData = () => {
+    const allCards = getCardsInLocalStorage()
+    const allTags = getTagsInLocalStorage()
+    const data = lzString.compressToUTF16(
+      JSON.stringify({
+        cards: allCards,
+        tags: allTags
+      })
+    )
+    return data
+  }
+
+  const importData = (compressString: string) => {
+    const data = lzString.decompressFromUTF16(compressString)
+    const toObject = JSON.parse(data) as { cards: ICard[]; tags: ITag[] }
+    localStorage.setItem(tags.key, JSON.stringify(toObject.tags))
+    localStorage.setItem(cards.key, JSON.stringify(toObject.cards))
+    tagsReactive.setValue(toObject.tags)
+    cardsReactive.setValue(toObject.cards)
+    return toObject
+  }
+
   return {
     cardsReactive,
     tagsReactive,
-    cardsFiltredByTags
+    cardsFiltredByTags,
+    exportData,
+    importData
   }
 })
