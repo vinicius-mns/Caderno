@@ -20,7 +20,7 @@ const toggle = () => {
 
 <template>
   <div class="dark-mode">
-    <!-- <p class="text">Modo escuro:</p> -->
+    <p class="text">Modo escuro:</p>
     <SwitchButton
       id="dark-mode-id"
       :check-value="value"
