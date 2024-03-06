@@ -60,7 +60,6 @@ const clickInTagChecked = () => {
     margin-bottom: 0;
   }
   & .switch {
-    opacity: 0;
     position: absolute;
     top: 2.5px;
     right: 10px;
