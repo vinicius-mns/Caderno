@@ -5,6 +5,8 @@ import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
 import TagCreate from '../organisms/tag/TagCreate.vue'
 import ConfigGlobal from '../organisms/ConfigGlobal.vue'
 import ShowFilterCards from '../organisms/tag/ShowFilterTags.vue'
+import CardsFilter from '../organisms/card/CardsFilter.vue'
+import { reactive } from 'vue'
 
 const { style } = useStyle()
 
@@ -13,6 +15,11 @@ const emit = defineEmits<{
 }>()
 
 const close = () => emit('closePanel')
+
+const filterOn = reactive({
+  value: false,
+  setValue: (v: boolean) => (filterOn.value = v)
+})
 </script>
 
 <template>
@@ -24,10 +31,11 @@ const close = () => emit('closePanel')
     </div>
     <div class="container row">
       <TagCreate class="create-card" />
-      <ShowFilterCards class="config" />
+      <ShowFilterCards class="config" @show-filter="filterOn.setValue" />
     </div>
     <div class="container tags">
-      <TagWithOptionsList />
+      <CardsFilter @filter-on="filterOn.setValue" v-if="filterOn.value" />
+      <TagWithOptionsList v-else />
     </div>
   </main>
 </template>
