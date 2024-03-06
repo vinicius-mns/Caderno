@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import FloatModal from '../molecules/FloatModal.vue'
 import DarkMode from './DarkMode.vue'
 import { useStyle } from '@/stores/style'
+import ExportAndImportData from './ExportAndImportData.vue'
 
 const { style } = useStyle()
 
@@ -33,6 +34,7 @@ const assets = reactive({
       <div class="config-global-container">
         <div class="options-container">
           <DarkMode />
+          <ExportAndImportData />
         </div>
       </div>
       <!-- <CardsFilter /> -->
@@ -49,6 +51,7 @@ $buttonSize: v-bind('style.button.size');
     max-width: 80dvw;
     & .options-container {
       display: flex;
+      flex-direction: column;
       align-items: center;
     }
   }
