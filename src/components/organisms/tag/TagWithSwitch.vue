@@ -54,15 +54,14 @@ const clickInTagChecked = () => {
   & .button {
     width: 100%;
     flex-shrink: 0;
-    margin-bottom: 6px;
+    margin: 6px;
   }
   & .ent-button {
     margin-bottom: 0;
   }
   & .switch {
-    opacity: 0;
     position: absolute;
-    top: 2.5px;
+    top: 9.5px;
     right: 10px;
   }
   & .checked {

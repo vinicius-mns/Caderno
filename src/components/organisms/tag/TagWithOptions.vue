@@ -43,7 +43,7 @@ onMounted(() => {
 <template>
   <div class="tag-container" @mouseenter="buttonOptions.visible" @mouseleave="buttonOptions.hidden">
     <TagView :tag="props.tag" @click="goTo" class="tag" />
-    <MoreOptions class="button-more-options" v-if="buttonOptions.show" :visible="false">
+    <MoreOptions class="button-more-options" v-if="buttonOptions.show" :visible="true">
       <div class="options-container">
         <TagUpdate :tag="tag" class="button" @close="buttonOptions.hidden" />
         <TagDelete :tag="props.tag" class="button" @close="buttonOptions.hidden" />
@@ -67,12 +67,13 @@ onMounted(() => {
   }
   & .button-more-options {
     position: absolute;
-    height: 100%;
-    width: 100%;
-
-    // height: calc(100% - 10px);
-    // right: calc(2.5% + 4px);
-    // aspect-ratio: 1;
+    // height: 100%;
+    // width: 100%;
+    height: calc(100% - 18px);
+    right: calc(2.5% + 4px);
+    aspect-ratio: 1;
+    top: 9px;
+    border-radius: 50%;
     & .options-container {
       width: 160px;
       display: flex;

@@ -5,11 +5,16 @@ import { useConfig } from '@/stores/config'
 
 const config = useConfig()
 
+const emit = defineEmits<{
+  (e: 'showFilter', v: boolean): void
+}>()
+
 const filter = reactive({
   value: config.showFilterCards.value,
   toggle: () => {
     config.showFilterCards.setValue()
     filter.value = config.showFilterCards.value
+    emit('showFilter', filter.value)
   }
 })
 </script>
