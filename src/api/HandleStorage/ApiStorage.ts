@@ -15,7 +15,7 @@ export class ApiStorage<T> {
    * Verifica se as regras de negocio correspondem
    * @param ent entitdade a ser veficada
    */
-  private _validationSchema(ent: T) {
+  protected _validationSchema(ent: T) {
     const verify = this._schema.safeParse(ent)
     if (!verify.success) {
       const erros = () => {
