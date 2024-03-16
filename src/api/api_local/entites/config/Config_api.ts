@@ -27,13 +27,11 @@ class Config_local extends Api_localStorage<IConfig> {
     }
   }
 
-  public toggleFilter(value?: boolean) {
+  public toggleFilter() {
     try {
-      if (value === true) {
-        const data = this.read()
-        const newData: IConfig = { ...data, showFilterCards: value }
-        this.update(newData)
-      }
+      const data = this.read()
+      const newData: IConfig = { ...data, showFilterCards: !data.showFilterCards }
+      this.update(newData)
     } catch (e) {
       const message = 'erro ao alterar filter cards'
       throw new Error(JSON.stringify({ message: message, error: e }))
