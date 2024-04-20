@@ -1,86 +1,146 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, watchPostEffect } from 'vue'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
-import TagWithSwitch from '../tag/TagWithSwitch.vue'
-import type { ITag } from '@/api/local'
-import { useConfig } from '@/stores/config'
+import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
+import OptionInLine from '@/components/molecules/OptionInLine.vue'
+import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
+import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
+import { useCards } from '@/stores/local/cards'
+import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
+import InputTextAtom from '@/components/atoms/InputTextAtom.vue'
+import SearchInput from '@/components/molecules/SearchInput.vue'
 
-const cardsTags = useHandleCardsTags()
+const cards = useCards()
 
-const config = useConfig()
+const filterCardsIncludeTags = (tagIds: string[]) => cards.filterIncludeTag(tagIds)
 
-const tags = reactive({
-  value: [] as ITag[],
-  setValue: (tagList: ITag[]) => (tags.value = tagList)
-})
+const filterCardsExcludeTags = (tagIds: string[]) => cards.filterExcludeTags(tagIds)
 
-const tagsChecked = reactive({
-  value: [] as string[],
-  addOnList: (tagId: string) => {
-    const insertTag = [...tagsChecked.value, tagId]
-    tagsChecked.value = insertTag
-  },
-  removeOnList: (tagId: string) => {
-    const removedTag = tagsChecked.value.filter((id) => id !== tagId)
-    tagsChecked.value = removedTag
-  },
-  isChecked: (tagId: string) => {
-    return tagsChecked.value.includes(tagId)
-  },
-  handle: (e: { tagId: string; checked: boolean }) => {
-    const addOrRemove = e.checked === true ? 'addOnList' : 'removeOnList'
-    tagsChecked[addOrRemove](e.tagId)
-    cardsTags.cardsFiltredByTags.setFilter(tagsChecked.value, 'every')
-  }
-})
+// const allCards = reactive({
+//   value: cards.cards.value,
+//   setValue: (nv: ICard[]) => (allCards.value = nv)
+// })
 
-const modal = reactive({
-  show: false,
-  open: () => (modal.show = true),
-  close: () => (modal.show = false)
-})
+// const filterEveryInclude = reactive({
+//   value: allCards,
+//   setValue: (tagIds: string[]) => {
+//     const filtred = cards.filterEveryInclude(allCards, tagIds)
+//     filterEveryInclude.value = filtred
+//   }
+// })
 
-const show = computed(() => config.showFilterCards.value)
+// const filterEveryIncludeValue = computed(() => filterEveryInclude.value)
 
-watchPostEffect(() => {
-  tags.setValue(cardsTags.tagsReactive.value)
-})
+// const filterSomeExclude = reactive({
+//   value: filterEveryIncludeValue.value,
+//   setValue: (tagIds: string[]) => {
+//     const filtred = cards.filterSomeExclude(filterSomeExclude.value, tagIds)
+//     filterSomeExclude.value = filtred
+//   }
+// })
 
-onMounted(() => {
-  tags.setValue(cardsTags.tagsReactive.value)
-})
+// const everyInclude = ref(allCards)
+
+// const someExclude = computed(() => everyInclude.value)
+
+// const filterByTags = (tagIds: string[], type: 'include' | 'exclude') => {
+//   const execute = {
+//     include: () => (everyInclude.value = cards.filterEveryInclude(allCards, tagIds)),
+//     exclude: () => cards.filterSomeExclude(everyInclude.value, tagIds)
+//   }
+//   console.log('clicado')
+//   execute[type]()
+//   cards.updateReactiveCards(someExclude.value)
+// }
+
+// const filtredCards = reactive({
+//   value: allCards,
+//   setValue: (updatedCards: ICard[]) => {
+//     filtredCards.value = updatedCards
+//     cards.updateReactiveCards(filtredCards.value)
+//   }
+// })
+
+// const filterByTagInclude = (tagsId: string[]) => {
+//   const filtred = cards.findByTags(allCards, tagsId, 'every', 'include')
+//   console.log('filtred-include', filtred)
+//   filtredCards.setValue(filtred)
+// }
+
+// const filterByTagExclude = (tagsId: string[]) => {
+//   const filtred = cards.findByTags(filtredCards.value, tagsId, 'some', 'exclude')
+//   filtredCards.setValue(filtred)
+// }
+
+// const includeTags = {
+//   value: [] as string[],
+//   setValue: (tagIds: string[]) => (includeTags.value = tagIds)
+// }
+
+// const excludeTags = {
+//   value: [] as string[],
+//   setValue: (tagIds: string[]) => (excludeTags.value = tagIds)
+// }
+
+// const filterByTags = (props: {
+//   tagIds?: string[]
+//   type?: 'include' | 'exclude'
+//   cardsList?: ICard[]
+// }) => {
+//   const { tagIds, type, cardsList } = props
+//   const ids = !tagIds ? [] : tagIds
+//   const ca = !cardsList || cardsList.length < 1 ? allCards.value : cardsList
+//   const execute = {
+//     include: () => includeTags.setValue(ids),
+//     exclude: () => excludeTags.setValue(ids)
+//   }
+//   if (type) execute[type]()
+//   const cardsIncludeTags = cards.filterEveryInclude(ca, includeTags.value)
+//   const cardsExcludeTags = cards.filterSomeExclude(cardsIncludeTags, excludeTags.value)
+//   cards.updateReactiveCards(cardsExcludeTags)
+// }
+
+// watchEffect(() => {
+//   const updateCards = cards.cards.value
+//   filterByTags({ cardsList: updateCards })
+// })
+
+// watchEffect(() => {
+//   cards.filterText(text.value)
+// })
+
+const filterCardsText = (e: string) => cards.filterText(e)
+
+const range = window.innerWidth / 2
 </script>
 
 <template>
-  <div class="card-filter-tags-list dinamic-scroll" v-show="show">
-    <TagWithSwitch
-      v-for="(tag, i) in tags.value"
-      :key="i"
-      :tag="tag"
-      class="tag"
-      :checked="tagsChecked.isChecked(tag.id)"
-      unic-name="filter-by-tag"
-      @emit-tag="tagsChecked.handle"
+  <div>
+    <SearchInput
+      key-id="filter-text-card"
+      :content="''"
+      @emit-content="filterCardsText"
+      placeholder="pesquisa"
     />
+    <OptionInLine content="tags:">
+      <HorizontalCarousel :range="range" :scroll-buttons="true">
+        <TagWithSwitchList
+          direction="row"
+          :checkeds="[]"
+          unic-name="cards-filter-include"
+          @emit-tags="filterCardsIncludeTags"
+        />
+      </HorizontalCarousel>
+    </OptionInLine>
+    <OptionInLine content="sem tags:">
+      <HorizontalCarousel :range="range" :scroll-buttons="true">
+        <TagWithSwitchList
+          direction="row"
+          :checkeds="[]"
+          unic-name="cards-filter-exclude"
+          @emit-tags="filterCardsExcludeTags"
+        />
+      </HorizontalCarousel>
+    </OptionInLine>
   </div>
 </template>
 
-<style scoped lang="scss">
-.card-filter-tags-list {
-  width: 100%;
-  height: 100%;
-  max-width: 1428px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-@media screen and (min-width: 768px) {
-  .dinamic-scroll {
-    scrollbar-gutter: stable;
-    overflow: hidden;
-    &:hover {
-      overflow: auto;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

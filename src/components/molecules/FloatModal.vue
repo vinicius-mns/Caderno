@@ -2,7 +2,8 @@
 import { reactive } from 'vue'
 import FixedCard from '../atoms/FixedCard.vue'
 import { useStyle } from '@/stores/style'
-import ThemeIco from '../atoms/ThemeIco.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
+// import ThemeIco from '../atoms/ThemeIco.vue'
 
 const { style } = useStyle()
 
@@ -36,7 +37,8 @@ const closePopUp = () => {
 
 <template>
   <div class="button-container">
-    <ThemeIco :ico="props.ico" :colored="false" size="24px" :content="title" @click="openPopUp" />
+    <!-- <ThemeIco :ico="props.ico" :colored="false" size="24px" :content="title" @click="openPopUp" /> -->
+    <ThemeButton @click="openPopUp">{{ props.title }}</ThemeButton>
     <FixedCard v-if="props.show" :cursor-position="cursor" class="relative-fixed-card">
       <header>
         <p>{{ title }}</p>

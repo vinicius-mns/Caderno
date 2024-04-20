@@ -31,13 +31,17 @@ const localStyle = computed(() => ({
 $buttonSize: v-bind('style.button.size');
 $color: v-bind('style.button.textColor');
 $buttonBgColor: v-bind('style.button.bgColor');
-$size: calc($buttonSize + 10px);
+$size: calc($buttonSize + 2px);
+$borderRadius: v-bind('style.button.borderRadius');
+$boxShadow: v-bind('style.boxShadow');
 .theme-ico {
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   margin-bottom: 4px;
+  padding: 5px;
+  box-sizing: border-box;
   & .button {
     transition: all 0.1s;
     width: 100%;
@@ -46,10 +50,11 @@ $size: calc($buttonSize + 10px);
     flex-shrink: 0;
     margin: 0;
     padding: 0;
-    border-radius: 8px;
+    border-radius: $borderRadius;
     border: none;
     cursor: pointer;
     filter: grayscale(100%);
+    box-shadow: $boxShadow;
     &:hover {
       filter: grayscale(0%);
       background-color: rgba(154, 218, 154, 0.6);

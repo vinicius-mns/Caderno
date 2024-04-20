@@ -13,10 +13,10 @@ const { style } = useStyle()
 <style scoped lang="scss">
 $boxShadow: v-bind('style.boxShadow');
 $buttonSize: v-bind('style.button.size');
-$buttonHoverColor: v-bind('style.button.hoverColor');
+$buttonHoverColor: v-bind('style.color.highlight');
 $buttonTextColor: v-bind('style.button.textColor');
 $buttonBorderRadius: v-bind('style.button.borderRadius');
-$buttonBgColor: v-bind('style.button.bgColor');
+$buttonBgColor: v-bind('style.color.base');
 .button {
   height: $buttonSize;
   box-shadow: $boxShadow;

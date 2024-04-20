@@ -1,51 +1,28 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import CardWithOptions from './CardWithOptions.vue'
-import { computed, reactive, watchEffect } from 'vue'
-import type { ICard } from '@/api/local'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import { computed, ref, watchEffect } from 'vue'
 import { useConfig } from '@/stores/config'
+import { useCards } from '@/stores/local/cards'
 
-const { columnsCard } = useConfig()
-
-const cardsTags = useHandleCardsTags()
+const { config } = useConfig()
 
 const { style } = useStyle()
 
-const allCards = computed(() => cardsTags.cardsReactive.value)
+const cards = useCards()
 
-const columnsNumber = computed(() => columnsCard.value)
+const allCards = ref(cards.cards)
 
-const cardsInColumns = reactive({
-  value: [] as ICard[][],
-  update: () => {
-    cardsInColumns.value = setCardsInColumns(columnsNumber.value, allCards.value)
-  }
-})
-
-const setCardsInColumns = (numberOfColumns: number, cards: ICard[]) => {
-  const addCardsOnColum = (colum: ICard[], columnIndex: number) => {
-    for (let i = columnIndex; i < cards.length; i += numberOfColumns) {
-      colum.push(cards[i])
-    }
-    return colum
-  }
-  const columnsEmpty = new Array(numberOfColumns).fill(0).map(() => [])
-  const columns = columnsEmpty.map((colum, index) => addCardsOnColum(colum, index))
-  return columns
-}
+const columnsNumber = computed(() => config.value.columnsCard)
 
 watchEffect(() => {
-  columnsCard.setColumns(columnsNumber.value)
-  cardsInColumns.update()
+  allCards.value = cards.cards.reverse()
 })
 </script>
 
 <template>
   <div class="container-cards-list">
-    <div class="column" v-for="(column, i) in cardsInColumns.value" :key="i">
-      <CardWithOptions v-for="(card, ii) in column" :key="ii" :card="card" />
-    </div>
+    <CardWithOptions v-for="(card, ii) in allCards" :key="ii" :card="card" />
   </div>
 </template>
 
@@ -53,31 +30,26 @@ watchEffect(() => {
 $buttonSize: v-bind('style.button.size');
 .container-cards-list {
   width: 100%;
-  max-width: 1428px;
-  min-height: 600px;
-  display: flex;
-  justify-content: space-evenly;
-  @media screen and (max-width: 767px) {
-    padding-top: 20px;
-  }
-  & .column {
-    width: 95%;
-    min-width: 30%;
-    margin: 0.5%;
+  max-width: 1928px;
+  column-gap: 20px;
+  padding: 20px 20px 20px 20px;
+  box-sizing: border-box;
+  columns: v-bind(columnsNumber);
+  background-color: v-bind('style.color.background');
+}
+@media screen and (max-width: 768px) {
+  .container-cards-list {
+    width: 98%;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
+    padding: 2px 0 120px 0;
+    background-color: v-bind('style.color.background');
+    & .card {
+      padding: 3px;
+      margin-top: 3px;
+      box-sizing: border-box;
+    }
   }
-  // column-gap: 10px;
-  // margin: 10px;
-  // padding-right: 10px;
-  // columns: 3;
-  // @media screen and (min-width: 768px) and (max-width: 1022px) {
-  //   columns: 2;
-  // }
-  // @media screen and (max-width: 767px) {
-  //   columns: 1;
-  // }
 }
 </style>

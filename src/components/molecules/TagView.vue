@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../atoms/ThemeButton.vue'
+import { reactive } from 'vue'
 const { style } = useStyle()
 
 const props = defineProps<{
@@ -16,30 +17,48 @@ const emit = defineEmits<{
   (e: 'emitId', v: string): void
 }>()
 
+const emojiFocus = reactive({
+  value: false,
+  focus: () => (emojiFocus.value = true),
+  noFocus: () => (emojiFocus.value = false)
+})
+
 const emitId = () => emit('emitId', props.tag.id)
 </script>
 
 <template>
-  <ThemeButton class="tag" @click="emitId" :title="props.tag.content">
-    <p class="emoji">{{ props.tag.emoji }}</p>
+  <ThemeButton
+    class="tag"
+    :title="props.tag.content"
+    @click="emitId"
+    @mouseenter="emojiFocus.focus"
+    @mouseleave="emojiFocus.noFocus"
+  >
+    <p :class="[emojiFocus.value ? 'emojiFocus' : '', 'emoji']">{{ props.tag.emoji }}</p>
     <p class="content">{{ props.tag.content }}</p>
   </ThemeButton>
 </template>
 
 <style scoped lang="scss">
 $buttonSize: v-bind('style.button.size');
-$margin: 8px;
+$margin: 12px;
+$borderRadius: v-bind('style.button.borderRadius');
 .tag {
   width: 100%;
   height: $buttonSize;
   position: relative;
   display: flex;
   align-items: center;
+  border-radius: $borderRadius;
   flex-grow: 0;
   flex-shrink: 0;
+  background-color: transparent;
   & .emoji {
-    font-size: calc($buttonSize - 8px);
-    margin-left: $margin;
+    font-size: calc($buttonSize / 2);
+    filter: grayscale(100%);
+  }
+  & .emojiFocus {
+    filter: grayscale(0);
   }
   & .content {
     overflow: hidden;

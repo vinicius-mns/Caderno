@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../atoms/ThemeButton.vue'
-import type { ICard, ITag } from '@/api/local'
+import type { ICard } from '@/api/local'
 
 import ThemeTextArea from '../atoms/ThemeTextArea.vue'
 import CreateTag from '../organisms/tag/TagCreate.vue'
@@ -10,7 +10,7 @@ import TagsWithSwitch from '../organisms/tag/TagWithSwitchList.vue'
 
 const { style } = useStyle()
 
-const props = defineProps<{ card: ICard; tags: ITag[] }>()
+const props = defineProps<{ card: ICard }>()
 
 const emit = defineEmits<{ (e: 'emitCard', v: typeof props.card): void }>()
 
@@ -47,10 +47,11 @@ const send = () => {
       </div>
       <div class="tag-section">
         <TagsWithSwitch
-          :card="props.card"
+          :checkeds="props.card.tags"
           @emit-tags="checkedTags.set"
           unic-name="tags-switch-card-editor"
           :emit-tags="true"
+          direction="column"
           class="tags-list"
         />
         <CreateTag class="create-tag" />

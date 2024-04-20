@@ -16,7 +16,14 @@ export const IStyleSchema = z.object({
   page: z.object({
     bgColor: z.string()
   }),
-  optionsColor: z.array(z.string())
+  optionsColor: z.array(z.string()),
+  color: z.object({
+    text: z.string(),
+    neutral: z.string(),
+    background: z.string(),
+    base: z.string(),
+    highlight: z.string()
+  })
 })
 
 export type IStyle = z.infer<typeof IStyleSchema>

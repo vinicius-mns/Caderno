@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import type { ICard } from '@/api/local'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import TagWithSwitch from './TagWithSwitch.vue'
+import { useTags } from '@/stores/local/tags'
 
-const cardsTags = useHandleCardsTags()
+const tags = useTags()
 
-const props = defineProps<{ card: ICard; unicName: string; emitTags: boolean }>()
+const props = defineProps<{ checkeds: string[]; unicName: string; direction: 'column' | 'row' }>()
 
 const emit = defineEmits<{
   (e: 'emitTags', v: string[]): void
 }>()
 
 const tagsChecked = reactive({
-  value: props.card.tags,
+  value: props.checkeds,
   addOnList: (tagId: string) => {
     const insertTag = [...tagsChecked.value, tagId]
     tagsChecked.value = insertTag
@@ -25,46 +24,53 @@ const tagsChecked = reactive({
   isChecked: (tagId: string) => {
     return tagsChecked.value.includes(tagId)
   },
-  emitOrUpdate: () => {
-    if (!props.emitTags) cardsTags.cardsReactive.update({ ...props.card, tags: tagsChecked.value })
-    if (props.emitTags) emit('emitTags', tagsChecked.value)
-  },
+  // emitOrUpdate: () => {
+  //   emit('emitTags', tagsChecked.value)
+  // },
   handle: (e: { tagId: string; checked: boolean }) => {
     const addOrRemove = e.checked === true ? 'addOnList' : 'removeOnList'
     tagsChecked[addOrRemove](e.tagId)
-    tagsChecked.emitOrUpdate()
+    // tagsChecked.emitOrUpdate()
+    emit('emitTags', tagsChecked.value)
   }
 })
 
-const tags = computed(() => cardsTags.tagsReactive.value)
-
-// const tags = reactive({
-//   value: [] as ITag[],
-//   setTags: (e: ITag[]) => {
-//     tags.value = e
-//   }
-// })
+const allTags = computed(() => tags.tags.value)
 </script>
 
 <template>
-  <div class="tag-with-switch-list">
+  <div :class="[props.direction, 'tag-with-switch-list']">
     <TagWithSwitch
-      v-for="(tag, i) in tags"
+      v-for="(tag, i) in allTags"
       :key="i"
       :tag="tag"
       :checked="tagsChecked.isChecked(tag.id)"
       :unic-name="props.unicName"
       @emit-tag="tagsChecked.handle"
+      class="tag"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
+$margin: 10px;
+.row {
+  flex-direction: row;
+  & .tag {
+    width: 200px;
+    flex-shrink: 0;
+    margin-left: $margin;
+    margin-right: $margin;
+  }
+}
+.column {
+  flex-direction: column;
+  overflow: auto;
+}
 .tag-with-switch-list {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  overflow: auto;
+  align-items: center;
 }
 </style>

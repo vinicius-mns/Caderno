@@ -48,13 +48,13 @@ const clickInTagChecked = () => {
 <style scoped lang="scss">
 .tag-container {
   position: relative;
-  width: 100%;
+  width: 95%;
   display: flex;
   justify-content: center;
   & .button {
     width: 100%;
     flex-shrink: 0;
-    margin: 6px;
+    margin: 4px;
   }
   & .ent-button {
     margin-bottom: 0;
@@ -63,6 +63,7 @@ const clickInTagChecked = () => {
     position: absolute;
     top: 9.5px;
     right: 10px;
+    visibility: hidden;
   }
   & .checked {
     background-color: rgb(128, 184, 128);

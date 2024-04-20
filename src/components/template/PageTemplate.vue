@@ -1,0 +1,158 @@
+<script setup lang="ts">
+import { useStyle } from '@/stores/style'
+import { onMounted, reactive } from 'vue'
+
+const { style } = useStyle()
+
+const sideW = reactive({
+  closed: false,
+  closeDefault: '60px',
+  mobile: '60px',
+  desktop: '60px',
+  mobileDefault: '100%',
+  desktopDefault: '360px'
+})
+
+const closeSidebar = () => {
+  sideW.closed = true
+  sideW.mobile = sideW.closeDefault
+  sideW.desktop = sideW.closeDefault
+}
+
+const openSidebar = () => {
+  sideW.closed = false
+  sideW.mobile = sideW.mobileDefault
+  sideW.desktop = sideW.desktopDefault
+}
+
+const toggleSidebar = () => {
+  sideW.closed ? openSidebar() : closeSidebar()
+}
+
+const isMobile = () => window.innerWidth <= 768
+
+const closeSideIfMobileDivice = () => {
+  isMobile() ? closeSidebar() : openSidebar()
+}
+
+onMounted(closeSideIfMobileDivice)
+</script>
+
+<template>
+  <div class="page-container">
+    <div class="side focus">
+      <div class="content">
+        <slot name="sidebar-content"></slot>
+      </div>
+      <div class="actions-container">
+        <div class="actions-buttons">
+          <button @click="toggleSidebar" v-if="sideW.closed">{{ '>' }}</button>
+          <button @click="toggleSidebar" v-else>{{ '<' }}</button>
+          <nav class="redirections">
+            <RouterLink to="/config" class="routerlink">
+              <button class="config-button">⚙️</button>
+            </RouterLink>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <main class="page focus">
+      <slot name="page-content"></slot>
+    </main>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.focus:hover {
+  z-index: 2;
+}
+.routerlink {
+  margin: 0;
+  padding: 0;
+}
+.config-button {
+  font-size: 20px;
+  filter: grayscale(100%);
+  &:hover {
+    filter: grayscale(0);
+  }
+}
+.actions-container {
+  width: 60px;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: v-bind('style.color.background');
+  & .actions-buttons {
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    & button {
+      width: 40px;
+      margin: 10px 0 10px;
+      aspect-ratio: 1;
+      background-color: v-bind('style.color.base');
+      color: v-bind('style.color.text');
+      border: none;
+      cursor: pointer;
+      &:hover {
+        background-color: v-bind('style.color.highlight');
+      }
+    }
+    @media screen and (max-width: 768px) {
+      flex-direction: column-reverse;
+    }
+  }
+}
+.content {
+  background-color: v-bind('style.color.base');
+}
+$sidebarWidth: v-bind('sideW.desktop');
+.page-container {
+  display: flex;
+  & .side {
+    z-index: 2;
+    transition: all 0.3s;
+    width: $sidebarWidth;
+    height: 100dvh;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    display: flex;
+    & .content {
+      width: calc(100% - 60px);
+      height: 100%;
+    }
+  }
+  & .page {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  $sidebarWidth: v-bind('sideW.mobile');
+  .page-container {
+    display: flex;
+    & .side {
+      z-index: 2;
+      transition: all 0.3s;
+      width: $sidebarWidth;
+      height: 100dvh;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      display: flex;
+      & .content {
+        width: calc(100% - 60px);
+        height: 100%;
+      }
+    }
+    & .page {
+      width: calc(100% - 60px);
+      margin-left: 60px;
+    }
+  }
+}
+</style>

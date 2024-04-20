@@ -44,6 +44,7 @@ const emitChecked = () => {
 $buttonSize: calc(v-bind('style.button.size') - 6px);
 $margin: 5px;
 $especialColor: v-bind('style.component.bgColor');
+$borderRadius: v-bind('style.button.borderRadius');
 .switch {
   height: $buttonSize;
   display: flex;
@@ -58,7 +59,7 @@ $especialColor: v-bind('style.component.bgColor');
     height: $buttonSize;
     background: rgba(120, 120, 120, 0.5);
     display: block;
-    border-radius: 100px;
+    border-radius: 50px;
     cursor: pointer;
   }
   & .ball {
@@ -69,7 +70,7 @@ $especialColor: v-bind('style.component.bgColor');
     left: $margin;
     top: calc($margin / 2);
     background: white;
-    border-radius: 90px;
+    border-radius: 50%;
     transition: 0.3s;
     display: flex;
     align-items: center;

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 
 const { style } = useStyle()
@@ -31,13 +31,12 @@ $buttonSize: v-bind('style.button.size');
     height: 100%;
     aspect-ratio: 1;
     border-radius: $buttonSize;
-    font-size: 16px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 4px;
     flex-shrink: 0;
-    background-color: v-bind('style.button.bgColor');
   }
 }
-</style>
+</style> -->

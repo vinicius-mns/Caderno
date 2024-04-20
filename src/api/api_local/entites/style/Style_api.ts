@@ -18,7 +18,14 @@ const initialValue: IStyle = {
   page: {
     bgColor: '#191919'
   },
-  optionsColor: ['pink', '#B6E0FE', '#202020']
+  optionsColor: ['pink', '#B6E0FE', '#202020'],
+  color: {
+    text: 'white',
+    neutral: '#848484',
+    background: '#181818',
+    base: '#272727',
+    highlight: '#3C3C3C'
+  }
 }
 
 class StyleStorage extends Api_localStorage<IStyle> {
@@ -40,6 +47,11 @@ class StyleStorage extends Api_localStorage<IStyle> {
       updatedData.button.hoverColor = '#424242'
       updatedData.optionsColor = ['rgb(45, 29, 29)', 'rgb(10, 10, 25)', '#202020']
       updatedData.component.bgColor = '#202020'
+      updatedData.color.text = 'white'
+      updatedData.color.neutral = '#848484'
+      updatedData.color.background = '#181818'
+      updatedData.color.base = '#272727'
+      updatedData.color.highlight = '#3C3C3C'
     } else {
       updatedData.button.textColor = 'black'
       updatedData.button.bgColor = 'white'
@@ -47,6 +59,11 @@ class StyleStorage extends Api_localStorage<IStyle> {
       updatedData.button.hoverColor = '#e6e6e6'
       updatedData.optionsColor = ['pink', '#B6E0FE', 'rgb(205, 205, 205)']
       updatedData.component.bgColor = 'rgb(205, 205, 205)'
+      updatedData.color.text = 'black'
+      updatedData.color.neutral = '#848484'
+      updatedData.color.background = '#f5f5f7'
+      updatedData.color.base = 'white'
+      updatedData.color.highlight = 'rgb(238, 238, 238)'
     }
     this.update(updatedData)
   }
@@ -78,4 +95,4 @@ class StyleStorage extends Api_localStorage<IStyle> {
   }
 }
 
-export const styleStorage = () => new StyleStorage('style_local', IStyleSchema, initialValue)
+export const styleStorage = () => new StyleStorage('style_local_new', IStyleSchema, initialValue)

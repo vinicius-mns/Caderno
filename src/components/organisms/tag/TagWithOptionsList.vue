@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
 import TagWithOptions from './TagWithOptions.vue'
-import type { ITag } from '@/api/local'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import { useTags } from '@/stores/local/tags'
+import { computed } from 'vue'
 
-const { tagsReactive } = useHandleCardsTags()
+const tags = useTags()
 
-const allTags = computed(() => tagsReactive.value)
-
-const tags = reactive({
-  value: [] as ITag[],
-  setTags: (e: ITag[]) => {
-    tags.value = e
-  }
-})
+const allTags = computed(() => tags.tags.value)
 </script>
 
 <template>

@@ -1,28 +1,16 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
 import { RouterView } from 'vue-router'
 import { useStyle } from './stores/style'
-import { useConfig } from './stores/config'
+import { onMounted, onUpdated } from 'vue'
 
-const { defineButtonSize, style, styleDarkMode } = useStyle()
+const { style } = useStyle()
 
-const config = useConfig()
-
-const resizeButton = () => {
-  const screen = window.innerWidth
-  screen < 768 && defineButtonSize('mobile')
-  screen >= 768 && defineButtonSize('desktop')
+const setBGColor = () => {
+  document.body.style.backgroundColor = style.color.background
 }
 
-onMounted(() => {
-  resizeButton()
-  window.addEventListener('resize', resizeButton)
-  styleDarkMode(config.darkmode.value)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', resizeButton)
-})
+onUpdated(setBGColor)
+onMounted(setBGColor)
 </script>
 
 <template>
@@ -30,7 +18,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
-$especialColor: v-bind('style.component.bgColor');
+$especialColor: v-bind('style.color.highlight');
 $textColor: v-bind('style.button.textColor');
 a,
 strong {
@@ -40,6 +28,7 @@ strong {
   border-radius: 4px;
 }
 table {
+  // background-color: $especialColor;
   width: 100%;
   border-collapse: collapse;
 }
@@ -49,7 +38,6 @@ td {
   padding: 8px;
 }
 th {
-  background-color: $especialColor;
   color: $textColor;
 }
 </style>

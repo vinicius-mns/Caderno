@@ -1,17 +1,18 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { ref } from 'vue'
 import CalcDate from '../atoms/CalcDate.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import ListOf from '../atoms/ListOf.vue'
-import type { ICardTag } from '@/stores/local/handleCardsTags'
 import { marked } from 'marked'
+import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
+import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 
 const { style } = useStyle()
 
 marked.setOptions({ breaks: true })
 
-const props = defineProps<{ card: ICardTag }>()
+const props = defineProps<{ card: ICard; tags: ITag[] }>()
 
 const show = ref(false)
 
@@ -31,7 +32,7 @@ defineExpose({
       </div>
       <ListOf
         class="tags"
-        :list="props.card.tags.map((tag) => ({ content: tag.emoji, title: tag.content }))"
+        :list="props.tags.map((tag) => ({ content: tag.emoji, title: tag.content }))"
       />
     </header>
     <div class="card-text">
@@ -44,13 +45,15 @@ defineExpose({
 $buttonSize: v-bind('style.button.size');
 $buttonBgColor: v-bind('style.button.bgColor');
 $buttonHoverColor: v-bind('style.button.hoverColor');
-$borderRadius: 8px;
+$borderRadius: v-bind('style.button.borderRadius');
+$boxShadow: v-bind('style.boxShadow');
 .card {
   display: flex;
   flex-direction: column;
   box-shadow: none;
   height: auto;
   border-radius: $borderRadius;
+  box-shadow: $boxShadow;
   & header {
     width: 100%;
     height: calc($buttonSize / 1.3);
@@ -78,15 +81,11 @@ $borderRadius: 8px;
     margin-left: 2.5%;
     box-sizing: border-box;
     border-radius: $borderRadius;
-
     @media screen and (max-width: 768px) {
       & p {
         font-size: 16px;
       }
     }
   }
-  &:hover {
-    background-color: $buttonBgColor;
-  }
 }
-</style>
+</style> -->

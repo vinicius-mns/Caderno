@@ -54,7 +54,7 @@ $closeButton: $headerHeight;
   color: white;
   .modal {
     max-width: 90%;
-    border-radius: 8px;
+    border-radius: $buttonBorderRadius;
     overflow: hidden;
     background-color: $modalBgColor;
     box-shadow: $boxShadow;
