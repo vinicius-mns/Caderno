@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import ThemeTextArea from '../atoms/ThemeTextArea.vue'
@@ -32,4 +32,4 @@ const importData = () => {
 </template>
 
 <style scoped lang="scss"></style>
-@/stores/local/xhandleCardsTags
+@/stores/local/xhandleCardsTags -->
