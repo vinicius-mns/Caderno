@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import ThemeIco from '../../atoms/ThemeIco.vue'
 import { useConfig } from '@/stores/config'
@@ -23,4 +23,4 @@ onMounted(() => emit('showFilter', show.value))
   <ThemeIco ico="📌" content="filtro" size="24px" @click="toggle" class="config" :colored="show" />
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->
