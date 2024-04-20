@@ -3,19 +3,17 @@ import { reactive } from 'vue'
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 import CenterModal from '../../atoms/CenterModal.vue'
-import CardView from '../../molecules/CardView.vue'
 import type { ICard } from '@/api/local'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import CardView from './CardView.vue'
+import { useCards } from '@/stores/local/cards'
 
 const { style } = useStyle()
 
-const cardsTags = useHandleCardsTags()
+const cards = useCards()
 
 const props = defineProps<{ card: ICard }>()
 
 const emit = defineEmits<{ (e: 'close', v: null): void }>()
-
-const cardWitgTags = cardsTags.cardsReactive.withTagsObject([props.card])[0]
 
 const modal = reactive({
   show: false,
@@ -25,8 +23,10 @@ const modal = reactive({
     emit('close', null)
   }
 })
+
 const deleteCard = () => {
-  cardsTags.cardsReactive.delete(props.card.id)
+  console.log(props.card.id)
+  cards.deleteOne(props.card.id)
   modal.close()
 }
 </script>
@@ -36,7 +36,7 @@ const deleteCard = () => {
     <ThemeButton @click="modal.open" class="delete">Deletar</ThemeButton>
     <CenterModal title-modal="Deletar tag" v-if="modal.show" @close="modal.close">
       <div class="confirm-delete-container">
-        <CardView :card="cardWitgTags" class="card" />
+        <CardView :card="props.card" class="card" />
         <ThemeButton @click="deleteCard" class="item delete">Deletar</ThemeButton>
       </div>
     </CenterModal>

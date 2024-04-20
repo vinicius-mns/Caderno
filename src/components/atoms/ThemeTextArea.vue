@@ -41,7 +41,7 @@ $buttonBgColor: v-bind('style.button.bgColor');
   width: 100%;
   box-shadow: $boxShadow;
   background-color: $buttonBgColor;
-  border-radius: 10px;
+  border-radius: $buttonBorderRadius;
   color: $buttonTextColor;
   border: none;
   overflow: auto;

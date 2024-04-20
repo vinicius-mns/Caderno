@@ -4,17 +4,26 @@ import { useStyle } from '@/stores/style'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 import CenterModal from '../../atoms/CenterModal.vue'
 import { type ITag } from '@/api/local'
-import CardView from '../../molecules/CardView.vue'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import CardView from '../card/CardView.vue'
 import TagView from '../../molecules/TagView.vue'
+import { useTags } from '@/stores/local/tags'
+import { useCards } from '@/stores/local/cards'
 
 const { style } = useStyle()
 
-const cardsTags = useHandleCardsTags()
+const tags = useTags()
+
+const cards = useCards()
 
 const props = defineProps<{ tag: ITag }>()
 
 const emit = defineEmits<{ (e: 'close', v: null): void }>()
+
+const cardsWithTag = () => {
+  const allCards = cards.cards
+  const tagIdsList = [props.tag.id]
+  return cards.filterReturn.findByTags(allCards, tagIdsList)
+}
 
 const modal = reactive({
   show: false,
@@ -25,12 +34,9 @@ const modal = reactive({
   }
 })
 
-const cards = cardsTags.cardsFiltredByTags.filterAndReturn([props.tag.id], 'some')
-
-const cardsWithTag = () => cardsTags.cardsReactive.withTagsObject(cards)
-
 const deleteTag = () => {
-  cardsTags.tagsReactive.delete(props.tag.id, cards)
+  tags.deleteOne(props.tag.id)
+  cards.removeTagOnCard(props.tag.id)
   modal.close()
 }
 </script>

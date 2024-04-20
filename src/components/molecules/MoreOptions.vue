@@ -7,6 +7,10 @@ const props = defineProps<{
   visible: boolean
 }>()
 
+const emit = defineEmits<{
+  (e: 'close', v: void): void
+}>()
+
 const popUp = reactive({
   show: false,
   open: () => (popUp.show = true),
@@ -24,6 +28,11 @@ const openPopUp = (e: MouseEvent) => {
   cursorPosition(e)
   popUp.open()
 }
+
+const close = () => {
+  popUp.close()
+  emit('close')
+}
 </script>
 
 <template>
@@ -31,7 +40,7 @@ const openPopUp = (e: MouseEvent) => {
     <ThemeButton :class="[!props.visible ? 'transparent' : '', 'button']" @click="openPopUp"
       >+</ThemeButton
     >
-    <FixedCard v-if="popUp.show" :cursor-position="cursor">
+    <FixedCard v-if="popUp.show" :cursor-position="cursor" @close="close">
       <slot></slot>
     </FixedCard>
   </div>
@@ -41,6 +50,7 @@ const openPopUp = (e: MouseEvent) => {
 .button {
   height: 100%;
   width: 100%;
+  border-radius: 50%;
   background-color: rgba(110, 110, 110, 0.4);
 }
 .transparent {

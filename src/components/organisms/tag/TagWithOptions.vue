@@ -3,10 +3,10 @@ import TagDelete from './TagDelete.vue'
 import TagUpdate from './TagUpdate.vue'
 import MoreOptions from '../../molecules/MoreOptions.vue'
 import { onMounted, reactive } from 'vue'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+// import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
 import TagView from '../../molecules/TagView.vue'
 
-const cardsTags = useHandleCardsTags()
+// const cardsTags = useHandleCardsTags()
 
 const mobileRules = {
   isMobile: () => window.innerWidth < 780
@@ -32,7 +32,7 @@ const props = defineProps<{
 }>()
 
 const goTo = () => {
-  cardsTags.cardsFiltredByTags.setFilter([props.tag.id], 'some')
+  // cardsTags.cardsFiltredByTags.setFilter([props.tag.id], 'some')
 }
 
 onMounted(() => {
@@ -45,8 +45,8 @@ onMounted(() => {
     <TagView :tag="props.tag" @click="goTo" class="tag" />
     <MoreOptions class="button-more-options" v-if="buttonOptions.show" :visible="true">
       <div class="options-container">
-        <TagUpdate :tag="tag" class="button" @close="buttonOptions.hidden" />
-        <TagDelete :tag="props.tag" class="button" @close="buttonOptions.hidden" />
+        <TagUpdate :tag="tag" class="button-option" @close="buttonOptions.hidden" />
+        <TagDelete :tag="props.tag" class="button-option" @close="buttonOptions.hidden" />
       </div>
     </MoreOptions>
   </div>
@@ -55,25 +55,24 @@ onMounted(() => {
 <style scoped lang="scss">
 .tag-container {
   position: relative;
-  width: 100%;
+  width: 95%;
   display: flex;
   justify-content: center;
   flex-shrink: 0;
   flex-grow: 0;
-  & .button {
+  margin: 4px;
+  & .button-option {
     width: 100%;
-    flex-shrink: 0;
-    margin: 6px;
+    margin: 4px;
   }
   & .button-more-options {
     position: absolute;
-    // height: 100%;
-    // width: 100%;
-    height: calc(100% - 18px);
-    right: calc(2.5% + 4px);
+    height: 80%;
+    top: 10%;
+    right: 5%;
     aspect-ratio: 1;
-    top: 9px;
-    border-radius: 50%;
+    // width: 100%;
+    // height: 100%;
     & .options-container {
       width: 160px;
       display: flex;

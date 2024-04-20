@@ -1,16 +1,27 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
+import { reactive } from 'vue'
 import CenterModal from '../../atoms/CenterModal.vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
-import ThemeIco from '@/components/atoms/ThemeIco.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
-const cardsTags = useHandleCardsTags()
+import { useCards } from '@/stores/local/cards'
+import { useStyle } from '@/stores/style'
+
+const cards = useCards()
+
+const props = withDefaults(
+  defineProps<{
+    big?: boolean
+  }>(),
+  {
+    big: false
+  }
+)
 
 const emit = defineEmits<{ (e: 'close', v: null): void }>()
 
-const tags = computed(() => cardsTags.tagsReactive.value)
+const { style } = useStyle()
 
 const modal = reactive({
   show: false,
@@ -29,18 +40,35 @@ const initialCard: ICard = {
 }
 
 const createCard = (e: ICard) => {
-  cardsTags.cardsReactive.create(e)
+  cards.createOne(e)
   modal.close()
 }
 </script>
 
 <template>
-  <div class="tag-create">
-    <ThemeIco ico="✍️" size="24px" content="Criar card" @click="modal.open" />
+  <div class="card-create">
+    <ThemeButton @click="modal.open" v-if="props.big" class="big">✍️</ThemeButton>
+    <ThemeButton @click="modal.open" v-else>Criar card ✍️</ThemeButton>
     <CenterModal title-modal="Criar novo Card" v-if="modal.show" @close="modal.close">
-      <CardEditor :card="initialCard" @emit-card="createCard" :tags="tags" />
+      <CardEditor :card="initialCard" @emit-card="createCard" />
     </CenterModal>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.card-create {
+  width: 100%;
+  .big {
+    height: 60px;
+    width: 60px;
+    font-size: 20px;
+    border: solid 1px v-bind('style.color.background');
+    background-color: rgb(125, 125, 173);
+    background-color: v-bind('style.color.base');
+    border-radius: 50%;
+  }
+  // & .button {
+  //   width: 100%;
+  // }
+}
+</style>

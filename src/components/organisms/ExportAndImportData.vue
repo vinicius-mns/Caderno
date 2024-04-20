@@ -32,3 +32,4 @@ const importData = () => {
 </template>
 
 <style scoped lang="scss"></style>
+@/stores/local/xhandleCardsTags

@@ -4,9 +4,12 @@ import CenterModal from '../../atoms/CenterModal.vue'
 import TagEditor from '../../molecules/TagEditor.vue'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 import type { ITag } from '@/api/local'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
+import { useTags } from '@/stores/local/tags'
+import { useCards } from '@/stores/local/cards'
 
-const cardsTags = useHandleCardsTags()
+const tags = useTags()
+
+const cards = useCards()
 
 const props = defineProps<{ tag: ITag }>()
 
@@ -22,7 +25,8 @@ const modal = reactive({
 })
 
 const updateTag = (e: typeof props.tag) => {
-  cardsTags.tagsReactive.update(e)
+  cards.tagsUseUpdateCards()
+  tags.updateOne(e)
   modal.close()
 }
 </script>

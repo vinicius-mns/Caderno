@@ -1,34 +1,38 @@
 <script setup lang="ts">
-import ThemeRange from '@/components/atoms/ThemeRange.vue'
+import RangeImput from '@/components/molecules/RangeImput.vue'
 import { useConfig } from '@/stores/config'
 import { useStyle } from '@/stores/style'
-import { reactive } from 'vue'
+import { computed } from 'vue'
 
 const { style } = useStyle()
 
-const { columnsCard } = useConfig()
+const { config, setColumns } = useConfig()
 
-const columns = reactive({
-  value: columnsCard.value,
-  set: (e: number) => columnsCard.setColumns(e)
-})
+const columns = computed(() => config.value.columnsCard)
+
+const ColumnsSet = (e: number) => setColumns(e)
 </script>
 
 <template>
   <div class="range-container">
-    <ThemeRange :init-value="columns.value" @emit-value="columns.set" class="range" />
+    <RangeImput
+      :title="{ visible: false, content: 'Quantidade de colunas' }"
+      :limit="{ min: 1, max: 3 }"
+      :init-value="columns"
+      @emit-value="ColumnsSet"
+      class="range"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .range-container {
-  background-color: v-bind('style.page.bgColor');
   display: flex;
   justify-content: center;
-  width: 50%;
-  border-radius: 30px;
+  width: 100%;
+  background-color: v-bind('style.color.background');
   .range {
-    width: 100%;
+    width: 50%;
   }
 }
 </style>

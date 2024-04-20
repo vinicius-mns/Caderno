@@ -8,6 +8,10 @@ const props = defineProps<{
   cursorPosition: { x: number; y: number }
 }>()
 
+const emit = defineEmits<{
+  (e: 'close', v: void): void
+}>()
+
 const card = ref<HTMLElement>()
 
 const topCard = ref(`${props.cursorPosition.y}px`)
@@ -27,6 +31,8 @@ const cardRepositionY = () => {
   if (cardInBottonSide) topCard.value = cardTranslateToTop
 }
 
+const close = () => emit('close')
+
 onMounted(() => {
   cardRepositionX()
   cardRepositionY()
@@ -34,25 +40,38 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="float-card translatex translatey" @click.stop ref="card">
+  <div class="float-card" @click.stop ref="card">
     <slot class="slot"></slot>
   </div>
+  <div class="glass" @click="close"></div>
 </template>
 
 <style scoped lang="scss">
+$borderRadius: v-bind('style.button.borderRadius');
 $buttonSize: v-bind('style.button.size');
-$cardColor: v-bind('style.component.bgColor');
+$cardColor: v-bind('style.color.base');
 $buttonColor: v-bind('style.button.bgColor');
 $boxShadow: v-bind('style.boxShadow');
 .float-card {
-  z-index: 1;
+  transition: background-color 1s;
+  z-index: 2;
   position: fixed;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: $borderRadius;
   background-color: $cardColor;
   box-shadow: $boxShadow;
-
   left: v-bind(leftCard);
   top: v-bind(topCard);
+}
+.glass {
+  z-index: 1;
+  content: '';
+  background-color: v-bind('style.color.neutral');
+  opacity: 30%;
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  top: 0;
+  left: 0;
 }
 </style>

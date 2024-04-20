@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import FloatModal from '../molecules/FloatModal.vue'
-import DarkMode from './DarkMode.vue'
 import { useStyle } from '@/stores/style'
 import ExportAndImportData from './ExportAndImportData.vue'
+import StyleGlobal from './config/StyleGlobal.vue'
 
 const { style } = useStyle()
 
@@ -19,6 +19,14 @@ const assets = reactive({
     ico: '⚙️'
   }
 })
+
+const borderRadius = {
+  value: parseFloat(style.button.borderRadius),
+  setValue: (n: number) => {
+    borderRadius.value = n
+    style.button.borderRadius = `${n}px`
+  }
+}
 </script>
 
 <template>
@@ -33,11 +41,10 @@ const assets = reactive({
     >
       <div class="config-global-container">
         <div class="options-container">
-          <DarkMode />
+          <StyleGlobal />
           <ExportAndImportData />
         </div>
       </div>
-      <!-- <CardsFilter /> -->
     </FloatModal>
   </div>
 </template>

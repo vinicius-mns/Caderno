@@ -2,10 +2,10 @@
 import { reactive } from 'vue'
 import CenterModal from '../../atoms/CenterModal.vue'
 import TagEditor from '../../molecules/TagEditor.vue'
-import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
-import ThemeIco from '@/components/atoms/ThemeIco.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import { useTags } from '@/stores/local/tags'
 
-const handleCardsTags = useHandleCardsTags()
+const tag = useTags()
 
 const initTag = {
   emoji: '',
@@ -25,15 +25,15 @@ const modal = reactive({
 })
 
 const createTag = (e: typeof initTag) => {
-  handleCardsTags.tagsReactive.create(e)
+  tag.createOne(e)
   modal.close()
 }
 </script>
 
 <template>
   <div class="tag-create">
-    <!-- <ThemeButton @click="modal.open" class="button">Criar nova tag 🏷️</ThemeButton> -->
-    <ThemeIco ico="🏷️" @click="modal.open" content="Criar tag" size="24px" />
+    <!-- <ThemeIco ico="🏷️" @click="modal.open" content="Criar tag" size="24px" /> -->
+    <ThemeButton @click="modal.open" class="button">Criar tag 🏷️</ThemeButton>
     <CenterModal title-modal="Criar tag" v-if="modal.show" @close="modal.close">
       <TagEditor :tag="initTag" @emit-tag="createTag" />
     </CenterModal>
@@ -45,7 +45,6 @@ const createTag = (e: typeof initTag) => {
   width: 100%;
   & .button {
     width: 100%;
-    height: 100%;
   }
 }
 </style>
