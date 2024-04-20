@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import FloatModal from '../molecules/FloatModal.vue'
 import { useStyle } from '@/stores/style'
-import ExportAndImportData from './ExportAndImportData.vue'
+// import ExportAndImportData from './ExportAndImportData.vue'
 import StyleGlobal from './config/StyleGlobal.vue'
 
 const { style } = useStyle()
@@ -42,7 +42,6 @@ const borderRadius = {
       <div class="config-global-container">
         <div class="options-container">
           <StyleGlobal />
-          <ExportAndImportData />
         </div>
       </div>
     </FloatModal>
