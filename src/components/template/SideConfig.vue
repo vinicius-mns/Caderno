@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
-import TagCreate from '../organisms/tag/TagCreate.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 // import TagCreate from '../organisms/tag/TagCreate.vue'
 // import ConfigGlobal from '../organisms/ConfigGlobal.vue'

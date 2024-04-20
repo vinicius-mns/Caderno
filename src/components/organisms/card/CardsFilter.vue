@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watchEffect } from 'vue'
 import OptionInLine from '@/components/molecules/OptionInLine.vue'
 import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
 import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
 import { useCards } from '@/stores/local/cards'
-import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
-import InputTextAtom from '@/components/atoms/InputTextAtom.vue'
 import SearchInput from '@/components/molecules/SearchInput.vue'
 
 const cards = useCards()
