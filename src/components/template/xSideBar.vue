@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import TagCreate from '../organisms/tag/TagCreate.vue'
 import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
 </script>
@@ -25,4 +25,4 @@ import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
     margin-top: 10px;
   }
 }
-</style>
+</style> -->
