@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { onMounted, reactive } from 'vue'
+import CardConfigModal from '../organisms/card/CardConfigModal.vue'
+import CardCreate from '../organisms/card/CardCreate.vue'
 
 const { style } = useStyle()
 
@@ -46,13 +48,12 @@ onMounted(closeSideIfMobileDivice)
       </div>
       <div class="actions-container">
         <div class="actions-buttons">
-          <button @click="toggleSidebar" v-if="sideW.closed">{{ '>' }}</button>
-          <button @click="toggleSidebar" v-else>{{ '<' }}</button>
-          <nav class="redirections">
-            <RouterLink to="/config" class="routerlink">
-              <button class="config-button">⚙️</button>
-            </RouterLink>
-          </nav>
+          <button @click="toggleSidebar" class="action-button" v-if="sideW.closed">
+            {{ '>' }}
+          </button>
+          <button @click="toggleSidebar" class="action-button" v-else>{{ '<' }}</button>
+          <CardConfigModal class="action-button" />
+          <CardCreate type="mini" class="action-button" />
         </div>
       </div>
     </div>
@@ -89,10 +90,13 @@ onMounted(closeSideIfMobileDivice)
     height: 95%;
     display: flex;
     flex-direction: column;
-    & button {
+    & .action-button {
       width: 40px;
       margin: 10px 0 10px;
       aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: v-bind('style.color.base');
       color: v-bind('style.color.text');
       border: none;
@@ -107,6 +111,7 @@ onMounted(closeSideIfMobileDivice)
   }
 }
 .content {
+  overflow: hidden;
   background-color: v-bind('style.color.base');
 }
 $sidebarWidth: v-bind('sideW.desktop');

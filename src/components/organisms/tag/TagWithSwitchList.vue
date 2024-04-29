@@ -35,7 +35,7 @@ const tagsChecked = reactive({
   }
 })
 
-const allTags = computed(() => tags.tags.value)
+const allTags = computed(() => tags.tags)
 </script>
 
 <template>

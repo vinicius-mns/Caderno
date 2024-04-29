@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import InputTextAtom from '../atoms/InputTextAtom.vue'
 import type { ITag } from '@/api/local'
@@ -60,4 +60,4 @@ $margin: 5px;
     padding-left: calc($margin * 6);
   }
 }
-</style>
+</style> -->

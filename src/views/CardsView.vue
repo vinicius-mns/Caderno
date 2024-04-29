@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CardsPageTemplate from '@/components/template/CardsPageTemplate.vue'
-import SidebarCards from '@/components/template/SidebarCards.vue'
+import CardsPage from '@/components/template/CardsPage.vue'
+import CardsSide from '@/components/template/CardsSide.vue'
 import PageTemplate from '@/components/template/PageTemplate.vue'
 </script>
 
@@ -8,10 +8,10 @@ import PageTemplate from '@/components/template/PageTemplate.vue'
   <div class="cards-page-container">
     <PageTemplate>
       <template v-slot:sidebar-content>
-        <SidebarCards />
+        <CardsSide />
       </template>
       <template v-slot:page-content>
-        <CardsPageTemplate />
+        <CardsPage />
       </template>
     </PageTemplate>
   </div>

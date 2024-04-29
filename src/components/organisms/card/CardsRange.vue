@@ -30,9 +30,8 @@ const ColumnsSet = (e: number) => setColumns(e)
   display: flex;
   justify-content: center;
   width: 100%;
-  background-color: v-bind('style.color.background');
   .range {
-    width: 50%;
+    width: 100%;
   }
 }
 </style>

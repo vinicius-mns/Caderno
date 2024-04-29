@@ -10,7 +10,7 @@ const filterCardsText = (e: string) => cards.filterText(e)
 <template>
   <SearchInput
     key-id="filter-card-text"
-    :content="''"
+    content=""
     @emit-content="filterCardsText"
     placeholder="procurar por"
   />

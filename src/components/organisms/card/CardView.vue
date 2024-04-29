@@ -8,6 +8,7 @@ import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import { useTags } from '@/stores/local/tags'
+import FloatDescription from '@/components/molecules/FloatDescription.vue'
 
 const { style } = useStyle()
 
@@ -18,6 +19,8 @@ marked.setOptions({ breaks: true })
 const props = defineProps<{ card: ICard }>()
 
 const tagsInCard = computed(() => tags.readList(props.card.tags))
+
+const cardDate = String(new Date(props.card.date).toLocaleDateString())
 
 // const show = ref(false)
 
@@ -44,16 +47,18 @@ const tagsInCard = computed(() => tags.readList(props.card.tags))
   <ThemeButton class="card">
     <header>
       <div class="date">
-        <CalcDate class="date-text" :date="props.card.date" />
+        <FloatDescription :content="cardDate">
+          <CalcDate class="date-text" :date="props.card.date" />
+        </FloatDescription>
       </div>
       <HorizontalCarousel :range="0" :scroll-buttons="false">
-        <ThemeP
+        <FloatDescription
           v-for="(tag, i) in tagsInCard"
+          :content="`${tag.emoji} ${tag.content}`"
           :key="i"
-          :content="tag.emoji"
-          :title="tag.content"
-          class="tag"
-        />
+        >
+          <ThemeP :key="i" :content="tag.emoji" class="tag" />
+        </FloatDescription>
       </HorizontalCarousel>
       <!-- <ListOf
         class="tags"

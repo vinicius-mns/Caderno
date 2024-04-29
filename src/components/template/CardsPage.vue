@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import CardConfigModal from '../organisms/card/CardConfigModal.vue'
 import CardCreate from '../organisms/card/CardCreate.vue'
 // import CardsFilter from '../organisms/card/CardsFilter.vue'
 // import CardsRange from '../organisms/card/CardsRange.vue'
-import CardsList from '../organisms/card/CardsList.vue'
+import CardWithOptionsList from '../organisms/card/CardWithOptionsList.vue'
 import SearchCardText from '../organisms/card/SearchCardText.vue'
 </script>
 
@@ -12,8 +13,8 @@ import SearchCardText from '../organisms/card/SearchCardText.vue'
       <SearchCardText class="filter-card-text" />
       <!-- <CardsRange class="cards-range" /> -->
     </header>
-    <CardCreate class="card-create" :big="true" />
-    <CardsList />
+    <CardCreate class="card-create" type="full" />
+    <CardWithOptionsList />
   </div>
 </template>
 
@@ -38,22 +39,16 @@ import SearchCardText from '../organisms/card/SearchCardText.vue'
       max-width: 400px;
     }
   }
-  .cards-range {
-    z-index: 1;
-    position: sticky;
-    top: 0;
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
-  }
   .card-create {
     z-index: 1;
+    // width: 140px;
     position: sticky;
     margin: 0;
     padding: 0;
     position: fixed;
     bottom: 40px;
-    left: calc(90% - 60px);
+    right: 10%;
+    // left: calc(90% - 60px);
   }
 }
 </style>
