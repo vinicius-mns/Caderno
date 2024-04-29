@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 // import CardView from '../../molecules/CardView.vue'
-import { reactive, ref } from 'vue'
-import MoreOptions from '../../molecules/MoreOptions.vue'
+import { ref } from 'vue'
+// import MoreOptions from '../../molecules/MoreOptions.vue'
 import type { ICard } from '@/api/local'
 import CardDelete from './CardDelete.vue'
 import CardUpdate from './CardUpdate.vue'
@@ -12,65 +12,48 @@ import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
 import { useCards } from '@/stores/local/cards'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import CardView from './CardView.vue'
+// import FloatModal from '@/components/molecules/FloatModal.vue'
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 
 const { style } = useStyle()
-
-// const cardsTags = useHandleCardsTags()
-
-// const tags = useTags()
 
 const cards = useCards()
 
 const props = defineProps<{ card: ICard }>()
 
-// const tagsInCard = computed(() => tags.readList(props.card.tags))
-
-// const tagsInCard = computed(() => props.card.tags.map((tagId) => tags.readOne(tagId)))
-
-// const cardsWithTag = computed(() => cardsTags.cardsReactive.withTagsObject([props.card])[0])
-
-const options = reactive({
-  show: false,
-  open: () => (options.show = true),
-  close: () => (options.show = false)
-})
-
 const tagIds = ref([''])
 
 const showConfirmChanges = ref(false)
 
-const closeOptionsModal = () => {
-  tagIds.value = ['']
-  options.show = false
-  showConfirmChanges.value = false
-}
-
-const openOptionsModal = () => {
-  tagIds.value = ['']
-  showConfirmChanges.value = false
-  options.show = true
-}
+const floatModal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const emitTags = (tagIdsP: string[]) => {
   tagIds.value = tagIdsP
   showConfirmChanges.value = true
 }
 
+const handleClose = () => {
+  tagIds.value = ['']
+  showConfirmChanges.value = false
+}
+
+const close = () => {
+  floatModal.value?.close()
+  handleClose()
+}
+
 const confirmnChanges = () => {
   cards.updateOne({ ...props.card, tags: tagIds.value })
-  options.close()
+  close()
 }
 </script>
 
 <template>
-  <div class="card" @mouseenter="openOptionsModal" @mouseleave="closeOptionsModal">
-    <CardView :card="props.card" />
-    <MoreOptions
-      class="more-options"
-      v-if="options.show"
-      :visible="true"
-      @close="closeOptionsModal"
-    >
+  <FloatModalSlot ref="floatModal" @close="handleClose">
+    <template #button-slot>
+      <CardView :card="props.card" class="card" />
+    </template>
+    <template #container-slot>
       <div class="options-container">
         <TagWithSwitchList
           :checkeds="props.card.tags"
@@ -82,59 +65,58 @@ const confirmnChanges = () => {
         <CardUpdate
           class="option-button"
           :card="props.card"
-          @close="options.close"
+          @updated="close"
           v-if="!showConfirmChanges"
         />
         <ThemeButton @click="confirmnChanges" class="option-button confirm-changes" v-else>
           Confirmar Alterações
         </ThemeButton>
-        <CardDelete class="option-button" :card="props.card" @close="options.close" />
+        <CardDelete class="option-button" :card="props.card" @close="close" />
       </div>
-    </MoreOptions>
-  </div>
+    </template>
+  </FloatModalSlot>
+  <!-- <div class="card" @mouseenter="openOptionsModal" @mouseleave="closeOptionsModal">
+    <FloatModal button-content="+" v-if="options.show" class="float-button-card-options">
+    </FloatModal>
+  </div> -->
 </template>
 
 <style scoped lang="scss">
 $buttonSize: v-bind('style.button.size');
-$margin: 10px;
+$margin: 20px;
 .card {
   position: relative;
   width: 100%;
+  max-width: 860px;
   margin-bottom: $margin;
-  padding: $margin;
+  // padding: $margin;
   position: relative;
   box-sizing: border-box;
-  @media screen and (max-width: 768px) {
-    margin-bottom: 0;
-    padding: 0;
-    padding-top: calc($margin / 2);
+  // @media screen and (max-width: 768px) {
+  //   margin-bottom: 0;
+  //   padding: 0;
+  //   padding-top: calc($margin / 2);
+  // }
+}
+.options-container {
+  width: 280px;
+  height: 48dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  & .option-button {
+    flex-shrink: 0;
+    width: 95%;
+    margin-top: 8px;
   }
-  & .more-options {
-    position: absolute;
-    top: calc($margin * 2);
-    right: calc($margin * 2);
-    height: $buttonSize;
-    aspect-ratio: 1;
-    & .options-container {
-      width: 280px;
-      height: 48dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow: auto;
-      & .option-button {
-        flex-shrink: 0;
-        width: 95%;
-        margin-top: 8px;
-      }
-      & .tags-switch {
-        margin-top: 0;
-        width: 96%;
-      }
-    }
+  & .tags-switch {
+    margin-top: 0;
+    width: 96%;
   }
-  & .confirm-changes {
-    background-color: rgb(116, 116, 255);
-  }
+}
+
+.confirm-changes {
+  background-color: rgb(116, 116, 255);
 }
 </style>

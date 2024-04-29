@@ -9,7 +9,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close', v: void): void
+  (e: 'toggleVisible', v: void): void
 }>()
 
 const card = ref<HTMLElement>()
@@ -31,7 +31,7 @@ const cardRepositionY = () => {
   if (cardInBottonSide) topCard.value = cardTranslateToTop
 }
 
-const close = () => emit('close')
+const close = () => emit('toggleVisible')
 
 onMounted(() => {
   cardRepositionX()

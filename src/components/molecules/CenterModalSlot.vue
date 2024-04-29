@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
+import ThemeP from '../atoms/ThemeP.vue'
+import ThemeButtonClose from '../atoms/ThemeButtonClose.vue'
+import { ref } from 'vue'
 
 const { style } = useStyle()
 
@@ -8,22 +11,43 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close', v: null): void
+  (e: 'open', v: void): void
+  (e: 'close', v: void): void
 }>()
+
+const showModal = ref(false)
+
+const open = () => {
+  showModal.value = true
+  emit('open')
+}
+
+const close = () => {
+  showModal.value = false
+  emit('close')
+}
+
+defineExpose({
+  open,
+  close
+})
 </script>
 
 <template>
-  <div class="glass">
-    <div class="modal" @click.stop>
-      <header>
-        <p>{{ props.titleModal }}</p>
-        <button class="close-modal-button" @click="() => emit('close', null)">
-          <p>x</p>
-        </button>
-      </header>
-      <main>
-        <slot></slot>
-      </main>
+  <div>
+    <div class="button-modal" @click="open">
+      <slot name="button-modal"></slot>
+    </div>
+    <div class="glass" v-if="showModal">
+      <div class="modal" @click.stop>
+        <header>
+          <ThemeP :content="props.titleModal" />
+          <ThemeButtonClose @click="close" />
+        </header>
+        <main>
+          <slot name="center-modal"></slot>
+        </main>
+      </div>
     </div>
   </div>
 </template>
@@ -31,33 +55,31 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 $boxShadow: v-bind('style.boxShadow');
 $buttonSize: v-bind('style.button.size');
-$buttonHoverColor: v-bind('style.button.hoverColor');
-$buttonTextColor: v-bind('style.button.textColor');
+$buttonHoverColor: v-bind('style.color.highlight');
+$buttonTextColor: v-bind('style.color.text');
 $buttonBorderRadius: v-bind('style.button.borderRadius');
 $buttonBgColor: v-bind('style.button.bgColor');
-$modalBgColor: v-bind('style.component.bgColor');
+$modalBgColor: v-bind('style.color.background');
 $headerHeight: calc($buttonSize + 2px);
 $closeButton: $headerHeight;
+.x {
+  width: 100%;
+}
 .glass {
+  z-index: 99999;
   width: 100%;
   height: 100dvh;
   position: fixed;
-  z-index: 99999;
   left: 0;
   top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(119, 119, 119, 0.5);
   backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  color: white;
   .modal {
     max-width: 90%;
-    border-radius: $buttonBorderRadius;
     overflow: hidden;
     background-color: $modalBgColor;
-    box-shadow: $boxShadow;
     & header {
       height: $headerHeight;
       width: 100%;
@@ -73,20 +95,15 @@ $closeButton: $headerHeight;
         align-items: center;
         justify-content: center;
       }
-      & .close-modal-button {
-        height: $closeButton;
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        &:hover {
-          background-color: rgba(255, 0, 0, 0.345);
-          overflow: hidden;
-        }
-      }
+    }
+    margin-top: 20px;
+    opacity: 0;
+    animation: init 0.3s forwards;
+  }
+  @keyframes init {
+    to {
+      opacity: 100%;
+      margin-top: 0;
     }
   }
 }

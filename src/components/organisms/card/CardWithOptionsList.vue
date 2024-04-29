@@ -30,7 +30,7 @@ watchEffect(() => {
 $buttonSize: v-bind('style.button.size');
 .container-cards-list {
   width: 100%;
-  max-width: 1928px;
+  max-width: 1628px;
   column-gap: 20px;
   padding: 20px 20px 20px 20px;
   box-sizing: border-box;

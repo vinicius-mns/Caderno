@@ -1,42 +1,24 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import ThemeButton from '../../atoms/ThemeButton.vue'
-import CenterModal from '../../atoms/CenterModal.vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
 import { useCards } from '@/stores/local/cards'
-// import { useHandleCardsTags } from '@/stores/local/handleCardsTags'
-
-// const cardsTags = useHandleCardsTags()
+import CenterModal from '@/components/molecules/CenterModal.vue'
 
 const cards = useCards()
 
 const props = defineProps<{ card: ICard }>()
 
-const emit = defineEmits<{ (e: 'close', v: null): void }>()
-
-// const tags = computed(() => cardsTags.tagsReactive.value)
-
-const modal = reactive({
-  show: false,
-  open: () => (modal.show = true),
-  close: () => {
-    modal.show = false
-    emit('close', null)
-  }
-})
+const emit = defineEmits<{ (e: 'updated', v: void): void }>()
 
 const cardUpdate = (e: ICard) => {
-  // cardsTags.cardsReactive.update(e)
   cards.updateOne(e)
-  modal.close()
+  emit('updated')
 }
 </script>
 
 <template>
   <div class="tag-create">
-    <ThemeButton @click="modal.open" class="button">Editar Card</ThemeButton>
-    <CenterModal title-modal="Editar Card" v-if="modal.show" @close="modal.close">
+    <CenterModal button-content="Editar Card" title-modal="Editor de card">
       <CardEditor :card="props.card" @emit-card="cardUpdate" />
     </CenterModal>
   </div>

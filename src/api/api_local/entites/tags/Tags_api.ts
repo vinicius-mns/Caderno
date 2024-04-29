@@ -24,6 +24,14 @@ class TagDb extends Api_localStorage_as_db<ITag> {
     })
     return listOfTags
   }
+
+  public searchTag = (text: string, tags: ITag[]) => {
+    const filtred = tags.filter((tag) => {
+      const tagLowerContent = tag.content.toLowerCase()
+      return tagLowerContent.includes(text.toLowerCase())
+    })
+    return filtred
+  }
 }
 
 const key = 'tags_local'

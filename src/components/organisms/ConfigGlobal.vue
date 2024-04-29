@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import FloatModal from '../molecules/FloatModal.vue'
+// import FloatModal from '../molecules/FloatModal.vue'
 import { useStyle } from '@/stores/style'
 // import ExportAndImportData from './ExportAndImportData.vue'
 import StyleGlobal from './config/StyleGlobal.vue'
@@ -31,7 +31,7 @@ const borderRadius = {
 
 <template>
   <div class="config-global-button" @mouseleave="modal.close">
-    <FloatModal
+    <!-- <FloatModal
       :ico="assets.config.ico"
       :title="assets.config.title"
       :show="modal.show"
@@ -44,7 +44,7 @@ const borderRadius = {
           <StyleGlobal />
         </div>
       </div>
-    </FloatModal>
+    </FloatModal> -->
   </div>
 </template>
 

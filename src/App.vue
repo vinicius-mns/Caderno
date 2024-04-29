@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useStyle } from './stores/style'
-import { onMounted, onUpdated } from 'vue'
+import { onMounted, onUpdated, watchEffect } from 'vue'
 
 const { style } = useStyle()
 
-const setBGColor = () => {
+watchEffect(() => {
   document.body.style.backgroundColor = style.color.background
-}
-
-onUpdated(setBGColor)
-onMounted(setBGColor)
+})
 </script>
 
 <template>

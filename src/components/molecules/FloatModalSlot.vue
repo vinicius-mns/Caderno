@@ -1,20 +1,27 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
+
 const { style } = useStyle()
 
-const props = withDefaults(
-  defineProps<{
-    buttonContent: string
-    buttonColor?: string
-  }>(),
-  { buttonColor: '' }
-)
+const emit = defineEmits<{
+  (e: 'open', v: void): void
+  (e: 'close', v: void): void
+}>()
 
 const card = ref<HTMLElement>()
 
 const showFlotModal = ref(false)
+
+const open = () => {
+  showFlotModal.value = true
+  emit('open')
+}
+
+const close = () => {
+  showFlotModal.value = false
+  emit('close')
+}
 
 const toggleShowModal = () => (showFlotModal.value = !showFlotModal.value)
 
@@ -51,21 +58,19 @@ const openCard = (e: MouseEvent) => {
 }
 
 defineExpose({
-  toggleShowModal
+  open,
+  close
 })
 </script>
 
 <template>
   <div class="container-float-modal">
-    <ThemeButton
-      @click="openCard"
-      class="button-open-modal"
-      :style="{ 'background-color': props.buttonColor }"
-      >{{ props.buttonContent }}</ThemeButton
-    >
-    <div class="glass" v-if="showFlotModal" @click="toggleShowModal">
+    <div class="button-slot" @click="openCard">
+      <slot name="button-slot"></slot>
+    </div>
+    <div class="glass" v-if="showFlotModal" @click="close">
       <div class="float-card" @click.stop ref="card">
-        <slot class="slot"></slot>
+        <slot class="slot" name="container-slot"></slot>
       </div>
     </div>
   </div>

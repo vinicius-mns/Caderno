@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
-import CardsPage from '@/views/CardsPage.vue'
+import CardsView from '@/views/CardsView.vue'
 import About from '@/views/AboutPage.vue'
 import ConfigPage from '@/views/ConfigPage.vue'
 
@@ -20,7 +20,12 @@ const router = createRouter({
     {
       path: '/cards',
       name: 'cards',
-      component: CardsPage
+      component: CardsView
+    },
+    {
+      path: '/cards/:id',
+      name: 'cardsByTagId',
+      component: CardsView
     },
     {
       path: '/config',

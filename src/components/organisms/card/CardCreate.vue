@@ -1,36 +1,25 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import CenterModal from '../../atoms/CenterModal.vue'
+import { reactive, ref } from 'vue'
+// import CenterModal from '../../atoms/CenterModal.vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
 import { useCards } from '@/stores/local/cards'
 import { useStyle } from '@/stores/style'
+import CenterModal from '@/components/molecules/CenterModal.vue'
+import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
+import FloatDescription from '@/components/molecules/FloatDescription.vue'
 
 const cards = useCards()
 
-const props = withDefaults(
-  defineProps<{
-    big?: boolean
-  }>(),
-  {
-    big: false
-  }
-)
-
-const emit = defineEmits<{ (e: 'close', v: null): void }>()
-
 const { style } = useStyle()
 
-const modal = reactive({
-  show: false,
-  open: () => (modal.show = true),
-  close: () => {
-    modal.show = false
-    emit('close', null)
-  }
-})
+const props = defineProps<{
+  type: 'mini' | 'full'
+}>()
+
+const centerModal = ref<InstanceType<typeof CenterModalSlot>>()
 
 const initialCard: ICard = {
   content: '',
@@ -41,34 +30,37 @@ const initialCard: ICard = {
 
 const createCard = (e: ICard) => {
   cards.createOne(e)
-  modal.close()
+  centerModal.value?.close()
 }
 </script>
 
 <template>
-  <div class="card-create">
-    <ThemeButton @click="modal.open" v-if="props.big" class="big">✍️</ThemeButton>
-    <ThemeButton @click="modal.open" v-else>Criar card ✍️</ThemeButton>
-    <CenterModal title-modal="Criar novo Card" v-if="modal.show" @close="modal.close">
+  <CenterModalSlot title-modal="Criar novo card" class="container-create-card" ref="centerModal">
+    <template #button-modal>
+      <FloatDescription content="Criar um novo card">
+        <ThemeButton class="mini" v-if="props.type === 'mini'">✍️</ThemeButton>
+      </FloatDescription>
+      <ThemeButton class="full" v-if="props.type === 'full'">Criar card ✍️</ThemeButton>
+    </template>
+    <template #center-modal>
       <CardEditor :card="initialCard" @emit-card="createCard" />
-    </CenterModal>
-  </div>
+    </template>
+  </CenterModalSlot>
 </template>
 
 <style scoped lang="scss">
-.card-create {
-  width: 100%;
-  .big {
-    height: 60px;
-    width: 60px;
-    font-size: 20px;
-    border: solid 1px v-bind('style.color.background');
-    background-color: rgb(125, 125, 173);
-    background-color: v-bind('style.color.base');
-    border-radius: 50%;
+$button-size: v-bind('style.button.size');
+.container-create-card {
+  & .mini {
+    width: $button-size;
+    height: $button-size;
+    font-size: calc(($button-size / 1.8));
   }
-  // & .button {
-  //   width: 100%;
-  // }
+  & .full {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

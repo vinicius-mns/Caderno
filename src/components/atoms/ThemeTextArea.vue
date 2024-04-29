@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 
 const { style } = useStyle()
 
@@ -14,9 +14,13 @@ const emit = defineEmits<{
 
 const contentReactive = ref(props.content)
 
+const textArea = ref<HTMLElement>()
+
 watchEffect(() => {
   emit('emitContent', contentReactive.value)
 })
+
+onMounted(() => textArea.value?.focus())
 </script>
 
 <template>
@@ -25,6 +29,7 @@ watchEffect(() => {
     v-model="contentReactive"
     class="theme-textarea"
     placeholder="digite aqui"
+    ref="textArea"
   >
   </textarea>
 </template>

@@ -41,7 +41,7 @@ const emitChecked = () => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: calc(v-bind('style.button.size') - 6px);
+$buttonSize: calc(v-bind('style.button.size') - 10px);
 $margin: 5px;
 $especialColor: v-bind('style.component.bgColor');
 $borderRadius: v-bind('style.button.borderRadius');

@@ -88,7 +88,6 @@ export const useCards = defineStore('cards', () => {
     const cardsInDb = cardsLocalApi.read()
     const cardsFiltreds = filterChain(cardsInDb)
     cards.value = cardsFiltreds
-    console.log(history.value)
   }
 
   watch(history, updateCards, { deep: true })

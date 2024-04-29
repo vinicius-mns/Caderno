@@ -15,7 +15,10 @@ class CardDb extends Api_localStorage_as_db<ICard> {
   }
 
   searchCard = (cards: ICard[], text: string) => {
-    const filtred = cards.filter((card) => card.content.includes(text))
+    const filtred = cards.filter((card) => {
+      const cardLowerContent = card.content.toLowerCase()
+      return cardLowerContent.includes(text.toLowerCase())
+    })
     return filtred
   }
 

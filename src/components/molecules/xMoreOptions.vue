@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { reactive } from 'vue'
 import FixedCard from '../atoms/FixedCard.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'close', v: void): void
+  (e: 'toggleVisible', v: void): void
 }>()
 
 const popUp = reactive({
@@ -31,7 +31,7 @@ const openPopUp = (e: MouseEvent) => {
 
 const close = () => {
   popUp.close()
-  emit('close')
+  emit('toggleVisible')
 }
 </script>
 
@@ -61,4 +61,4 @@ const close = () => {
     color: transparent;
   }
 }
-</style>
+</style> -->
