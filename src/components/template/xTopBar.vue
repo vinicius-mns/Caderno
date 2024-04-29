@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import CardCreate from '../organisms/card/CardCreate.vue'
 import ConfigGlobal from '../organisms/ConfigGlobal.vue'
 </script>
@@ -38,4 +38,4 @@ import ConfigGlobal from '../organisms/ConfigGlobal.vue'
     justify-content: center;
   }
 }
-</style>
+</style> -->

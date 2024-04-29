@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 // import { useStyle } from '@/stores/style'
 import CardCreate from '../organisms/card/CardCreate.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
@@ -38,4 +38,4 @@ const openPanel = () => emit('openPanel')
     display: none;
   }
 }
-</style>
+</style> -->

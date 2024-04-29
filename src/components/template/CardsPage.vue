@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import CardConfigModal from '../organisms/card/CardConfigModal.vue'
 import CardCreate from '../organisms/card/CardCreate.vue'
-// import CardsFilter from '../organisms/card/CardsFilter.vue'
-// import CardsRange from '../organisms/card/CardsRange.vue'
 import CardWithOptionsList from '../organisms/card/CardWithOptionsList.vue'
 import SearchCardText from '../organisms/card/SearchCardText.vue'
 </script>
@@ -11,7 +8,6 @@ import SearchCardText from '../organisms/card/SearchCardText.vue'
   <div class="cards-container">
     <header>
       <SearchCardText class="filter-card-text" />
-      <!-- <CardsRange class="cards-range" /> -->
     </header>
     <CardCreate class="card-create" type="full" />
     <CardWithOptionsList />
