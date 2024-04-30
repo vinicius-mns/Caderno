@@ -69,14 +69,14 @@ $backColor: v-bind('style.color.background');
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');
   left: v-bind('cursorPosition.x');
-  transform: translate(0, -100%);
+  transform: translate(0, -120%);
   opacity: 0;
-  animation: init 0.3s forwards;
+  animation: init 0.2s forwards;
 }
 @keyframes init {
   to {
     opacity: 100%;
-    transform: translate(0, -170%);
+    transform: translate(0, -180%);
   }
 }
 </style>

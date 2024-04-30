@@ -1,10 +1,14 @@
 import { configStorage } from '@/api/api_local/entites/config/Config_api'
 import type { IConfig } from '@/api/api_local/entites/config/configTypes'
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 export const useConfig = defineStore('config', () => {
   const config_local_api = configStorage()
+
+  const filterCardsByTag = ref(false)
+
+  const toggleFilterByTag = () => (filterCardsByTag.value = !filterCardsByTag.value)
 
   const config = reactive({
     value: config_local_api.read(),
@@ -32,6 +36,8 @@ export const useConfig = defineStore('config', () => {
   return {
     config,
     setColumns,
-    toggleFilter
+    toggleFilter,
+    filterCardsByTag,
+    toggleFilterByTag
   }
 })

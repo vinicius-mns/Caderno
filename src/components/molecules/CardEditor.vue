@@ -54,7 +54,7 @@ const send = () => {
           direction="column"
           class="tags-list"
         />
-        <CreateTag class="create-tag" />
+        <CreateTag class="create-tag" :large="true" />
       </div>
     </div>
   </div>
@@ -98,6 +98,7 @@ $margin: 10px;
       }
       & .create-tag {
         height: $butonsize;
+        width: 100%;
       }
     }
 

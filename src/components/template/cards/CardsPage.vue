@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import CardCreate from '../organisms/card/CardCreate.vue'
-import CardWithOptionsList from '../organisms/card/CardWithOptionsList.vue'
-import SearchCardText from '../organisms/card/SearchCardText.vue'
+import CardWithOptionsList from '../../organisms/card/CardWithOptionsList.vue'
+import SearchCardText from '../../organisms/card/SearchCardText.vue'
 </script>
 
 <template>
@@ -9,7 +8,6 @@ import SearchCardText from '../organisms/card/SearchCardText.vue'
     <header>
       <SearchCardText class="filter-card-text" />
     </header>
-    <CardCreate class="card-create" type="full" />
     <CardWithOptionsList />
   </div>
 </template>
