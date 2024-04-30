@@ -19,6 +19,10 @@ const props = defineProps<{
   width: 40px;
   height: 40px;
   flex-shrink: 0;
-  font-size: 24px;
+  font-size: 20px;
+  filter: grayscale(100%);
+  &:hover {
+    filter: grayscale(0);
+  }
 }
 </style>
