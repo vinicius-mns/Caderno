@@ -1,31 +1,27 @@
 <script setup lang="ts">
-import TagWithOptionsList from '../organisms/tag/TagWithOptionsList.vue'
-import TagCreate from '../organisms/tag/TagCreate.vue'
+import TagWithOptionsList from '../../organisms/tag/TagWithOptionsList.vue'
+import TagCreate from '../../organisms/tag/TagCreate.vue'
 // import TagSearch from '../organisms/tag/TagSearch.vue'
-import SwitchButton from '../atoms/SwitchButton.vue'
+import SwitchButton from '../../atoms/SwitchButton.vue'
 import { computed, ref } from 'vue'
 import { useTags } from '@/stores/local/tags'
-import TagsFilterCards from '../organisms/tag/TagsFilterCards.vue'
+import TagsFilterCards from '../../organisms/tag/TagsFilterCards.vue'
 import { useStyle } from '@/stores/style'
+import { useConfig } from '@/stores/config'
 
 const tags = useTags()
 
 const { style } = useStyle()
 
+const config = useConfig()
+
 const allTags = computed(() => tags.tags)
 
-const showFilter = ref(false)
-
-const toggle = (v: { id: string; checked: boolean }) => (showFilter.value = v.checked)
+const showFilter = computed(() => config.filterCardsByTag)
 </script>
 
 <template>
   <div class="sibebar-cards-container">
-    <TagCreate class="button-margin" />
-    <div class="action-button">
-      <h3>Filtrar Cards</h3>
-      <SwitchButton :check-value="showFilter" @emit-checked="toggle" id="f" unic-name="ff" />
-    </div>
     <div class="container" v-show="!showFilter">
       <h3>Tags</h3>
       <TagWithOptionsList :all-tags="allTags" />
