@@ -16,6 +16,7 @@ const props = defineProps<{
 
 <style scoped lang="scss">
 .action-button {
+  transition: all 0.2s;
   width: 40px;
   height: 40px;
   flex-shrink: 0;
@@ -23,6 +24,9 @@ const props = defineProps<{
   filter: grayscale(100%);
   &:hover {
     filter: grayscale(0);
+  }
+  &:active {
+    transform: scale(80%);
   }
 }
 </style>
