@@ -1,23 +1,12 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-// import CenterModal from '../../atoms/CenterModal.vue'
+import { ref } from 'vue'
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
-
 import { useCards } from '@/stores/local/cards'
-import { useStyle } from '@/stores/style'
-import CenterModal from '@/components/molecules/CenterModal.vue'
 import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
-import FloatDescription from '@/components/molecules/FloatDescription.vue'
+import ThemeActionButton from '@/components/atoms/ThemeActionButton.vue'
 
 const cards = useCards()
-
-const { style } = useStyle()
-
-const props = defineProps<{
-  type: 'mini' | 'full'
-}>()
 
 const centerModal = ref<InstanceType<typeof CenterModalSlot>>()
 
@@ -37,10 +26,7 @@ const createCard = (e: ICard) => {
 <template>
   <CenterModalSlot title-modal="Criar novo card" class="container-create-card" ref="centerModal">
     <template #button-modal>
-      <FloatDescription content="Criar um novo card">
-        <ThemeButton class="mini" v-if="props.type === 'mini'">✍️</ThemeButton>
-      </FloatDescription>
-      <ThemeButton class="full" v-if="props.type === 'full'">Criar card ✍️</ThemeButton>
+      <ThemeActionButton ico="✍️" description="Criar um novo card" />
     </template>
     <template #center-modal>
       <CardEditor :card="initialCard" @emit-card="createCard" />
@@ -48,19 +34,4 @@ const createCard = (e: ICard) => {
   </CenterModalSlot>
 </template>
 
-<style scoped lang="scss">
-$button-size: v-bind('style.button.size');
-.container-create-card {
-  & .mini {
-    width: $button-size;
-    height: $button-size;
-    font-size: calc(($button-size / 1.8));
-  }
-  & .full {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
