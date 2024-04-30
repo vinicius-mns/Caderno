@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { onMounted, reactive } from 'vue'
-import CardConfigModal from '../organisms/card/CardConfigModal.vue'
-import CardCreate from '../organisms/card/CardCreate.vue'
 
 const { style } = useStyle()
 
@@ -52,8 +50,7 @@ onMounted(closeSideIfMobileDivice)
             {{ '>' }}
           </button>
           <button @click="toggleSidebar" class="action-button" v-else>{{ '<' }}</button>
-          <CardConfigModal class="action-button" />
-          <CardCreate type="mini" class="action-button" />
+          <slot name="action-button"></slot>
         </div>
       </div>
     </div>
