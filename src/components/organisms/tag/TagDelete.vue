@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 // import CenterModal from '../../atoms/CenterModal.vue'
