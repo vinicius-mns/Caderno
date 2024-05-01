@@ -8,7 +8,7 @@ import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import { useTags } from '@/stores/local/tags'
-import FloatDescription from '@/components/molecules/FloatDescription.vue'
+import FloatDescription from '@/components/atoms/FloatDescription.vue'
 
 const { style } = useStyle()
 
@@ -60,10 +60,6 @@ const cardDate = String(new Date(props.card.date).toLocaleDateString())
           <ThemeP :key="i" :content="tag.emoji" class="tag" />
         </FloatDescription>
       </HorizontalCarousel>
-      <!-- <ListOf
-        class="tags"
-        :list="props.tags.map((tag) => ({ content: tag.emoji, title: tag.content }))"
-      /> -->
     </header>
     <div class="card-text">
       <div v-html="marked(props.card.content)"></div>

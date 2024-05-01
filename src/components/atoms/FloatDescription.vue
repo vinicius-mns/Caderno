@@ -33,19 +33,11 @@ const cardRepositionX = () => {
   }
 }
 
-// const cardRepositionY = () => {
-//   const cardHeight = card.value?.clientHeight as number
-//   const cardInBottonSide = parseInt(cursorPosition.y) > window.innerHeight / 2
-//   const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight}px`
-//   if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
-// }
-
 const openCard = (e: MouseEvent) => {
   setCursorPostion(e)
   openFlotCard()
   nextTick(() => {
     cardRepositionX()
-    // cardRepositionY()
   })
 }
 </script>
@@ -61,7 +53,7 @@ const openCard = (e: MouseEvent) => {
 $color: v-bind('style.color.text');
 $backColor: v-bind('style.color.background');
 .description-text {
-  z-index: 2;
+  z-index: 1;
   position: fixed;
   padding: 10px;
   color: $color;

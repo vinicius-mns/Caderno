@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
-import FloatDescription from '@/components/molecules/FloatDescription.vue'
+import FloatDescription from '@/components/atoms/FloatDescription.vue'
 
 const props = defineProps<{
   description: string
-  ico: string
 }>()
 </script>
 
 <template>
   <FloatDescription :content="props.description">
-    <ThemeButton class="action-button">{{ props.ico }}</ThemeButton>
+    <ThemeButton class="action-button">
+      <slot></slot>
+    </ThemeButton>
   </FloatDescription>
 </template>
 
@@ -21,12 +22,16 @@ const props = defineProps<{
   height: 40px;
   flex-shrink: 0;
   font-size: 20px;
-  filter: grayscale(100%);
-  &:hover {
-    filter: grayscale(0);
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:active {
     transform: scale(80%);
   }
+}
+
+svg {
+  fill: red;
+  width: 20px;
 }
 </style>
