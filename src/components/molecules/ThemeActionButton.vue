@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
-import FloatDescription from '@/components/molecules/FloatDescription.vue'
+import FloatDescription from '@/components/atoms/FloatDescription.vue'
 
 const props = defineProps<{
   description: string
