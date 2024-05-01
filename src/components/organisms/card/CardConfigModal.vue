@@ -57,6 +57,6 @@ const { style } = useStyle()
 }
 svg {
   fill: v-bind('style.color.text');
-  width: 20px;
+  width: 16px;
 }
 </style>

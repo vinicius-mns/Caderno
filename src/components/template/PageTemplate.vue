@@ -119,8 +119,9 @@ onMounted(closeSideIfMobileDivice)
       justify-content: center;
       background-color: v-bind('style.color.base');
       color: v-bind('style.color.text');
+      border-radius: 8px;
       & svg {
-        height: 30px;
+        height: 22px;
         fill: v-bind('style.color.text');
       }
       border: none;

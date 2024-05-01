@@ -55,6 +55,6 @@ const createCard = (e: ICard) => {
 <style scoped lang="scss">
 svg {
   fill: v-bind('style.color.text');
-  height: 20px;
+  height: 17px;
 }
 </style>

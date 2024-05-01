@@ -65,7 +65,7 @@ const createTag = (e: typeof initTag) => {
   width: 100%;
 }
 svg {
-  height: 24px;
+  height: 19px;
   fill: v-bind('style.color.text');
 }
 </style>

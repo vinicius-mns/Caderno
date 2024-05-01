@@ -39,7 +39,7 @@ const click = () => config.toggleFilterByTag()
   box-shadow: 0 0 0 2px rgb(55, 133, 55);
 }
 svg {
-  height: 22px;
+  height: 19px;
   fill: v-bind('style.color.text');
 }
 </style>
