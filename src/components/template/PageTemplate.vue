@@ -47,9 +47,32 @@ onMounted(closeSideIfMobileDivice)
       <div class="actions-container">
         <div class="actions-buttons">
           <button @click="toggleSidebar" class="action-button" v-if="sideW.closed">
-            {{ '>' }}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              id="Outline"
+              viewBox="0 0 24 24"
+              width="512"
+              height="512"
+              style="transform: rotate(180deg)"
+            >
+              <path
+                d="M19,11H9l3.29-3.29a1,1,0,0,0,0-1.42,1,1,0,0,0-1.41,0l-4.29,4.3A2,2,0,0,0,6,12H6a2,2,0,0,0,.59,1.4l4.29,4.3a1,1,0,1,0,1.41-1.42L9,13H19a1,1,0,0,0,0-2Z"
+              />
+            </svg>
           </button>
-          <button @click="toggleSidebar" class="action-button" v-else>{{ '<' }}</button>
+          <button @click="toggleSidebar" class="action-button" v-else>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              id="Outline"
+              viewBox="0 0 24 24"
+              width="512"
+              height="512"
+            >
+              <path
+                d="M19,11H9l3.29-3.29a1,1,0,0,0,0-1.42,1,1,0,0,0-1.41,0l-4.29,4.3A2,2,0,0,0,6,12H6a2,2,0,0,0,.59,1.4l4.29,4.3a1,1,0,1,0,1.41-1.42L9,13H19a1,1,0,0,0,0-2Z"
+              />
+            </svg>
+          </button>
           <slot name="action-button"></slot>
         </div>
       </div>
@@ -96,6 +119,10 @@ onMounted(closeSideIfMobileDivice)
       justify-content: center;
       background-color: v-bind('style.color.base');
       color: v-bind('style.color.text');
+      & svg {
+        height: 30px;
+        fill: v-bind('style.color.text');
+      }
       border: none;
       cursor: pointer;
       &:hover {
