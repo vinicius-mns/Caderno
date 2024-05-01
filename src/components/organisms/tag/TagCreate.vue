@@ -4,7 +4,7 @@ import TagEditor from '../../molecules/TagEditor.vue'
 import { useTags } from '@/stores/local/tags'
 import CenterModal from '@/components/molecules/CenterModal.vue'
 import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
-import ThemeActionButton from '@/components/atoms/ThemeActionButton.vue'
+import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
 const tag = useTags()

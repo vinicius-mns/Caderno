@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { ICard } from '@/api/local'
-import CardEditor from '../../molecules/CardEditor.vue'
+import CardEditor from '@/components/molecules/CardEditor.vue'
 import { useCards } from '@/stores/local/cards'
 import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
-import ThemeActionButton from '@/components/atoms/ThemeActionButton.vue'
+import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 
 const cards = useCards()
 

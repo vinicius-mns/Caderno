@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ThemeActionButton from '@/components/atoms/ThemeActionButton.vue'
+import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import { computed } from 'vue'
 import { useConfig } from '@/stores/config'
 

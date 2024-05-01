@@ -3,7 +3,7 @@ import CardsRange from './CardsRange.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import DarkMode from '../config/DarkMode.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-import ThemeActionButton from '@/components/atoms/ThemeActionButton.vue'
+import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 </script>
 
 <template>
