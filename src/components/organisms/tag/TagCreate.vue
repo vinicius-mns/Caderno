@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import TagEditor from '../../molecules/TagEditor.vue'
 import { useTags } from '@/stores/local/tags'
-import CenterModal from '@/components/molecules/CenterModal.vue'
 import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
 import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
@@ -27,16 +26,16 @@ const initTag = {
   id: ''
 }
 
-const centerModal = ref<InstanceType<typeof CenterModal>>()
+const centerModal = ref<InstanceType<typeof CenterModalSlot>>()
 
 const createTag = (e: typeof initTag) => {
   tag.createOne(e)
-  centerModal.value?.toggleVisible()
+  centerModal.value?.close()
 }
 </script>
 
 <template>
-  <CenterModalSlot title-modal="Criar nova tag">
+  <CenterModalSlot title-modal="Criar nova tag" ref="centerModal">
     <template #button-modal>
       <ThemeButton v-if="props.large" class="large">Criar nova tag 🏷️</ThemeButton>
       <ThemeActionButton description="Criar nova tag" v-else>
