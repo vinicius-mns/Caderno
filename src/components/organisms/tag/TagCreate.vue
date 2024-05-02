@@ -41,9 +41,9 @@ const createTag = (e: typeof initTag) => {
       <ThemeActionButton description="Criar nova tag" v-else>
         <svg
           id="Layer_1"
-          height="512"
+          height="19"
           viewBox="0 0 24 24"
-          width="512"
+          width="19"
           xmlns="http://www.w3.org/2000/svg"
           data-name="Layer 1"
         >
@@ -64,7 +64,6 @@ const createTag = (e: typeof initTag) => {
   width: 100%;
 }
 svg {
-  height: 19px;
   fill: v-bind('style.color.text');
 }
 </style>

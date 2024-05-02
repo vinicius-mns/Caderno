@@ -37,4 +37,7 @@ td {
 th {
   color: $textColor;
 }
+svg {
+  fill: v-bind('style.color.text');
+}
 </style>
