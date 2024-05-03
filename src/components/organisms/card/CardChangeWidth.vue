@@ -5,7 +5,7 @@ import { computed } from 'vue'
 
 const { config, cardChengeWidth } = useConfig()
 
-const columns = computed(() => config.value.columnsCard)
+const columns = computed(() => config.value.cardWidth)
 
 const ColumnsSet = (e: number) => cardChengeWidth(e)
 </script>

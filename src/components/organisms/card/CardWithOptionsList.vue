@@ -13,7 +13,7 @@ const cards = useCards()
 
 const allCards = ref(cards.cards)
 
-const carsSize = computed(() => `${config.value.columnsCard}px`)
+const carsSize = computed(() => `${config.value.cardWidth}px`)
 
 watchEffect(() => {
   allCards.value = cards.cards.reverse()
