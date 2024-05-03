@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CardsRange from './CardsRange.vue'
+import cardChengeWidth from '@/components/organisms/card/CardChangeWidth.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import DarkMode from '../config/DarkMode.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
@@ -43,8 +43,8 @@ const { style } = useStyle()
     </template>
     <template #container-slot>
       <div class="options-container">
-        <ThemeP content="Seleciona a quantidade de colunas" />
-        <CardsRange />
+        <ThemeP content="Largura do card" />
+        <cardChengeWidth />
         <DarkMode />
         <CardsStyleSelector />
       </div>

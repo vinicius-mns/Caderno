@@ -15,9 +15,9 @@ export const useConfig = defineStore('config', () => {
     setValue: (ent: IConfig) => (config.value = ent)
   })
 
-  const setColumns = (columnsLength: number) => {
+  const cardChengeWidth = (width: number) => {
     try {
-      config_local_api.setColumns(columnsLength)
+      config_local_api.cardChengeWidth(width)
       config.setValue(config_local_api.read())
     } catch (e) {
       console.error(e)
@@ -35,7 +35,7 @@ export const useConfig = defineStore('config', () => {
 
   return {
     config,
-    setColumns,
+    cardChengeWidth,
     toggleFilter,
     filterCardsByTag,
     toggleFilterByTag

@@ -158,6 +158,9 @@ $sidebarWidth: v-bind('sideW.desktop');
   }
   & .page {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: v-bind('style.color.background');
   }
 }
 

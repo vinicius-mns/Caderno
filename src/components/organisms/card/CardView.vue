@@ -77,6 +77,8 @@ const cardDate = String(new Date(props.card.date).toLocaleDateString())
 // $boxShadow: v-bind('style.boxShadow');
 $margin: 5px;
 .card {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   box-shadow: none;

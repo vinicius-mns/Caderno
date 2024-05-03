@@ -14,11 +14,11 @@ import SearchCardText from '../../organisms/card/SearchCardText.vue'
 
 <style scoped lang="scss">
 .cards-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  // margin: 0;
+  // padding: 0;
   header {
     height: 60px;
     width: 100%;

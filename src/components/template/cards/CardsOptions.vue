@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import CardsFilter from '@/components/organisms/card/CardsFilter.vue'
-import CardsRange from '@/components/organisms/card/CardsRange.vue'
+import cardChengeWidth from '@/components/organisms/card/CardChangeWidth.vue'
 </script>
 
 <template>
   <div class="cards-options-container">
-    <CardsRange />
+    <cardChengeWidth />
     <CardsFilter />
   </div>
 </template>

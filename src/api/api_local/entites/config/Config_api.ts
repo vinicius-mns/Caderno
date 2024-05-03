@@ -16,7 +16,7 @@ class Config_local extends Api_localStorage<IConfig> {
     super(key, _schema, _initialValue)
   }
 
-  public setColumns(columnsLength: number) {
+  public cardChengeWidth(columnsLength: number) {
     try {
       const data = this.read()
       const newData: IConfig = { ...data, columnsCard: columnsLength }
