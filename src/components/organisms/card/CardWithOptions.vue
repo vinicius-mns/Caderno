@@ -85,18 +85,14 @@ const confirmnChanges = () => {
 $buttonSize: v-bind('style.button.size');
 $margin: 20px;
 .card {
-  position: relative;
-  width: 100%;
-  max-width: 860px;
-  margin-bottom: $margin;
-  // padding: $margin;
-  position: relative;
-  box-sizing: border-box;
-  // @media screen and (max-width: 768px) {
-  //   margin-bottom: 0;
-  //   padding: 0;
-  //   padding-top: calc($margin / 2);
-  // }
+  // position: relative;
+  // width: 100%;
+  // min-width: 380px;
+  // max-width: 860px;
+  // flex-shrink: 0;
+  // margin-bottom: $margin;
+  // position: relative;
+  // box-sizing: border-box;
 }
 .options-container {
   width: 280px;
