@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const IConfigSchema = z.object({
-  columnsCard: z.number().max(860).min(200),
+  cardWidth: z.number().max(860).min(200),
   showFilterCards: z.boolean()
 })
 

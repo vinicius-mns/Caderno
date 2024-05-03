@@ -3,7 +3,7 @@ import { Api_localStorage } from '../../Api_localStorage'
 import { type IConfig, IConfigSchema } from './configTypes'
 
 const initialValue: IConfig = {
-  columnsCard: 2,
+  cardWidth: 202,
   showFilterCards: false
 }
 
@@ -16,10 +16,10 @@ class Config_local extends Api_localStorage<IConfig> {
     super(key, _schema, _initialValue)
   }
 
-  public cardChengeWidth(columnsLength: number) {
+  public cardChengeWidth(length: number) {
     try {
       const data = this.read()
-      const newData: IConfig = { ...data, columnsCard: columnsLength }
+      const newData: IConfig = { ...data, cardWidth: length }
       this.update(newData)
     } catch (e) {
       const message = 'erro ao alterar colunas'
