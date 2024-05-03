@@ -1,14 +1,14 @@
-import { cardStyleLocalDb } from '@/api/api_local/entites/cardsStyle/Card_Style_api'
+// import { cardStyleLocalDb } from '@/api/api_local/entites/cardsStyle/Card_Style_api'
 // import type { ICardStyle } from '@/api/api_local/entites/cardsStyle/CardsStyleTypes'
 import { defineStore } from 'pinia'
-import { reactive, ref, watch } from 'vue'
+import { ref } from 'vue'
 
 export const useCardStyle = defineStore('cardStyle', () => {
-  const cardStyleApi = cardStyleLocalDb()
+  // const cardStyleApi = cardStyleLocalDb()
 
-  const history = reactive({
-    value: [] as string[]
-  })
+  // const history = reactive({
+  //   value: [] as string[]
+  // })
 
   const cardInit = [
     {
@@ -43,11 +43,11 @@ export const useCardStyle = defineStore('cardStyle', () => {
     atualCardSyle.value = cardsStyle.value[index]
   }
 
-  const updateCards = () => {
-    cardsStyle.value = cardStyleApi.read()
-  }
+  // const updateCards = () => {
+  //   cardsStyle.value = cardStyleApi.read()
+  // }
 
-  watch(history, updateCards, { deep: true })
+  // watch(history, updateCards, { deep: true })
 
   return {
     cardsStyle,
