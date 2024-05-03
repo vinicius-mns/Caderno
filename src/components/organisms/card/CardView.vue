@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import { computed } from 'vue'
 import CalcDate from '../../atoms/CalcDate.vue'
 import ThemeButton from '../../atoms/ThemeButton.vue'
@@ -9,10 +8,13 @@ import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import { useTags } from '@/stores/local/tags'
 import FloatDescription from '@/components/atoms/FloatDescription.vue'
-
-const { style } = useStyle()
+import { useCardStyle } from '@/stores/cardStyle'
 
 const tags = useTags()
+
+const cardStyle = useCardStyle()
+
+const atualStyle = computed(() => cardStyle.atualCardSyle)
 
 marked.setOptions({ breaks: true })
 
@@ -44,7 +46,7 @@ const cardDate = String(new Date(props.card.date).toLocaleDateString())
 </script>
 
 <template>
-  <ThemeButton class="card">
+  <ThemeButton class="card" :style="atualStyle">
     <header>
       <div class="date">
         <FloatDescription :content="cardDate">
@@ -68,24 +70,23 @@ const cardDate = String(new Date(props.card.date).toLocaleDateString())
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
-$buttonBgColor: v-bind('style.button.bgColor');
-$buttonHoverColor: v-bind('style.button.hoverColor');
-$borderRadius: v-bind('style.button.borderRadius');
-$boxShadow: v-bind('style.boxShadow');
+// $buttonSize: v-bind('style.button.size');
+// $buttonBgColor: v-bind('style.button.bgColor');
+// $buttonHoverColor: v-bind('style.button.hoverColor');
+// $borderRadius: v-bind('style.button.borderRadius');
+// $boxShadow: v-bind('style.boxShadow');
 $margin: 5px;
 .card {
   display: flex;
   flex-direction: column;
   box-shadow: none;
   height: auto;
-  border-radius: $borderRadius;
-  box-shadow: $boxShadow;
   & header {
     width: 100%;
-    height: calc($buttonSize / 1.3);
+    height: 26px;
     display: flex;
     align-items: center;
+    background-color: transparent;
     & .date {
       width: 35%;
       height: 100%;
@@ -107,7 +108,6 @@ $margin: 5px;
     width: 95%;
     margin-left: 2.5%;
     box-sizing: border-box;
-    border-radius: $borderRadius;
     @media screen and (max-width: 768px) {
       & p {
         font-size: 16px;

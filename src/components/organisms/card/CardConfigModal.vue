@@ -5,6 +5,7 @@ import DarkMode from '../config/DarkMode.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import { useStyle } from '@/stores/style'
+import CardsStyleSelector from '../config/style/CardsStyleSelector.vue'
 
 const { style } = useStyle()
 </script>
@@ -45,6 +46,7 @@ const { style } = useStyle()
         <ThemeP content="Seleciona a quantidade de colunas" />
         <CardsRange />
         <DarkMode />
+        <CardsStyleSelector />
       </div>
     </template>
   </FloatModalSlot>
