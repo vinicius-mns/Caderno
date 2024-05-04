@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import type { ICard } from '@/api/local'
@@ -32,94 +32,95 @@ const send = () => {
     tags: checkedTags.value
   })
 }
+
+const showEditor = ref(false)
+
+const open = () => (showEditor.value = true)
+
+const close = () => {
+  content.set('')
+  showEditor.value = false
+}
 </script>
 
 <template>
-  <div class="card-editor">
-    <div class="card-form">
-      <div class="content-section">
-        <ThemeTextArea
-          :content="props.card.content"
-          @emit-content="content.set"
-          class="text-area"
-        />
-        <ThemeButton class="send-button" @click="send">Confirmar</ThemeButton>
-      </div>
-      <div class="tag-section">
-        <TagsWithSwitch
-          :checkeds="props.card.tags"
-          @emit-tags="checkedTags.set"
-          unic-name="tags-switch-card-editor"
-          :emit-tags="true"
-          direction="column"
-          class="tags-list"
-        />
-        <CreateTag class="create-tag" :large="true" />
-      </div>
+  <div class="card-form">
+    <div class="tag-section" v-show="showEditor">
+      <TagsWithSwitch
+        :checkeds="props.card.tags"
+        @emit-tags="checkedTags.set"
+        unic-name="tags-switch-card-editor"
+        :emit-tags="true"
+        direction="row"
+        class="tags-list"
+      />
+    </div>
+    <div class="content-section">
+      <ThemeTextArea
+        :content="props.card.content"
+        :class="[showEditor ? 'focus' : 'nofocus', 'text-area']"
+        @emit-content="content.set"
+        @focus="open"
+      />
+    </div>
+    <div class="handle-buttons" v-show="showEditor">
+      <ThemeButton class="close-button" @mousedown="close">x</ThemeButton>
+      <ThemeButton class="send-button" @mousedown="send">Confirmar</ThemeButton>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-$butonsize: v-bind('style.button.size');
-$margin: 10px;
-.card-editor {
-  width: 900px;
-  max-width: 100%;
-  height: 60dvh;
+.card-form {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  padding: 10px;
   box-sizing: border-box;
-  padding: $margin;
-  & .card-form {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  & .tag-section {
+    transition: all 0.3s;
     width: 100%;
-    height: 100%;
-    display: flex;
-    & .content-section {
-      width: 60%;
-      height: calc(100% - $butonsize - $margin);
-      box-sizing: border-box;
-      padding: $margin;
-      & .send-button {
-        width: 100%;
-        margin-top: calc($margin / 2);
-      }
-    }
-    & .tag-section {
-      width: 40%;
+    height: 60px;
+    margin: 5px 0 5px;
+    & .tags-list {
+      width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      & .tags-list {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        height: calc(100% - $butonsize - $margin);
-        overflow: auto;
-      }
-      & .create-tag {
-        height: $butonsize;
-        width: 100%;
+      overflow: auto;
+    }
+    & .create-tag {
+      height: 30px;
+      width: 100%;
+    }
+  }
+
+  & .content-section {
+    width: 100%;
+    & .text-area {
+      width: 100%;
+      transition: all 0.3s;
+      height: 60px;
+    }
+    & .focus {
+      height: 160px;
+    }
+  }
+  & .handle-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    & .close-button {
+      background-color: rgba(255, 122, 122, 0.5);
+      width: 8%;
+      &:hover {
+        background-color: red;
       }
     }
-
-    @media screen and (max-width: 768px) {
-      flex-direction: column;
-      & .content-section {
-        width: 100%;
-        height: 50%;
-        padding: 0;
-        & .text-area {
-          height: calc(100% - $butonsize - $margin);
-        }
-        & .send-button {
-          flex-shrink: 0;
-          margin-top: 0;
-        }
-      }
-      & .tag-section {
-        width: 100%;
-        height: 50%;
-      }
+    & .send-button {
+      width: 90%;
+      background-color: rgb(140, 140, 189);
     }
   }
 }

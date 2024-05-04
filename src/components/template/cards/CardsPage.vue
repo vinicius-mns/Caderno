@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CardCreateN from '@/components/organisms/card/CardCreateN.vue';
 import CardWithOptionsList from '../../organisms/card/CardWithOptionsList.vue'
 import SearchCardText from '../../organisms/card/SearchCardText.vue'
 </script>
@@ -9,16 +10,13 @@ import SearchCardText from '../../organisms/card/SearchCardText.vue'
       <SearchCardText class="filter-card-text" />
     </header>
     <CardWithOptionsList />
+    <CardCreateN />
   </div>
 </template>
 
 <style scoped lang="scss">
 .cards-container {
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // margin: 0;
-  // padding: 0;
+  width: 100%;
   header {
     height: 60px;
     width: 100%;
