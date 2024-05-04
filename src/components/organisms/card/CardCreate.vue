@@ -47,12 +47,23 @@ const createCard = (e: ICard) => {
       </ThemeActionButton>
     </template>
     <template #center-modal>
-      <CardEditor :card="initialCard" @emit-card="createCard" />
+      <div class="card-create-container">
+        <CardEditor :card="initialCard" @emit-card="createCard" class="card-create" />
+      </div>
     </template>
   </CenterModalSlot>
 </template>
 
 <style scoped lang="scss">
+.card-create-container {
+  width: 400px;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  & .card-create {
+    width: 95%;
+  }
+}
 svg {
   fill: v-bind('style.color.text');
   height: 17px;

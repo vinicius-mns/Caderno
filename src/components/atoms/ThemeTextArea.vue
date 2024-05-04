@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
-import { onMounted, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const { style } = useStyle()
 
@@ -14,13 +14,9 @@ const emit = defineEmits<{
 
 const contentReactive = ref(props.content)
 
-const textArea = ref<HTMLElement>()
-
 watchEffect(() => {
   emit('emitContent', contentReactive.value)
 })
-
-onMounted(() => textArea.value?.focus())
 </script>
 
 <template>
@@ -29,7 +25,6 @@ onMounted(() => textArea.value?.focus())
     v-model="contentReactive"
     class="theme-textarea"
     placeholder="digite aqui"
-    ref="textArea"
   >
   </textarea>
 </template>
@@ -42,20 +37,16 @@ $buttonTextColor: v-bind('style.button.textColor');
 $buttonBorderRadius: v-bind('style.button.borderRadius');
 $buttonBgColor: v-bind('style.button.bgColor');
 .theme-textarea {
-  height: 100%;
+  // height: 100%;
   width: 100%;
-  box-shadow: $boxShadow;
-  background-color: $buttonBgColor;
-  border-radius: $buttonBorderRadius;
+  background-color: transparent;
+  border-radius: 8px;
+  border: solid rgba(131, 131, 131, 0.5) 0.5px;
   color: $buttonTextColor;
-  border: none;
   overflow: auto;
   outline: none;
   box-sizing: border-box;
   padding: 20px;
   resize: none;
-  &:hover {
-    background-color: $buttonHoverColor;
-  }
 }
 </style>
