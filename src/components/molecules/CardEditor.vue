@@ -5,7 +5,6 @@ import ThemeButton from '../atoms/ThemeButton.vue'
 import type { ICard } from '@/api/local'
 
 import ThemeTextArea from '../atoms/ThemeTextArea.vue'
-import CreateTag from '../organisms/tag/TagCreate.vue'
 import TagsWithSwitch from '../organisms/tag/TagWithSwitchList.vue'
 
 const { style } = useStyle()
@@ -18,6 +17,8 @@ const content = reactive({
   value: props.card.content,
   set: (e: string) => (content.value = e)
 })
+
+const textArea = ref<InstanceType<typeof ThemeTextArea>>()
 
 const checkedTags = reactive({
   value: props.card.tags as string[],
@@ -38,7 +39,7 @@ const showEditor = ref(false)
 const open = () => (showEditor.value = true)
 
 const close = () => {
-  content.set('')
+  textArea.value?.clear()
   showEditor.value = false
 }
 </script>
@@ -57,6 +58,7 @@ const close = () => {
     </div>
     <div class="content-section">
       <ThemeTextArea
+        ref="textArea"
         :content="props.card.content"
         :class="[showEditor ? 'focus' : 'nofocus', 'text-area']"
         @emit-content="content.set"

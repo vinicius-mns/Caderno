@@ -14,9 +14,15 @@ const emit = defineEmits<{
 
 const contentReactive = ref(props.content)
 
+const clear = () => {
+  contentReactive.value = ''
+}
+
 watchEffect(() => {
   emit('emitContent', contentReactive.value)
 })
+
+defineExpose({ clear })
 </script>
 
 <template>
