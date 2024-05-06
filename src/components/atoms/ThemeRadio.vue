@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useStyle } from '@/stores/style'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   options: string[]
@@ -35,9 +35,9 @@ const emitSelected = () => emit('emitSelected', select.value)
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
-$color: v-bind('style.button.textColor');
-$boxShadow: v-bind('style.boxShadow');
+$buttonSize: 36px;
+$color: v-bind('atualStyle.color.text');
+$boxShadow: v-bind('atualStyle.boxShadow');
 .emojis-container {
   padding: 10px;
   width: 95%;

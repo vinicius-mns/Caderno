@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import CardWithOptions from './CardWithOptions.vue'
 import { computed, ref, watchEffect } from 'vue'
 import { useConfig } from '@/stores/config'
 import { useCards } from '@/stores/local/cards'
 const { config } = useConfig()
-
-const { style } = useStyle()
 
 const cards = useCards()
 
@@ -26,7 +23,7 @@ watchEffect(() => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 .container-cards-list {
   width: 100%;
   display: flex;

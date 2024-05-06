@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 // import CenterModal from '../../atoms/CenterModal.vue'
 import { type ITag } from '@/api/local'
@@ -7,9 +6,7 @@ import CardView from '../card/CardView.vue'
 import TagView from '../../molecules/TagView.vue'
 import { useTags } from '@/stores/local/tags'
 import { useCards } from '@/stores/local/cards'
-import FloatModal from '@/components/molecules/FloatModal.vue'
-
-const { style } = useStyle()
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 
 const tags = useTags()
 
@@ -33,19 +30,24 @@ const deleteTag = () => {
 </script>
 
 <template>
-  <FloatModal button-content="Deletar Tag" class="delete" button-color="rgb(255, 49, 49)">
-    <div class="confirm-delete-container">
-      <TagView class="item" :tag="props.tag" />
-      <div class="card-section item">
-        <CardView v-for="(card, i) in cardsWithTag()" :key="i" :card="card" class="card item" />
+  <FloatModalSlot>
+    <template #button-slot>
+      <ThemeButton class="delete">Deletar</ThemeButton>
+    </template>
+    <template #container-slot>
+      <div class="confirm-delete-container">
+        <TagView class="item" :tag="props.tag" />
+        <div class="card-section item">
+          <CardView v-for="(card, i) in cardsWithTag()" :key="i" :card="card" class="card item" />
+        </div>
+        <ThemeButton @click="deleteTag" class="item delete">Deletar</ThemeButton>
       </div>
-      <ThemeButton @click="deleteTag" class="item delete">Deletar</ThemeButton>
-    </div>
-  </FloatModal>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 .delete {
   height: $buttonSize;
   border-radius: 6px;

@@ -1,61 +1,40 @@
-import { styleStorage } from '@/api/api_local/entites/style/Style_api'
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
-export const useStyle = defineStore('style', () => {
-  const apiStyle = styleStorage()
-
-  const style = reactive(apiStyle.read())
-
-  const updateStyle = () => {
-    const localStyle = apiStyle.read()
-    style.boxShadow = localStyle.boxShadow
-    style.button = localStyle.button
-    style.component = localStyle.component
-    style.darkmode = localStyle.darkmode
-    style.optionsColor = localStyle.optionsColor
-    style.page = localStyle.page
-    style.color.background = localStyle.color.background
-    style.color.base = localStyle.color.base
-    style.color.neutral = localStyle.color.neutral
-    style.color.text = localStyle.color.text
-    style.color.highlight = localStyle.color.highlight
-  }
-
-  const toggleDarkMode = () => {
-    apiStyle.toggleDarkMode()
-    updateStyle()
-  }
-
-  const selecColor = (color: string) => {
-    apiStyle.selecColor(color)
-    updateStyle()
-  }
-
-  // const defineButtonSize = (device: 'mobile' | 'desktop') => {
-  //   const execute = {
-  //     mobile: () => (style.button.size = '42px'),
-  //     desktop: () => (style.button.size = '32px')
-  //   }
-  //   execute[device]()
+export const useStyle = defineStore('style-global', () => {
+  const optionsStyle = [
+    {
+      color: {
+        text: 'white',
+        one: '#181818',
+        two: '#191919',
+        three: '#202020',
+        four: '#282828'
+      },
+      boxShadow: '',
+      // border: 'solid rgba(131, 131, 131, 0.8) 1px',
+      borderRadius: {
+        one: '8px',
+        two: '12px',
+        trhee: '14px'
+      }
+    }
+  ]
+  // {
+  //   'color-text': 'white',
+  //   'button-bgColor': '#313131',
+  //   'page-bgColor': '#191919',
+  //   'component.bgColor': '#202020',
+  //   'color-neutral': '#848484'
+  //   'hover-Color': '#424242',
+  //   color.background = '#181818'
+  //   color.base = '#272727'
+  //   color.highlight = '#3C3C3C'
   // }
 
-  const setBorderRadius = (value: number) => {
-    apiStyle.changeBorderRadius(value)
-    updateStyle()
-  }
-
-  const setBoxShadown = (value: { color?: string; border?: number }) => {
-    apiStyle.changeBoxShadown(value)
-    updateStyle()
-  }
+  const atualStyle = ref(optionsStyle[0])
 
   return {
-    style,
-    // defineButtonSize,
-    toggleDarkMode,
-    selecColor,
-    setBorderRadius,
-    setBoxShadown
+    atualStyle
   }
 })

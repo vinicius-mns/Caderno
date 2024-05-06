@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 // import CardView from '../../molecules/CardView.vue'
 import { ref } from 'vue'
 // import MoreOptions from '../../molecules/MoreOptions.vue'
@@ -14,8 +13,6 @@ import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import CardView from './CardView.vue'
 // import FloatModal from '@/components/molecules/FloatModal.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-
-const { style } = useStyle()
 
 const cards = useCards()
 
@@ -82,7 +79,7 @@ const confirmnChanges = () => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 $margin: 20px;
 .card {
   // position: relative;

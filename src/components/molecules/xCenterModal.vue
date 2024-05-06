@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import ThemeP from '../atoms/ThemeP.vue'
 import ThemeButtonClose from '../atoms/ThemeButtonClose.vue'
@@ -98,4 +98,4 @@ $closeButton: $headerHeight;
     }
   }
 }
-</style>
+</style> -->

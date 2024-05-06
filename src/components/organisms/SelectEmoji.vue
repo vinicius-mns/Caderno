@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import EmojiSelector from '../molecules/EmojiSelector.vue'
 import { ref } from 'vue'
-import { useStyle } from '@/stores/style'
 import { useEmoji } from '@/stores/emojis'
-import CenterModal from '../molecules/CenterModal.vue'
-
-const { style } = useStyle()
+import FloatModalSlot from '../molecules/FloatModalSlot.vue'
+import ThemeButton from '../atoms/ThemeButton.vue'
 
 const emojis = useEmoji()
 
@@ -17,37 +15,37 @@ const emit = defineEmits<{
   (e: 'changeEmoji', v: string): void
 }>()
 
-const centerModal = ref<InstanceType<typeof CenterModal>>()
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const allEmojis = ref(emojis.getAll())
 
 const sendSelected = (e: string) => {
   emit('changeEmoji', e)
-  centerModal.value?.toggleVisible()
+  modal.value?.close()
 }
 </script>
 
 <template>
-  <CenterModal
-    :button-content="props.seletedEmoji ? props.seletedEmoji : '+'"
-    title-modal="Selecione um emoji"
-    ref="centerModal"
-    class="container-selectemoji"
-  >
-    <div class="modal-selec-emoji">
-      <div class="emoji-selector-container">
-        <EmojiSelector
-          :emojis="allEmojis"
-          :emoji-selected="props.seletedEmoji"
-          @change-emoji="sendSelected"
-        />
+  <FloatModalSlot ref="modal">
+    <template #button-slot>
+      <ThemeButton>{{ props.seletedEmoji ? props.seletedEmoji : '+' }}</ThemeButton>
+    </template>
+    <template #container-slot>
+      <div class="modal-selec-emoji">
+        <div class="emoji-selector-container">
+          <EmojiSelector
+            :emojis="allEmojis"
+            :emoji-selected="props.seletedEmoji"
+            @change-emoji="sendSelected"
+          />
+        </div>
       </div>
-    </div>
-  </CenterModal>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 .container-selectemoji {
   width: $buttonSize;
   flex-shrink: 0;

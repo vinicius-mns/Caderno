@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { useStyle } from '@/stores/style'
 import InputTextAtom from '../atoms/InputTextAtom.vue'
 import SelectEmoji from '../organisms/SelectEmoji.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import type { ITag } from '@/api/local'
-
-const { style } = useStyle()
 
 const props = defineProps<{ tag: ITag }>()
 
@@ -54,7 +51,7 @@ const emitTag = () => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 $margin: 10px;
 .container {
   width: 350px;

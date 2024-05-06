@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const emit = defineEmits<{
   (e: 'open', v: void): void
@@ -78,10 +78,10 @@ defineExpose({
 
 <style scoped lang="scss">
 // $borderRadius: v-bind('style.button.borderRadius');
-$buttonSize: v-bind('style.button.size');
-$cardColor: v-bind('style.color.background');
-$buttonColor: v-bind('style.button.bgColor');
-$boxShadow: v-bind('style.boxShadow');
+$buttonSize: 36px;
+$cardColor: v-bind('atualStyle.color.one');
+$buttonColor: v-bind('atualStyle.color.two');
+$boxShadow: v-bind('atualStyle.boxShadow');
 .container-float-modal {
   height: 100%;
   width: 100%;
@@ -115,7 +115,7 @@ $boxShadow: v-bind('style.boxShadow');
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
-    border: solid 1px v-bind('style.color.base');
+    border: solid 1px v-bind('atualStyle.color.two');
   }
 }
 @keyframes init {

@@ -6,7 +6,7 @@ import TagView from '../../molecules/TagView.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 import { useStyle } from '@/stores/style'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   tag: {
@@ -37,7 +37,7 @@ const closeModal = () => floatModal.value?.close()
 
 <style scoped lang="scss">
 .tag-with-options-container {
-  height: v-bind('style.button.size');
+  height: 36px;
   // margin: 4px 0 4px 0;
   width: 100%;
   & .tag-option {

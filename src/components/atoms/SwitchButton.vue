@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { reactive } from 'vue'
-const { style } = useStyle()
+
+const { atualStyle } = useStyle()
 
 const props = withDefaults(
   defineProps<{
@@ -41,10 +42,10 @@ const emitChecked = () => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: calc(v-bind('style.button.size') - 10px);
+$buttonSize: calc(36px - 10px);
 $margin: 5px;
-$especialColor: v-bind('style.component.bgColor');
-$borderRadius: v-bind('style.button.borderRadius');
+$especialColor: v-bind('atualStyle.color.two');
+$borderRadius: v-bind('atualStyle.borderRadius');
 .switch {
   height: $buttonSize;
   display: flex;

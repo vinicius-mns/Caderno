@@ -6,7 +6,7 @@ import { useStyle } from '@/stores/style'
 
 const config = useConfig()
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const filter = computed(() => config.filterCardsByTag)
 
@@ -40,6 +40,6 @@ const click = () => config.toggleFilterByTag()
 }
 svg {
   height: 19px;
-  fill: v-bind('style.color.text');
+  fill: v-bind('atualStyle.color.text');
 }
 </style>

@@ -2,7 +2,8 @@
 import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
 import { useCards } from '@/stores/local/cards'
-import CenterModal from '@/components/molecules/CenterModal.vue'
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
 const cards = useCards()
 
@@ -18,9 +19,14 @@ const cardUpdate = (e: ICard) => {
 
 <template>
   <div class="tag-create">
-    <CenterModal button-content="Editar Card" title-modal="Editor de card">
-      <CardEditor :card="props.card" @emit-card="cardUpdate" />
-    </CenterModal>
+    <FloatModalSlot>
+      <template #button-slot>
+        <ThemeButton>Editar</ThemeButton>
+      </template>
+      <template #container-slot>
+        <CardEditor :card="props.card" @emit-card="cardUpdate" />
+      </template>
+    </FloatModalSlot>
   </div>
 </template>
 

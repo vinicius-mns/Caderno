@@ -7,7 +7,7 @@ import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
 import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import { useStyle } from '@/stores/style'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const cards = useCards()
 
@@ -65,7 +65,7 @@ const createCard = (e: ICard) => {
   }
 }
 svg {
-  fill: v-bind('style.color.text');
+  fill: v-bind('atualStyle.color.text');
   height: 17px;
 }
 </style>

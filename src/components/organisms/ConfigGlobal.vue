@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 // import FloatModal from '../molecules/FloatModal.vue'
-import { useStyle } from '@/stores/style'
 // import ExportAndImportData from './ExportAndImportData.vue'
 import StyleGlobal from './config/StyleGlobal.vue'
-
-const { style } = useStyle()
 
 const modal = reactive({
   show: false,
@@ -20,13 +17,13 @@ const assets = reactive({
   }
 })
 
-const borderRadius = {
-  value: parseFloat(style.button.borderRadius),
-  setValue: (n: number) => {
-    borderRadius.value = n
-    style.button.borderRadius = `${n}px`
-  }
-}
+// const borderRadius = {
+//   value: parseFloat(style.button.borderRadius),
+//   setValue: (n: number) => {
+//     borderRadius.value = n
+//     style.button.borderRadius = `${n}px`
+//   }
+// }
 </script>
 
 <template>
@@ -49,7 +46,7 @@ const borderRadius = {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 .config-global-button {
   .config-global-container {
     max-height: 50dvh;

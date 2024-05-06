@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CardCreateN from '@/components/organisms/card/CardCreateN.vue';
+import CardCreateN from '@/components/organisms/card/CardCreateN.vue'
 import CardWithOptionsList from '../../organisms/card/CardWithOptionsList.vue'
 import SearchCardText from '../../organisms/card/SearchCardText.vue'
 </script>

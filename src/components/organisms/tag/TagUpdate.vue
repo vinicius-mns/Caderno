@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
 // import CenterModal from '../../atoms/CenterModal.vue'
 import TagEditor from '../../molecules/TagEditor.vue'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 import type { ITag } from '@/api/local'
 import { useTags } from '@/stores/local/tags'
 import { useCards } from '@/stores/local/cards'
-import FloatModal from '@/components/molecules/FloatModal.vue'
-import { useStyle } from '@/stores/style'
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 
 const tags = useTags()
 
 const cards = useCards()
-
-const { style } = useStyle()
 
 const props = defineProps<{ tag: ITag }>()
 
@@ -27,15 +23,14 @@ const updateTag = (e: typeof props.tag) => {
 </script>
 
 <template>
-  <FloatModal button-content="Editar tag" class="tag-editor">
-    <TagEditor :tag="tag" @emit-tag="updateTag" />
-  </FloatModal>
+  <FloatModalSlot>
+    <template #button-slot>
+      <ThemeButton>Editar tag</ThemeButton>
+    </template>
+    <template #container-slot>
+      <TagEditor :tag="tag" @emit-tag="updateTag" />
+    </template>
+  </FloatModalSlot>
 </template>
 
-<style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
-.tag-editor {
-  height: $buttonSize;
-  width: 100%;
-}
-</style>
+<style scoped lang="scss"></style>

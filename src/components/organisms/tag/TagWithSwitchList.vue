@@ -57,7 +57,7 @@ $margin: 10px;
 .row {
   flex-direction: row;
   & .tag {
-    width: 200px;
+    width: 100px;
     flex-shrink: 0;
     margin-left: $margin;
     margin-right: $margin;

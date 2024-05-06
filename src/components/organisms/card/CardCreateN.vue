@@ -5,9 +5,6 @@ import CardEditor from '@/components/molecules/CardEditor.vue'
 import { useCards } from '@/stores/local/cards'
 import CenterModalSlot from '@/components/molecules/CenterModalSlot.vue'
 import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
-import { useStyle } from '@/stores/style'
-
-const { style } = useStyle()
 
 const cards = useCards()
 
@@ -35,7 +32,6 @@ const createCard = (e: ICard) => {
 <style scoped lang="scss">
 .card-create-container {
   width: 400px;
-  background-color: v-bind('style.color.background');
   position: fixed;
   bottom: 80px;
   right: 80px;

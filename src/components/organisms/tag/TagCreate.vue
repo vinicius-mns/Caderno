@@ -9,7 +9,7 @@ import { useStyle } from '@/stores/style'
 
 const tag = useTags()
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = withDefaults(
   defineProps<{
@@ -64,6 +64,6 @@ const createTag = (e: typeof initTag) => {
   width: 100%;
 }
 svg {
-  fill: v-bind('style.color.text');
+  fill: v-bind('atualStyle.color.text');
 }
 </style>

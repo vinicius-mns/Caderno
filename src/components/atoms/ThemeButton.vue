@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 </script>
 
 <template>
@@ -11,17 +11,17 @@ const { style } = useStyle()
 </template>
 
 <style scoped lang="scss">
-$boxShadow: v-bind('style.boxShadow');
-$buttonSize: v-bind('style.button.size');
-$buttonHoverColor: v-bind('style.color.highlight');
-$buttonTextColor: v-bind('style.button.textColor');
-$buttonBorderRadius: v-bind('style.button.borderRadius');
-$buttonBgColor: v-bind('style.color.base');
+$boxShadow: v-bind('atualStyle.boxShadow');
+$buttonSize: 36px;
+$buttonHoverColor: v-bind('atualStyle.color.three');
+$buttonTextColor: v-bind('atualStyle.color.text');
+$buttonBorderRadius: v-bind('atualStyle.borderRadius');
+$buttonBgColor: v-bind('atualStyle.color.two');
 .button {
   height: $buttonSize;
   box-shadow: $boxShadow;
   background-color: $buttonBgColor;
-  border-radius: 8px;
+  border-radius: $buttonBorderRadius;
   color: $buttonTextColor;
   border: none;
   overflow: hidden;

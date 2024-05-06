@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import ThemeButton from '../../atoms/ThemeButton.vue'
 import type { ICard } from '@/api/local'
 import CardView from './CardView.vue'
 import { useCards } from '@/stores/local/cards'
-import FloatModal from '@/components/molecules/FloatModal.vue'
-
-const { style } = useStyle()
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 
 const cards = useCards()
 
@@ -21,19 +18,22 @@ const deleteCard = () => {
 </script>
 
 <template>
-  <FloatModal button-content="Deletar" button-color="red" class="delete">
-    <div class="confirm-delete-container">
-      <CardView :card="props.card" class="card" />
-      <ThemeButton @click="deleteCard" class="item delete">Deletar</ThemeButton>
-    </div>
-  </FloatModal>
+  <FloatModalSlot>
+    <template #button-slot>
+      <ThemeButton class="delete">Deletar</ThemeButton>
+    </template>
+    <template #container-slot>
+      <div class="confirm-delete-container">
+        <CardView :card="props.card" class="card" />
+        <ThemeButton @click="deleteCard" class="item delete">Deletar</ThemeButton>
+      </div>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
 .delete {
   width: 100%;
-  height: $buttonSize;
   background-color: rgb(255, 49, 49);
   color: white;
 }

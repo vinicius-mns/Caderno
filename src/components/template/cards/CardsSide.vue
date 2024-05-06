@@ -11,7 +11,7 @@ import { useConfig } from '@/stores/config'
 
 const tags = useTags()
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const config = useConfig()
 
@@ -36,7 +36,7 @@ const showFilter = computed(() => config.filterCardsByTag)
 <style scoped lang="scss">
 .sibebar-cards-container {
   & h3 {
-    color: v-bind('style.color.text');
+    color: v-bind('atualStyle.color.text');
   }
   .action-button {
     display: flex;
