@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useStyle } from '@/stores/style'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   emojis: string[]
@@ -37,12 +37,12 @@ const sendSelected = () => emit('changeEmoji', emojiR.value)
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
-$color: v-bind('style.button.textColor');
-$boxShadow: v-bind('style.boxShadow');
+$buttonSize: 36px;
+$color: v-bind('atualStyle.color.text');
 .emojis-container {
   padding: 10px;
-  width: 95%;
+  box-sizing: border-box;
+  width: 360px;
   height: 400px;
   overflow: auto;
   flex-wrap: wrap;
@@ -77,7 +77,6 @@ $boxShadow: v-bind('style.boxShadow');
       }
       &:hover {
         background-color: $color;
-        box-shadow: $boxShadow;
       }
     }
     input:checked + label {

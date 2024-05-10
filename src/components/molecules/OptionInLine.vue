@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import ThemeP from '../atoms/ThemeP.vue'
-
-const { style } = useStyle()
 
 const props = defineProps<{
   content: string
@@ -21,7 +18,7 @@ const props = defineProps<{
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 $margin: 10px;
 .option-in-line-container {
   height: calc($buttonSize * 1.5);

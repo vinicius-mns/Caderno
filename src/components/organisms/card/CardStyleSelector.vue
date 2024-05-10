@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import CardView from '../../card/CardView.vue'
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
-
 import { useCardStyle } from '@/stores/cardStyle'
 import { computed } from 'vue'
+import CardView from './CardView.vue'
+import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const cardStyle = useCardStyle()
 
@@ -23,6 +23,7 @@ const setCard = (index: number) => {
 
 <template>
   <div class="container-card-style-selector">
+    <ThemeP content="Selecionar estilo do card" />
     <CardView
       class="card"
       :card="mockCard"
@@ -40,7 +41,7 @@ const setCard = (index: number) => {
   display: flex;
   flex-wrap: wrap;
   & .card {
-    margin: 10px;
+    margin: 10px 0 0;
     width: 100%;
   }
 }

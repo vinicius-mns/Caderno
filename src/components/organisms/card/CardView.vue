@@ -22,7 +22,7 @@ const props = defineProps<{ card: ICard }>()
 
 const tagsInCard = computed(() => tags.readList(props.card.tags))
 
-const cardDate = String(new Date(props.card.date).toLocaleDateString())
+const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateString()))
 
 // const show = ref(false)
 

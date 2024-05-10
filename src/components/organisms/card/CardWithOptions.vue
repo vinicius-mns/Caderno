@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 // import CardView from '../../molecules/CardView.vue'
 import { ref } from 'vue'
 // import MoreOptions from '../../molecules/MoreOptions.vue'
@@ -14,8 +13,6 @@ import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import CardView from './CardView.vue'
 // import FloatModal from '@/components/molecules/FloatModal.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-
-const { style } = useStyle()
 
 const cards = useCards()
 
@@ -75,40 +72,28 @@ const confirmnChanges = () => {
       </div>
     </template>
   </FloatModalSlot>
-  <!-- <div class="card" @mouseenter="openOptionsModal" @mouseleave="closeOptionsModal">
-    <FloatModal button-content="+" v-if="options.show" class="float-button-card-options">
-    </FloatModal>
-  </div> -->
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
-$margin: 20px;
-.card {
-  // position: relative;
-  // width: 100%;
-  // min-width: 380px;
-  // max-width: 860px;
-  // flex-shrink: 0;
-  // margin-bottom: $margin;
-  // position: relative;
-  // box-sizing: border-box;
-}
+$buttonSize: 36px;
 .options-container {
-  width: 280px;
+  width: 100%;
+  min-width: 280px;
   height: 48dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: auto;
+  padding: 10px;
+  box-sizing: border-box;
   & .option-button {
+    width: 100%;
     flex-shrink: 0;
-    width: 95%;
     margin-top: 8px;
   }
   & .tags-switch {
+    height: 100%;
+    width: 100%;
     margin-top: 0;
-    width: 96%;
   }
 }
 

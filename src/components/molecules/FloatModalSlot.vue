@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const emit = defineEmits<{
   (e: 'open', v: void): void
@@ -77,52 +77,55 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-// $borderRadius: v-bind('style.button.borderRadius');
-$buttonSize: v-bind('style.button.size');
-$cardColor: v-bind('style.color.background');
-$buttonColor: v-bind('style.button.bgColor');
-$boxShadow: v-bind('style.boxShadow');
+$borderRadius: v-bind('atualStyle.borderRadius.two');
+$buttonSize: 36px;
+$cardColor: v-bind('atualStyle.color.one');
+$bgColor: v-bind('atualStyle.color.four');
+$boxShadow: v-bind('atualStyle.boxShadow');
 .container-float-modal {
-  height: 100%;
-  width: 100%;
-  & .button-open-modal {
-    width: 100%;
-    height: 100%;
-  }
   & .glass {
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: 3;
     padding: 0;
     margin: 0;
     width: 100dvw;
     height: 100dvh;
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
   }
   & .float-card {
-    z-index: 2;
-    transition: background-color 1s;
     position: fixed;
-    background-color: $cardColor;
-    box-shadow: $boxShadow;
-    left: v-bind('cursorPosition.x');
-    top: v-bind('cursorPosition.y');
-    opacity: 0;
-    margin-top: 20px;
-    animation: init 0.3s forwards;
-    max-width: 100%;
     margin-left: 0;
     margin-right: 0;
-    border: solid 1px v-bind('style.color.base');
+    overflow: hidden;
+    border-radius: $borderRadius;
+    background-color: $bgColor;
+    box-shadow: $boxShadow;
+    border: v-bind('atualStyle.border');
+    transition: background-color 1s;
+    opacity: 0;
+    left: v-bind('cursorPosition.x');
+    top: v-bind('cursorPosition.y');
+    animation: initDesk 0.3s forwards;
+    margin-top: 20px;
+    // @media screen and (min-width: 769px) {
+    //   max-width: 300px;
+    //   max-height: 48vh;
+    // }
   }
 }
-@keyframes init {
+@keyframes initDesk {
   to {
     opacity: 100%;
     margin-top: 0;
-    // transform: translateY(0);
   }
 }
+// @keyframes initMobile {
+//   to {
+//     height: 48vh;
+//     opacity: 100%;
+//   }
+// }
 </style>

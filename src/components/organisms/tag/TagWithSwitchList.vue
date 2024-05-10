@@ -2,10 +2,11 @@
 import { computed, reactive } from 'vue'
 import TagWithSwitch from './TagWithSwitch.vue'
 import { useTags } from '@/stores/local/tags'
+import TagCreate from './TagCreate.vue'
 
 const tags = useTags()
 
-const props = defineProps<{ checkeds: string[]; unicName: string; direction: 'column' | 'row' }>()
+const props = defineProps<{ checkeds: string[]; unicName: string }>()
 
 const emit = defineEmits<{
   (e: 'emitTags', v: string[]): void
@@ -39,7 +40,7 @@ const allTags = computed(() => tags.tags)
 </script>
 
 <template>
-  <div :class="[props.direction, 'tag-with-switch-list']">
+  <div class="tag-with-switch-list">
     <TagWithSwitch
       v-for="(tag, i) in allTags"
       :key="i"
@@ -54,23 +55,28 @@ const allTags = computed(() => tags.tags)
 
 <style scoped lang="scss">
 $margin: 10px;
-.row {
-  flex-direction: row;
-  & .tag {
-    width: 200px;
-    flex-shrink: 0;
-    margin-left: $margin;
-    margin-right: $margin;
-  }
-}
-.column {
-  flex-direction: column;
-  overflow: auto;
-}
+// .row {
+//   flex-direction: row;
+//   & .tag {
+//     width: 100px;
+//     flex-shrink: 0;
+//     margin-left: $margin;
+//     margin-right: $margin;
+//   }
+// }
+// .column {
+//   flex-direction: column;
+//   overflow: auto;
+// }
 .tag-with-switch-list {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  overflow: auto;
+  .create-tag {
+    width: 100%;
+  }
 }
 </style>

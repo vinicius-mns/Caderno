@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
@@ -120,4 +120,4 @@ $boxShadow: v-bind('style.boxShadow');
     // transform: translateY(0);
   }
 }
-</style>
+</style> -->

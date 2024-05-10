@@ -3,7 +3,7 @@ import { useStyle } from '@/stores/style'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import PageTemplate from '@/components/template/PageTemplate.vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const link = (tittle: string, path: string) => ({ title: tittle, path })
 
@@ -147,8 +147,8 @@ const toScroll = (sectionId: string) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: v-bind('style.color.background');
-  color: v-bind('style.color.text');
+  background-color: v-bind('atualStyle.color.one');
+  color: v-bind('atualStyle.color.text');
   padding-bottom: 80px;
   & h1 {
     // font-size: 2.5rem;
@@ -207,7 +207,7 @@ const toScroll = (sectionId: string) => {
   // flex-shrink: 0;
   // overflow: hidden;
   & .link-x {
-    background-color: v-bind('style.color.base');
+    background-color: v-bind('atualStyle.color.two');
     height: 50px;
     width: 100%;
     padding: 0;

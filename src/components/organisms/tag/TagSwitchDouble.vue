@@ -6,36 +6,37 @@ import ThemeButton from '@/components/atoms/ThemeButton.vue'
 
 const props = defineProps<{
   tag: ITag
+  status: 'l' | 'r' | undefined
 }>()
 
 const emit = defineEmits<{
-  (e: 'emitTag', v: { tagId: string; checked: 'l' | 'r' | 'n' }): void
+  (e: 'emitTag', v: { tag: ITag; status: 'l' | 'r' | undefined }): void
 }>()
 
-const checked = reactive({
-  tagId: props.tag.id,
-  checked: 'n' as 'l' | 'r' | 'n'
+const status = reactive({
+  tag: props.tag,
+  status: props.status
 })
 
-const handleChecked = (type: 'l' | 'r' | 'n') => {
-  if (checked.checked === type) checked.checked = 'n'
-  else checked.checked = type
+const handleStatus = (type: 'l' | 'r' | undefined) => {
+  if (status.status === type) status.status = undefined
+  else status.status = type
 }
 
 const emitTagL = () => {
-  handleChecked('l')
-  emit('emitTag', checked)
+  handleStatus('l')
+  emit('emitTag', status)
 }
 
 const emitTagR = () => {
-  handleChecked('r')
-  emit('emitTag', checked)
+  handleStatus('r')
+  emit('emitTag', status)
 }
 </script>
 
 <template>
   <div class="tag-container">
-    <TagView :class="[checked.checked, 'tag-d-s']" :tag="props.tag" />
+    <TagView :class="[status.status, 'tag-d-s']" :tag="props.tag" />
     <ThemeButton class="l-switch check-b" @click="emitTagL"></ThemeButton>
     <ThemeButton class="r-switch check-b" @click="emitTagR"></ThemeButton>
   </div>
@@ -50,7 +51,6 @@ const emitTagR = () => {
   & .tag-d-s {
     width: 100%;
     flex-shrink: 0;
-    // margin: 4px;
     border-radius: 0;
   }
   & .l {

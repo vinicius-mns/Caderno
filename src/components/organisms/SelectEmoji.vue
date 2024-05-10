@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import EmojiSelector from '../molecules/EmojiSelector.vue'
 import { ref } from 'vue'
-import { useStyle } from '@/stores/style'
 import { useEmoji } from '@/stores/emojis'
-import CenterModal from '../molecules/CenterModal.vue'
-
-const { style } = useStyle()
+import FloatModalSlot from '../molecules/FloatModalSlot.vue'
+import ThemeButton from '../atoms/ThemeButton.vue'
 
 const emojis = useEmoji()
 
@@ -17,54 +15,43 @@ const emit = defineEmits<{
   (e: 'changeEmoji', v: string): void
 }>()
 
-const centerModal = ref<InstanceType<typeof CenterModal>>()
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const allEmojis = ref(emojis.getAll())
 
 const sendSelected = (e: string) => {
   emit('changeEmoji', e)
-  centerModal.value?.toggleVisible()
+  modal.value?.close()
 }
 </script>
 
 <template>
-  <CenterModal
-    :button-content="props.seletedEmoji ? props.seletedEmoji : '+'"
-    title-modal="Selecione um emoji"
-    ref="centerModal"
-    class="container-selectemoji"
-  >
-    <div class="modal-selec-emoji">
-      <div class="emoji-selector-container">
-        <EmojiSelector
-          :emojis="allEmojis"
-          :emoji-selected="props.seletedEmoji"
-          @change-emoji="sendSelected"
-        />
-      </div>
-    </div>
-  </CenterModal>
+  <FloatModalSlot ref="modal" class="container-selectemoji">
+    <template #button-slot>
+      <ThemeButton class="emoji-button">{{
+        props.seletedEmoji ? props.seletedEmoji : '+'
+      }}</ThemeButton>
+    </template>
+    <template #container-slot>
+      <EmojiSelector
+        :emojis="allEmojis"
+        :emoji-selected="props.seletedEmoji"
+        @change-emoji="sendSelected"
+      />
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 .container-selectemoji {
-  width: $buttonSize;
-  flex-shrink: 0;
-  .modal-selec-emoji {
+  & .emoji-button {
+    font-size: calc($buttonSize / 1.6);
+    width: $buttonSize;
+    height: $buttonSize;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 450px;
-    max-width: 90dvw;
-    & .search {
-      width: 90%;
-      margin: 5px;
-    }
-    & .emoji-selector-container {
-      width: 95%;
-      margin-bottom: 5px;
-    }
+    justify-content: center;
   }
 }
 </style>

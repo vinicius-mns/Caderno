@@ -1,31 +1,48 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import TagWithOptions from './TagWithOptions.vue'
+import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
+import CoinButton from '@/components/molecules/CoinButton.vue'
+import TagIco from '@/components/atoms/icons/TagIco.vue'
+import { useTags } from '@/stores/local/tags'
+import { computed } from 'vue'
+import TagCreate from './TagCreate.vue'
 
-const props = defineProps<{ allTags: ITag[] }>()
+const tags = useTags()
+
+const allTags = computed(() => tags.tags)
 </script>
 
 <template>
-  <div class="tag-with-options-list dinamic-scroll">
-    <TagWithOptions v-for="(tag, i) in props.allTags" :key="i" :tag="tag" />
-  </div>
+  <FloatModalSlot>
+    <template #button-slot>
+      <CoinButton description="Tags">
+        <TagIco />
+      </CoinButton>
+    </template>
+    <template #container-slot>
+      <div class="container-cards-options">
+        <div class="cards-options-list">
+          <TagWithOptions v-for="(tag, i) in allTags" :key="i" :tag="tag" />
+        </div>
+        <TagCreate />
+      </div>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-.tag-with-options-list {
-  width: 100%;
-  height: 100%;
+.container-cards-options {
+  width: 260px;
+  height: 48dvh;
+  padding: 10px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: auto;
-}
-@media screen and (min-width: 768px) {
-  .dinamic-scroll {
-    scrollbar-gutter: stable;
-    overflow: hidden;
-    &:hover {
-      overflow: auto;
-    }
+  .cards-options-list {
+    width: 100%;
+    height: calc(48dvh - 38px);
+    margin-bottom: 10px;
+    overflow: auto;
   }
 }
 </style>

@@ -2,7 +2,8 @@
 import { useStyle } from '@/stores/style'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import { reactive } from 'vue'
-const { style } = useStyle()
+
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   tag: {
@@ -40,9 +41,9 @@ const emitId = () => emit('emitId', props.tag.id)
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 $margin: 12px;
-$borderRadius: v-bind('style.button.borderRadius');
+$borderRadius: 8;
 .tag {
   width: 100%;
   height: $buttonSize;

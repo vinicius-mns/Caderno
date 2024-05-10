@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import cardChengeWidth from '@/components/organisms/card/CardChangeWidth.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
-import DarkMode from '../config/DarkMode.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
 import ThemeActionButton from '@/components/molecules/ThemeActionButton.vue'
 import { useStyle } from '@/stores/style'
-import CardsStyleSelector from '../config/style/CardsStyleSelector.vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 </script>
 
 <template>
@@ -45,8 +43,6 @@ const { style } = useStyle()
       <div class="options-container">
         <ThemeP content="Largura do card" />
         <cardChengeWidth />
-        <DarkMode />
-        <CardsStyleSelector />
       </div>
     </template>
   </FloatModalSlot>
@@ -58,7 +54,7 @@ const { style } = useStyle()
   padding: 20px;
 }
 svg {
-  fill: v-bind('style.color.text');
+  fill: v-bind('atualStyle.color.text');
   width: 16px;
 }
 </style>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { onMounted, ref } from 'vue'
 
@@ -74,4 +74,4 @@ $boxShadow: v-bind('style.boxShadow');
   top: 0;
   left: 0;
 }
-</style>
+</style> -->

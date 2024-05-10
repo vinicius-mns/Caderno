@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   content: string
@@ -50,8 +50,8 @@ const openCard = (e: MouseEvent) => {
 </template>
 
 <style scoped lang="scss">
-$color: v-bind('style.color.text');
-$backColor: v-bind('style.color.background');
+$color: v-bind('atualStyle.color.text');
+$backColor: v-bind('atualStyle.color.one');
 .description-text {
   z-index: 1;
   position: fixed;

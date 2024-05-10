@@ -4,7 +4,7 @@ import ThemeP from '../atoms/ThemeP.vue'
 import ThemeButtonClose from '../atoms/ThemeButtonClose.vue'
 import { ref } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   titleModal: string
@@ -53,13 +53,13 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-$boxShadow: v-bind('style.boxShadow');
-$buttonSize: v-bind('style.button.size');
-$buttonHoverColor: v-bind('style.color.highlight');
-$buttonTextColor: v-bind('style.color.text');
-$buttonBorderRadius: v-bind('style.button.borderRadius');
-$buttonBgColor: v-bind('style.button.bgColor');
-$modalBgColor: v-bind('style.color.background');
+$boxShadow: v-bind('atualStyle.boxShadow');
+$buttonSize: 36px;
+$buttonHoverColor: v-bind('atualStyle.color.three');
+$buttonTextColor: v-bind('atualStyle.color.text');
+$buttonBorderRadius: v-bind('atualStyle.borderRadius');
+$buttonBgColor: v-bind('atualStyle.color.two');
+$modalBgColor: v-bind('atualStyle.color.one');
 $headerHeight: calc($buttonSize + 2px);
 $closeButton: $headerHeight;
 .x {

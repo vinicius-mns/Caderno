@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { onMounted, reactive } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const sideW = reactive({
   closed: false,
@@ -105,7 +105,7 @@ onMounted(closeSideIfMobileDivice)
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: v-bind('style.color.background');
+  background-color: v-bind('atualStyle.color.one');
   & .actions-buttons {
     height: 95%;
     display: flex;
@@ -117,17 +117,17 @@ onMounted(closeSideIfMobileDivice)
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: v-bind('style.color.base');
-      color: v-bind('style.color.text');
+      background-color: v-bind('atualStyle.color.two');
+      color: v-bind('atualStyle.color.text');
       border-radius: 8px;
       & svg {
         height: 22px;
-        fill: v-bind('style.color.text');
+        fill: v-bind('atualStyle.color.text');
       }
       border: none;
       cursor: pointer;
       &:hover {
-        background-color: v-bind('style.color.highlight');
+        background-color: v-bind('atualStyle.color.three');
       }
     }
     @media screen and (max-width: 768px) {
@@ -137,7 +137,7 @@ onMounted(closeSideIfMobileDivice)
 }
 .content {
   overflow: hidden;
-  background-color: v-bind('style.color.base');
+  background-color: v-bind('atualStyle.color.two');
 }
 $sidebarWidth: v-bind('sideW.desktop');
 .page-container {
@@ -160,7 +160,7 @@ $sidebarWidth: v-bind('sideW.desktop');
     width: 100%;
     display: flex;
     justify-content: center;
-    background-color: v-bind('style.color.background');
+    background-color: v-bind('atualStyle.color.one');
   }
 }
 

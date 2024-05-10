@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { ref, watchEffect } from 'vue'
 
-const { style } = useStyle()
+const { atualStyle } = useStyle()
 
 const props = defineProps<{
   keyId: string
@@ -32,12 +32,12 @@ watchEffect(() => {
 </template>
 
 <style scoped lang="scss">
-$boxShadow: v-bind('style.boxShadow');
-$buttonSize: v-bind('style.button.size');
-$buttonHoverColor: v-bind('style.button.hoverColor');
-$buttonTextColor: v-bind('style.button.textColor');
-$buttonBorderRadius: v-bind('style.button.borderRadius');
-$buttonBgColor: v-bind('style.button.bgColor');
+$boxShadow: v-bind('atualStyle.boxShadow');
+$buttonSize: 36px;
+$buttonHoverColor: v-bind('atualStyle.color.three');
+$buttonTextColor: v-bind('atualStyle.color.text');
+$buttonBorderRadius: v-bind('atualStyle.borderRadius.one');
+$buttonBgColor: v-bind('atualStyle.color.two');
 .content-input {
   height: $buttonSize;
   box-shadow: $boxShadow;

@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import { ref } from 'vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
-
-const { style } = useStyle()
 
 const props = defineProps<{ range: number; scrollButtons: boolean }>()
 
@@ -49,7 +46,7 @@ const rightIco = '>'
 </template>
 
 <style scoped lang="scss">
-$buttonSize: v-bind('style.button.size');
+$buttonSize: 36px;
 $margin: 10px;
 .scroll-click-container {
   height: 100%;
