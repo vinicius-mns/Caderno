@@ -26,20 +26,18 @@ const sendSelected = (e: string) => {
 </script>
 
 <template>
-  <FloatModalSlot ref="modal">
+  <FloatModalSlot ref="modal" class="container-selectemoji">
     <template #button-slot>
-      <ThemeButton>{{ props.seletedEmoji ? props.seletedEmoji : '+' }}</ThemeButton>
+      <ThemeButton class="emoji-button">{{
+        props.seletedEmoji ? props.seletedEmoji : '+'
+      }}</ThemeButton>
     </template>
     <template #container-slot>
-      <div class="modal-selec-emoji">
-        <div class="emoji-selector-container">
-          <EmojiSelector
-            :emojis="allEmojis"
-            :emoji-selected="props.seletedEmoji"
-            @change-emoji="sendSelected"
-          />
-        </div>
-      </div>
+      <EmojiSelector
+        :emojis="allEmojis"
+        :emoji-selected="props.seletedEmoji"
+        @change-emoji="sendSelected"
+      />
     </template>
   </FloatModalSlot>
 </template>
@@ -47,22 +45,13 @@ const sendSelected = (e: string) => {
 <style scoped lang="scss">
 $buttonSize: 36px;
 .container-selectemoji {
-  width: $buttonSize;
-  flex-shrink: 0;
-  .modal-selec-emoji {
+  & .emoji-button {
+    font-size: calc($buttonSize / 1.6);
+    width: $buttonSize;
+    height: $buttonSize;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 450px;
-    max-width: 90dvw;
-    & .search {
-      width: 90%;
-      margin: 5px;
-    }
-    & .emoji-selector-container {
-      width: 95%;
-      margin-bottom: 5px;
-    }
+    justify-content: center;
   }
 }
 </style>

@@ -41,7 +41,8 @@ $buttonSize: 36px;
 $color: v-bind('atualStyle.color.text');
 .emojis-container {
   padding: 10px;
-  width: 95%;
+  box-sizing: border-box;
+  width: 360px;
   height: 400px;
   overflow: auto;
   flex-wrap: wrap;

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
 import type { ICard } from '@/api/local'
 import ThemeTextArea from '../atoms/ThemeTextArea.vue'
 import TagsWithSwitch from '../organisms/tag/TagWithSwitchList.vue'
-import ThemeButtonClose from '../atoms/ThemeButtonClose.vue'
+import OptionButton from './OptionButton.vue'
+import CheckIco from '@/components/atoms/icons/CheckIco.vue'
+import TagCreate from '../organisms/tag/TagCreate.vue'
 
 const props = defineProps<{ card: ICard }>()
 
@@ -19,12 +20,7 @@ const setContent = (v: string) => (content.value = v)
 const checkedTags = ref([] as string[])
 const setCheckedTags = (v: string[]) => (checkedTags.value = v)
 
-const showEditor = ref(false)
-const openEditor = () => (showEditor.value = true)
-const closeEditor = () => (showEditor.value = false)
-
 const closeAndClear = () => {
-  closeEditor()
   clearTextArea()
 }
 
@@ -41,91 +37,77 @@ const sendCard = () => {
 
 <template>
   <div class="card-form">
-    <ThemeButtonClose class="close-button" v-show="showEditor" @click="closeAndClear" />
-    <div class="tag-section" v-show="showEditor">
+    <div class="tag-section">
       <TagsWithSwitch
         :checkeds="props.card.tags"
         @emit-tags="setCheckedTags"
         unic-name="tags-switch-card-editor"
         :emit-tags="true"
-        direction="row"
+        direction="column"
         class="tags-list"
       />
+      <TagCreate class="tag-create" />
     </div>
     <div class="content-section">
       <ThemeTextArea
         ref="textArea"
         :content="content"
-        :class="[showEditor ? 'focus' : 'nofocus', 'text-area']"
+        class="text-area"
         @emit-content="setContent"
-        @click="openEditor"
       />
-    </div>
-    <div class="handle-buttons" v-show="showEditor">
-      <ThemeButton class="send-button" @mousedown="sendCard">Confirmar</ThemeButton>
+      <OptionButton content="Confirmar" @click="sendCard" class="send-button">
+        <CheckIco />
+      </OptionButton>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .card-form {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
+  width: 380px;
+  max-width: 95%dvw;
+  height: 48dvh;
   padding: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  & .close-button {
-    position: absolute;
-    top: -32px;
-    right: 0;
-    height: 32px;
-    width: 32px;
-  }
-
   & .tag-section {
-    transition: all 0.3s;
     width: 100%;
-    height: 60px;
-    margin: 5px 0 5px;
-    & .tags-list {
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-    }
-    & .create-tag {
-      height: 30px;
-      width: 100%;
+    height: 100%;
+    transition: all 0.3s;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    .tag-create {
+      padding: 10px 0 10px;
+      box-sizing: border-box;
     }
   }
-
   & .content-section {
     width: 100%;
     & .text-area {
       width: 100%;
+      height: 90px;
       transition: all 0.3s;
-      height: 60px;
-    }
-    & .focus {
-      height: 120px;
-    }
-  }
-  & .handle-buttons {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    & .close-button {
-      background-color: rgba(255, 122, 122, 0.5);
-      width: 8%;
-      &:hover {
-        background-color: red;
-      }
     }
     & .send-button {
       width: 100%;
     }
   }
+  // & .handle-buttons {
+  //   width: 100%;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   & .close-button {
+  //     background-color: rgba(255, 122, 122, 0.5);
+  //     width: 8%;
+  //     &:hover {
+  //       background-color: red;
+  //     }
+  //   }
+  //   & .send-button {
+  //     width: 100%;
+  //   }
+  // }
 }
 </style>

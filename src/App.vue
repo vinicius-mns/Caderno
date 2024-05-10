@@ -30,5 +30,7 @@ th {
 }
 svg {
   fill: v-bind('atualStyle.color.text');
+  height: 16px;
+  width: 16px;
 }
 </style>

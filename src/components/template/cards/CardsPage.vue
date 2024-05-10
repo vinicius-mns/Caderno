@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import CardCreateN from '@/components/organisms/card/CardCreateN.vue'
+import { useStyle } from '@/stores/style'
 import CardWithOptionsList from '../../organisms/card/CardWithOptionsList.vue'
 import SearchCardText from '../../organisms/card/SearchCardText.vue'
+
+const { atualStyle } = useStyle()
 </script>
 
 <template>
@@ -10,13 +12,13 @@ import SearchCardText from '../../organisms/card/SearchCardText.vue'
       <SearchCardText class="filter-card-text" />
     </header>
     <CardWithOptionsList />
-    <CardCreateN />
   </div>
 </template>
 
 <style scoped lang="scss">
 .cards-container {
   width: 100%;
+  background-color: v-bind('atualStyle.color.one');
   header {
     height: 60px;
     width: 100%;

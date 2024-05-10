@@ -4,6 +4,8 @@ import type { ICard } from '@/api/local'
 import CardView from './CardView.vue'
 import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
+import OptionButton from '@/components/molecules/OptionButton.vue'
+import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 
 const cards = useCards()
 
@@ -20,7 +22,9 @@ const deleteCard = () => {
 <template>
   <FloatModalSlot>
     <template #button-slot>
-      <ThemeButton class="delete">Deletar</ThemeButton>
+      <OptionButton content="Deletar" class="delete">
+        <TrashIco />
+      </OptionButton>
     </template>
     <template #container-slot>
       <div class="confirm-delete-container">
@@ -38,12 +42,13 @@ const deleteCard = () => {
   color: white;
 }
 .confirm-delete-container {
-  width: 320px;
-  max-height: 60dvh;
+  width: 100%;
+  min-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px;
+  padding: 10px;
+  box-sizing: border-box;
   & .card {
     width: 96%;
     margin-top: 6px;

@@ -72,40 +72,28 @@ const confirmnChanges = () => {
       </div>
     </template>
   </FloatModalSlot>
-  <!-- <div class="card" @mouseenter="openOptionsModal" @mouseleave="closeOptionsModal">
-    <FloatModal button-content="+" v-if="options.show" class="float-button-card-options">
-    </FloatModal>
-  </div> -->
 </template>
 
 <style scoped lang="scss">
 $buttonSize: 36px;
-$margin: 20px;
-.card {
-  // position: relative;
-  // width: 100%;
-  // min-width: 380px;
-  // max-width: 860px;
-  // flex-shrink: 0;
-  // margin-bottom: $margin;
-  // position: relative;
-  // box-sizing: border-box;
-}
 .options-container {
-  width: 280px;
+  width: 100%;
+  min-width: 280px;
   height: 48dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: auto;
+  padding: 10px;
+  box-sizing: border-box;
   & .option-button {
+    width: 100%;
     flex-shrink: 0;
-    width: 95%;
     margin-top: 8px;
   }
   & .tags-switch {
+    height: 100%;
+    width: 100%;
     margin-top: 0;
-    width: 96%;
   }
 }
 

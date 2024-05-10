@@ -7,6 +7,8 @@ import TagView from '../../molecules/TagView.vue'
 import { useTags } from '@/stores/local/tags'
 import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
+import OptionButton from '@/components/molecules/OptionButton.vue'
+import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 
 const tags = useTags()
 
@@ -32,7 +34,9 @@ const deleteTag = () => {
 <template>
   <FloatModalSlot>
     <template #button-slot>
-      <ThemeButton class="delete">Deletar</ThemeButton>
+      <OptionButton content="Deletar" class="delete">
+        <TrashIco />
+      </OptionButton>
     </template>
     <template #container-slot>
       <div class="confirm-delete-container">

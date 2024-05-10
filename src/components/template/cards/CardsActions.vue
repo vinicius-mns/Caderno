@@ -1,27 +1,18 @@
 <script setup lang="ts">
-import CardConfigModal from '@/components/organisms/card/CardConfigModal.vue'
+import ActionsContainer from '@/components/atoms/ActionsContainer.vue'
+import MenuButton from '@/components/organisms/MenuButton.vue'
 import CardCreate from '@/components/organisms/card/CardCreate.vue'
-import TagCreate from '@/components/organisms/tag/TagCreate.vue'
-import TagFilterToggler from '@/components/organisms/tag/TagFilterToggler.vue'
+import TagWithOptionsList from '@/components/organisms/tag/TagWithOptionsList.vue'
+import TagsFilterCards from '@/components/organisms/tag/TagsFilterCards.vue'
 </script>
 
 <template>
-  <div class="container">
-    <CardCreate type="action-button" class="button" />
-    <TagCreate class="button" />
-    <TagFilterToggler class="button" />
-    <CardConfigModal class="button" />
-  </div>
+  <ActionsContainer>
+    <MenuButton />
+    <TagWithOptionsList />
+    <TagsFilterCards />
+    <CardCreate />
+  </ActionsContainer>
 </template>
 
-<style scoped lang="scss">
-$butonSize: 40px;
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  & .button {
-    margin-bottom: 8px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

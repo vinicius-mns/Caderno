@@ -36,7 +36,7 @@ $boxShadow: v-bind('atualStyle.boxShadow');
 $buttonSize: 36px;
 $buttonHoverColor: v-bind('atualStyle.color.three');
 $buttonTextColor: v-bind('atualStyle.color.text');
-$buttonBorderRadius: v-bind('atualStyle.borderRadius');
+$buttonBorderRadius: v-bind('atualStyle.borderRadius.one');
 $buttonBgColor: v-bind('atualStyle.color.two');
 .content-input {
   height: $buttonSize;

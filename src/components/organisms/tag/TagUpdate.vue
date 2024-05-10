@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// import CenterModal from '../../atoms/CenterModal.vue'
 import TagEditor from '../../molecules/TagEditor.vue'
-import ThemeButton from '../../atoms/ThemeButton.vue'
 import type { ITag } from '@/api/local'
 import { useTags } from '@/stores/local/tags'
 import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
+import EditIco from '@/components/atoms/icons/EditIco.vue'
+import OptionButton from '@/components/molecules/OptionButton.vue'
 
 const tags = useTags()
 
@@ -25,7 +25,9 @@ const updateTag = (e: typeof props.tag) => {
 <template>
   <FloatModalSlot>
     <template #button-slot>
-      <ThemeButton>Editar tag</ThemeButton>
+      <OptionButton content="Editar" class="edit-button">
+        <EditIco />
+      </OptionButton>
     </template>
     <template #container-slot>
       <TagEditor :tag="tag" @emit-tag="updateTag" />
@@ -33,4 +35,8 @@ const updateTag = (e: typeof props.tag) => {
   </FloatModalSlot>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.edit-button {
+  width: 100%;
+}
+</style>

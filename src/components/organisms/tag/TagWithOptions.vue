@@ -4,9 +4,6 @@ import TagUpdate from './TagUpdate.vue'
 import { ref } from 'vue'
 import TagView from '../../molecules/TagView.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-import { useStyle } from '@/stores/style'
-
-const { atualStyle } = useStyle()
 
 const props = defineProps<{
   tag: {
@@ -38,11 +35,9 @@ const closeModal = () => floatModal.value?.close()
 <style scoped lang="scss">
 .tag-with-options-container {
   height: 36px;
-  // margin: 4px 0 4px 0;
   width: 100%;
   & .tag-option {
-    width: 95%;
-    margin-left: 2.5%;
+    width: 100%;
     flex-shrink: 0;
     flex-grow: 0;
   }

@@ -39,7 +39,7 @@ const emitTag = () => {
     <div class="tag-editor">
       <SelectEmoji :seleted-emoji="tag.emoji.value" @change-emoji="tag.emoji.setValue" />
       <InputTextAtom
-        placeholder="Digite aqui"
+        placeholder="Nome da tag"
         key-id="tag-content"
         :content="tag.content.value"
         class="content-input"
@@ -54,22 +54,27 @@ const emitTag = () => {
 $buttonSize: 36px;
 $margin: 10px;
 .container {
-  width: 350px;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   & .tag-editor {
-    margin-top: $margin;
-    width: 95%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
+    & .emoji-selector {
+      width: 40px;
+      background-color: blue;
+    }
     & .content-input {
       width: calc(100% - $buttonSize - $margin);
     }
   }
   & .send-button {
-    margin: $margin 0 $margin;
-    width: 95%;
+    margin-top: $margin;
+    width: 100%;
     height: $buttonSize;
   }
 }

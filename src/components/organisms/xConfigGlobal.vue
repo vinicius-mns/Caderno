@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { reactive } from 'vue'
 // import FloatModal from '../molecules/FloatModal.vue'
 // import ExportAndImportData from './ExportAndImportData.vue'
@@ -28,7 +28,7 @@ const assets = reactive({
 
 <template>
   <div class="config-global-button" @mouseleave="modal.close">
-    <!-- <FloatModal
+    <FloatModal
       :ico="assets.config.ico"
       :title="assets.config.title"
       :show="modal.show"
@@ -41,7 +41,7 @@ const assets = reactive({
           <StyleGlobal />
         </div>
       </div>
-    </FloatModal> -->
+    </FloatModal>
   </div>
 </template>
 
@@ -59,4 +59,4 @@ $buttonSize: 36px;
     }
   }
 }
-</style>
+</style> -->

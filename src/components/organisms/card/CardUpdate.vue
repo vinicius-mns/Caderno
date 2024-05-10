@@ -3,7 +3,8 @@ import type { ICard } from '@/api/local'
 import CardEditor from '../../molecules/CardEditor.vue'
 import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import OptionButton from '@/components/molecules/OptionButton.vue'
+import EditIco from '@/components/atoms/icons/EditIco.vue'
 
 const cards = useCards()
 
@@ -21,7 +22,9 @@ const cardUpdate = (e: ICard) => {
   <div class="tag-create">
     <FloatModalSlot>
       <template #button-slot>
-        <ThemeButton>Editar</ThemeButton>
+        <OptionButton content="Editar card">
+          <EditIco />
+        </OptionButton>
       </template>
       <template #container-slot>
         <CardEditor :card="props.card" @emit-card="cardUpdate" />
