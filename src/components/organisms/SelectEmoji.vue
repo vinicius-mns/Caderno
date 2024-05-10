@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useEmoji } from '@/stores/emojis'
 import FloatModalSlot from '../molecules/FloatModalSlot.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
+import EmojiPlusIco from '../atoms/icons/EmojiPlusIco.vue'
 
 const emojis = useEmoji()
 
@@ -28,9 +29,12 @@ const sendSelected = (e: string) => {
 <template>
   <FloatModalSlot ref="modal" class="container-selectemoji">
     <template #button-slot>
-      <ThemeButton class="emoji-button">{{
-        props.seletedEmoji ? props.seletedEmoji : '+'
+      <ThemeButton class="emoji-button" v-if="props.seletedEmoji">{{
+        props.seletedEmoji
       }}</ThemeButton>
+      <ThemeButton class="emoji-button" v-else>
+        <EmojiPlusIco class="emoji-plus" />
+      </ThemeButton>
     </template>
     <template #container-slot>
       <EmojiSelector
@@ -46,12 +50,17 @@ const sendSelected = (e: string) => {
 $buttonSize: 36px;
 .container-selectemoji {
   & .emoji-button {
-    font-size: calc($buttonSize / 1.6);
-    width: $buttonSize;
-    height: $buttonSize;
+    font-size: $buttonSize;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    & .emoji-plus {
+      height: calc($buttonSize / 1.2);
+      width: calc($buttonSize / 1.2);
+    }
   }
 }
 </style>
