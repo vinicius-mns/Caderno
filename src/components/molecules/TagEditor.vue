@@ -37,7 +37,11 @@ const emitTag = () => {
 <template>
   <div class="container" @keyup.enter="emitTag">
     <div class="tag-editor">
-      <SelectEmoji :seleted-emoji="tag.emoji.value" @change-emoji="tag.emoji.setValue" />
+      <SelectEmoji
+        :seleted-emoji="tag.emoji.value"
+        @change-emoji="tag.emoji.setValue"
+        class="emoji-button"
+      />
       <InputTextAtom
         placeholder="Nome da tag"
         key-id="tag-content"
@@ -63,13 +67,13 @@ $margin: 10px;
   & .tag-editor {
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    & .emoji-selector {
-      width: 40px;
-      background-color: blue;
+    flex-direction: column;
+    align-items: center;
+    & .emoji-button {
+      margin-bottom: 10px;
     }
     & .content-input {
-      width: calc(100% - $buttonSize - $margin);
+      width: 100%;
     }
   }
   & .send-button {

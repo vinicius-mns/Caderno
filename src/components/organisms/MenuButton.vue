@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
-import ThemeP from '../atoms/ThemeP.vue'
 import MenuIco from '../atoms/icons/MenuIco.vue'
 import CoinButton from '../molecules/CoinButton.vue'
 import FloatModalSlot from '../molecules/FloatModalSlot.vue'
