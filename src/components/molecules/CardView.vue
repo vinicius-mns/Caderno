@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import CalcDate from '../../atoms/CalcDate.vue'
+import CalcDate from '@/components/atoms/CalcDate.vue'
 import { marked } from 'marked'
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import ThemeP from '@/components/atoms/ThemeP.vue'

@@ -4,7 +4,7 @@ import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import TagView from '@/components/molecules/tag/TagView.vue'
+import TagView from '@/components/molecules/TagView.vue'
 
 const props = defineProps<{ tag: ITag }>()
 
@@ -37,7 +37,7 @@ const deletar = () => emit('emitDelete', props.tag)
 <style scoped lang="scss">
 .container {
   width: 100%;
-  width: 200px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

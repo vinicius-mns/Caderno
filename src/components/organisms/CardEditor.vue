@@ -5,7 +5,7 @@ import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import TagSelectable from '@/components/molecules/tag/TagSelectable.vue'
+import TagSelectable from '@/components/molecules/TagSelectable.vue'
 
 const props = defineProps<{ card: ICard; allTags: ITag[] }>()
 

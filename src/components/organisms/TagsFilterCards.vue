@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import type { ITag } from '@/api/local'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import FiltersIco from '@/components/atoms/icons/FiltersIco.vue'
-import TagDoubleSectable from '@/components/molecules/tag/TagDoubleSectable.vue'
+import TagDoubleSectable from '@/components/molecules/TagDoubleSectable.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const props = defineProps<{ allTags: ITag[] }>()

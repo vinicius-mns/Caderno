@@ -3,7 +3,7 @@ import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import CoinButton from '@/components/molecules/CoinButton.vue'
 import FilterIco from '@/components/atoms/icons/FilterIco.vue'
-import TagsFilterCards from '@/components/organisms/tag/TagsFilterCards.vue'
+import TagsFilterCards from '@/components/organisms/TagsFilterCards.vue'
 import { useCards } from '@/stores/local/cards'
 
 const cards = useCards()

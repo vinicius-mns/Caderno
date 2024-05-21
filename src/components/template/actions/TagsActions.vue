@@ -3,11 +3,11 @@ import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import TagIco from '@/components/atoms/icons/TagIco.vue'
 import CoinButton from '@/components/molecules/CoinButton.vue'
 import type { ITag } from '@/api/local'
-import TagEditor from '@/components/organisms/tag/TagEditor.vue'
+import TagEditor from '@/components/organisms/TagEditor.vue'
 import { useTags } from '@/stores/local/tags'
 import { ref } from 'vue'
-import TagDelete from '@/components/organisms/tag/TagDelete.vue'
-import TagListSlot from '@/components/organisms/tag/TagListSlot.vue'
+import TagDelete from '@/components/organisms/TagDelete.vue'
+import TagListSlot from '@/components/organisms/TagListSlot.vue'
 
 const tags = useTags()
 

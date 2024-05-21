@@ -4,7 +4,7 @@ import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import CardView from '@/components/molecules/card/CardView.vue'
+import CardView from '@/components/molecules/CardView.vue'
 
 const props = defineProps<{
   card: ICard
