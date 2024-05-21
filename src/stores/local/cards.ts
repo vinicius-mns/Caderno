@@ -65,38 +65,52 @@ export const useCards = defineStore('cards', () => {
     _updateHistory('deleta tag de cards')
   }
 
-  const filterReturn = {
-    findByTags: (cards: ICard[], tagIds: string[]) => {
-      return cardsLocalApi.findByTags(cards, tagIds, 'every', 'include')
-    },
-    findByExcludeTags: (cards: ICard[], tagIds: string[]) => {
-      return cardsLocalApi.findByTags(cards, tagIds, 'some', 'exclude')
-    },
-    searchByText: (cards: ICard[], text: string) => {
-      return cardsLocalApi.searchCard(cards, text)
-    }
-  }
-
   const cardsReturn = {
     allCards: () => {
       return cardsLocalApi.read()
     }
   }
 
-  const filterChain = (cards: ICard[]) => {
-    const filter1 = filterReturn.findByTags(cards, filter.includeTags)
-    const filter2 = filterReturn.findByExcludeTags(filter1, filter.excludeTags)
-    const filter3 = filterReturn.searchByText(filter2, filter.text)
-    return filter3
+  const cardsDeleteByTag = (tagId: string) => {
+    cardsLocalApi.deleteCardsByTag(tagId)
+    _updateHistory('deleta cards por tag')
   }
 
-  const updateCards = () => {
-    const cardsInDb = cardsLocalApi.read()
-    const cardsFiltreds = filterChain(cardsInDb)
-    cards.value = cardsFiltreds
+  const cardsFilter = () => {
+    return cardsLocalApi.filter({
+      content: '',
+      tags: { excludes: filter.excludeTags, includes: filter.includeTags }
+    })
   }
 
-  watch(history, updateCards, { deep: true })
+  const filterReturn = {
+    findByTags: (tagIds: string[]) => {
+      return cardsLocalApi.filter({ content: '', tags: { excludes: [], includes: tagIds } })
+    },
+    findByExcludeTags: (tagIds: string[]) => {
+      return cardsLocalApi.filter({ content: '', tags: { excludes: tagIds, includes: [] } })
+    },
+    searchByContent: (content: string) => {
+      return cardsLocalApi.filter({ content, tags: { excludes: [], includes: [] } })
+    }
+  }
+
+  const cardsGetAll = () => {
+    return cardsLocalApi.read()
+  }
+
+  const cardsRander = () => {
+    const filterOn = () => {
+      const isNotEmpty = (v: string | string[]) => v.length > 0
+      return (
+        isNotEmpty(filter.text) || isNotEmpty(filter.includeTags) || isNotEmpty(filter.excludeTags)
+      )
+    }
+
+    filterOn() ? (cards.value = cardsFilter()) : (cards.value = cardsGetAll())
+  }
+
+  watch(history, cardsRander, { deep: true })
 
   return {
     cards,
@@ -109,6 +123,8 @@ export const useCards = defineStore('cards', () => {
     deleteOne,
     filterIncludeTag,
     filterExcludeTags,
-    filterText
+    filterText,
+    cardsDeleteByTag,
+    cardsFilter
   }
 })

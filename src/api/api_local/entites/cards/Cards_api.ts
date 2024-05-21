@@ -8,39 +8,23 @@ class CardDb extends Api_localStorage_as_db<ICard> {
   constructor(
     public key: string,
     protected _schema: z.AnyZodObject,
-    // protected _initivalue: ICard[],
     protected _idGenerate: IGenerateID
   ) {
     super(key, _schema, _idGenerate)
   }
 
-  searchCard = (cards: ICard[], text: string) => {
-    const filtred = cards.filter((card) => {
-      const cardLowerContent = card.content.toLowerCase()
-      return cardLowerContent.includes(text.toLowerCase())
+  filter = (arg: { content: string; tags: { includes: string[]; excludes: string[] } }) => {
+    const allCards = this.read()
+    const filterByContent = allCards.filter((card) => {
+      return card.content.toLowerCase().includes(arg.content.toLocaleLowerCase())
     })
-    return filtred
-  }
-
-  findByTags = (
-    cards: ICard[],
-    tagIds: string[],
-    matchType: 'some' | 'every',
-    tagPresence: 'include' | 'exclude'
-  ) => {
-    const execute = {
-      include: () => {
-        return cards.filter((card) => {
-          return tagIds[matchType]((tagId) => card.tags.includes(tagId))
-        })
-      },
-      exclude: () => {
-        return cards.filter((card) => {
-          return !tagIds[matchType]((tagId) => card.tags.includes(tagId))
-        })
-      }
-    }
-    return execute[tagPresence]()
+    const filterByIncludeTags = filterByContent.filter((card) => {
+      return arg.tags.includes.every((tagId) => card.tags.includes(tagId))
+    })
+    const filterByExcludeTags = filterByIncludeTags.filter((card) => {
+      return !arg.tags.excludes.some((tagId) => card.tags.includes(tagId))
+    })
+    return filterByExcludeTags
   }
 
   removeTagOnCards = (tagId: string) => {
@@ -52,17 +36,14 @@ class CardDb extends Api_localStorage_as_db<ICard> {
     })
     this.create(newCards)
   }
+
+  deleteCardsByTag = (tagId: string) => {
+    const allCards = this.read()
+    const newCards = allCards.filter((card) => !card.tags.includes(tagId))
+    this.create(newCards)
+  }
 }
 
 const key = 'cards_local'
-
-// const initialValue: ICard[] = [
-//   {
-//     id: '0',
-//     content: 'card inicial',
-//     date: new Date(),
-//     tags: ['']
-//   }
-// ]
 
 export const cardsLocalDb = () => new CardDb(key, cardSchema, new UuidGenerate())
