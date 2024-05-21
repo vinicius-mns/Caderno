@@ -77,6 +77,12 @@ export const useCards = defineStore('cards', () => {
     }
   }
 
+  const cardsReturn = {
+    allCards: () => {
+      return cardsLocalApi.read()
+    }
+  }
+
   const filterChain = (cards: ICard[]) => {
     const filter1 = filterReturn.findByTags(cards, filter.includeTags)
     const filter2 = filterReturn.findByExcludeTags(filter1, filter.excludeTags)
@@ -95,6 +101,7 @@ export const useCards = defineStore('cards', () => {
   return {
     cards,
     filterReturn,
+    cardsReturn,
     tagsUseUpdateCards,
     removeTagOnCard,
     createOne,

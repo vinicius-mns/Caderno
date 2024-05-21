@@ -8,8 +8,12 @@ import { useTags } from '@/stores/local/tags'
 import { ref } from 'vue'
 import TagDelete from '@/components/organisms/TagDelete.vue'
 import TagListSlot from '@/components/organisms/TagListSlot.vue'
+import TagDeleteCards from '@/components/organisms/TadDeleteCards.vue'
+import { useCards } from '@/stores/local/cards'
 
 const tags = useTags()
+
+const cards = useCards()
 
 const props = defineProps<{
   emojis: string[]
@@ -38,6 +42,10 @@ const tagDelete = (t: ITag) => {
   tags.deleteOne(t.id)
   floatModalClose()
 }
+
+const TagFindCards = (t: ITag) => {
+  return cards.filterReturn.findByTags(cards.cardsReturn.allCards(), [t.id])
+}
 </script>
 
 <template>
@@ -54,6 +62,7 @@ const tagDelete = (t: ITag) => {
           @emit-tag="tagCreate"
           :emojis="props.emojis"
           :tag="tagInit"
+          class="button"
         />
         <TagListSlot :all-tags="props.allTags" @emit-tag="tagTargetSet">
           <TagEditor
@@ -62,7 +71,8 @@ const tagDelete = (t: ITag) => {
             :emojis="props.emojis"
             :tag="tagTarget"
           />
-          <TagDelete :tag="tagTarget" @emit-delete="tagDelete" />
+          <TagDelete :tag="tagTarget" @emit-delete="tagDelete" class="button" />
+          <TagDeleteCards :tag="tagTarget" :cards="TagFindCards(tagTarget)" class="button" />
         </TagListSlot>
       </div>
     </template>
@@ -72,11 +82,8 @@ const tagDelete = (t: ITag) => {
 <style scoped lang="scss">
 .container {
   width: 100%;
-  & .item {
+  & .button {
     margin: 3px 0;
   }
-}
-.container-2 {
-  width: 140px;
 }
 </style>
