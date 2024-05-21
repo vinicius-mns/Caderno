@@ -44,7 +44,7 @@ const tagDelete = (t: ITag) => {
 }
 
 const TagFindCards = (t: ITag) => {
-  return cards.filterReturn.findByTags(cards.cardsReturn.allCards(), [t.id])
+  return cards.filterReturn.findByTags([t.id])
 }
 
 const cardsDeleteByTag = (t: ITag) => {
