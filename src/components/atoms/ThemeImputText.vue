@@ -23,6 +23,7 @@ watchEffect(() => {
 
 <template>
   <input
+    autocomplete="off"
     type="text"
     :id="keyId"
     v-model="contentReactive"
