@@ -8,7 +8,6 @@ class CardDb extends Api_localStorage_as_db<ICard> {
   constructor(
     public key: string,
     protected _schema: z.AnyZodObject,
-    // protected _initivalue: ICard[],
     protected _idGenerate: IGenerateID
   ) {
     super(key, _schema, _idGenerate)
@@ -50,6 +49,12 @@ class CardDb extends Api_localStorage_as_db<ICard> {
       const newCard: ICard = { ...card, tags: newTagsOnCard }
       return newCard
     })
+    this.create(newCards)
+  }
+
+  deleteCardsByTag = (tagId: string) => {
+    const allCards = this.read()
+    const newCards = allCards.filter((card) => !card.tags.includes(tagId))
     this.create(newCards)
   }
 }

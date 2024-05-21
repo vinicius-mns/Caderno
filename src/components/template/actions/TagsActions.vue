@@ -46,6 +46,11 @@ const tagDelete = (t: ITag) => {
 const TagFindCards = (t: ITag) => {
   return cards.filterReturn.findByTags(cards.cardsReturn.allCards(), [t.id])
 }
+
+const cardsDeleteByTag = (t: ITag) => {
+  cards.cardsDeleteByTag(t.id)
+  floatModalClose()
+}
 </script>
 
 <template>
@@ -72,7 +77,12 @@ const TagFindCards = (t: ITag) => {
             :tag="tagTarget"
           />
           <TagDelete :tag="tagTarget" @emit-delete="tagDelete" class="button" />
-          <TagDeleteCards :tag="tagTarget" :cards="TagFindCards(tagTarget)" class="button" />
+          <TagDeleteCards
+            :tag="tagTarget"
+            :cards="TagFindCards(tagTarget)"
+            class="button"
+            @emit-delete="cardsDeleteByTag"
+          />
         </TagListSlot>
       </div>
     </template>

@@ -83,6 +83,11 @@ export const useCards = defineStore('cards', () => {
     }
   }
 
+  const cardsDeleteByTag = (tagId: string) => {
+    cardsLocalApi.deleteCardsByTag(tagId)
+    _updateHistory('deleta cards por tag')
+  }
+
   const filterChain = (cards: ICard[]) => {
     const filter1 = filterReturn.findByTags(cards, filter.includeTags)
     const filter2 = filterReturn.findByExcludeTags(filter1, filter.excludeTags)
@@ -109,6 +114,7 @@ export const useCards = defineStore('cards', () => {
     deleteOne,
     filterIncludeTag,
     filterExcludeTags,
-    filterText
+    filterText,
+    cardsDeleteByTag
   }
 })
