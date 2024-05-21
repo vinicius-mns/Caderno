@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import TagView from '@/components/molecules/tag/TagView.vue'
+import TagView from '@/components/molecules/TagView.vue'
 
 const props = defineProps<{ allTags: ITag[] }>()
 

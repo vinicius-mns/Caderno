@@ -2,13 +2,10 @@
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import { computed, ref } from 'vue'
-import CardListSlot from '../organisms/card/CardListSlot.vue'
-import CardDelete from '../organisms/card/CardDelete.vue'
+import CardListSlot from '../organisms/CardListSlot.vue'
+import CardDelete from '../organisms/CardDelete.vue'
 import { useCards } from '@/stores/local/cards'
-import FloatModalSlot from '../atoms/FloatModalSlot.vue'
-import CardEditor from '../organisms/card/CardEditor.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
-import PencilIco from '../atoms/icons/PencilIco.vue'
+import CardEditor from '../organisms/CardEditor.vue'
 
 const cards = useCards()
 

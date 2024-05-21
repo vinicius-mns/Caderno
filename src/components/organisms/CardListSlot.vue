@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import CardView from '@/components/molecules/card/CardView.vue'
+import CardView from '@/components/molecules/CardView.vue'
 import { ref } from 'vue'
 
 const props = defineProps<{ allCards: ICard[]; width: string }>()

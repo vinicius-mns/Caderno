@@ -1,88 +1,79 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStyle } from '@/stores/style'
-
-const { atualStyle } = useStyle()
+import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
+import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import EmojiPlusIco from '@/components/atoms/icons/EmojiPlusIco.vue'
 
 const props = defineProps<{
+  seletedEmoji: string
   emojis: string[]
-  emojiSelected: string
 }>()
 
 const emit = defineEmits<{
   (e: 'changeEmoji', v: string): void
 }>()
 
-const emojiR = ref(props.emojiSelected)
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
-const sendSelected = () => emit('changeEmoji', emojiR.value)
+const sendSelected = (e: string) => {
+  emit('changeEmoji', e)
+  modal.value?.close()
+}
 </script>
 
 <template>
-  <div class="emojis-container">
-    <div v-for="(emoji, i) in props.emojis" :key="i" class="emoji">
-      <input
-        type="radio"
-        name="emojisOptions"
-        :id="`tagid-${JSON.stringify(i)}`"
-        :value="emoji"
-        v-model="emojiR"
-        @change="sendSelected"
-      />
-      <label :for="`tagid-${JSON.stringify(i)}`">
-        <p>{{ emoji }}</p>
-      </label>
-    </div>
-  </div>
+  <FloatModalSlot ref="modal" class="container-selectemoji">
+    <template #button-slot>
+      <ThemeButton class="emoji-button" v-if="props.seletedEmoji">{{
+        props.seletedEmoji
+      }}</ThemeButton>
+      <ThemeButton class="emoji-button" v-else>
+        <EmojiPlusIco class="emoji-plus" />
+      </ThemeButton>
+    </template>
+    <template #container-slot>
+      <div class="container">
+        <ThemeButton
+          v-for="(emoji, i) in props.emojis"
+          :key="i"
+          @click="() => sendSelected(emoji)"
+          class="option"
+        >
+          {{ emoji }}
+        </ThemeButton>
+      </div>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
 $buttonSize: 36px;
-$color: v-bind('atualStyle.color.text');
-.emojis-container {
-  padding: 10px;
-  box-sizing: border-box;
-  width: 360px;
-  height: 400px;
-  overflow: auto;
-  flex-wrap: wrap;
-  display: flex;
-  align-content: flex-start;
-  & .emoji {
-    height: $buttonSize;
-    width: $buttonSize;
-    flex-shrink: 0;
-    margin: 8px;
+.container-selectemoji {
+  & .emoji-button {
+    font-size: $buttonSize;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    & input[type='radio'] {
-      height: 0;
-      width: 0;
-      visibility: hidden;
+    & .emoji-plus {
+      height: calc($buttonSize / 1.2);
+      width: calc($buttonSize / 1.2);
     }
-    & label {
-      border-radius: 50%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      & p {
-        font-size: $buttonSize;
-      }
-      &:hover {
-        background-color: $color;
-      }
-    }
-    input:checked + label {
-      background-color: $color;
-      border: solid 1px red;
-    }
+  }
+}
+.container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  .option {
+    height: 40px;
+    width: 40px;
+    margin: 2.5px;
+    font-size: 30px;
+    background-color: transparent;
   }
 }
 </style>

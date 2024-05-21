@@ -2,7 +2,7 @@
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import CoinButton from '@/components/molecules/CoinButton.vue'
 import MenuIco from '@/components/atoms/icons/MenuIco.vue'
-import CardChangeWidth from '@/components/organisms/card/CardChangeWidth.vue'
+import CardChangeWidth from '@/components/organisms/CardChangeWidth.vue'
 import { useConfig } from '@/stores/config'
 
 const config = useConfig()

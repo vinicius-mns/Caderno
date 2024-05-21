@@ -5,7 +5,7 @@ import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import { ref } from 'vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import { useCards } from '@/stores/local/cards'
-import CardEditor from '@/components/organisms/card/CardEditor.vue'
+import CardEditor from '@/components/organisms/CardEditor.vue'
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 
 const cards = useCards()
