@@ -6,10 +6,16 @@ const { atualStyle } = useStyle()
 </script>
 
 <template>
-  <RouterView />
+  <div class="body">
+    <RouterView />
+  </div>
 </template>
 
 <style lang="scss">
+.body {
+  background-color: v-bind('atualStyle.color.one');
+  min-height: 100dvh;
+}
 a,
 strong {
   padding: 3px;

@@ -1,63 +1,49 @@
 <script setup lang="ts">
-import ThemeButton from '../../atoms/ThemeButton.vue'
-import type { ICard } from '@/api/local'
-import CardView from './CardView.vue'
-import { useCards } from '@/stores/local/cards'
-import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-import OptionButton from '@/components/molecules/OptionButton.vue'
+import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
+import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
+import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
+import ButtonOption from '@/components/molecules/ButtonOption.vue'
+import CardView from '@/components/molecules/card/CardView.vue'
 
-const cards = useCards()
+const props = defineProps<{
+  card: ICard
+}>()
 
-const props = defineProps<{ card: ICard }>()
+const emit = defineEmits<{
+  (e: 'emitDeleteId', v: string): void
+}>()
 
-const emit = defineEmits<{ (e: 'close', v: void): void }>()
-
-const deleteCard = () => {
-  cards.deleteOne(props.card.id)
-  emit('close')
-}
+const cardDelete = () => emit('emitDeleteId', props.card.id)
 </script>
 
 <template>
   <FloatModalSlot>
     <template #button-slot>
-      <OptionButton content="Deletar" class="delete">
+      <ButtonOption content="Deletar">
         <TrashIco />
-      </OptionButton>
+      </ButtonOption>
     </template>
     <template #container-slot>
-      <div class="confirm-delete-container">
-        <CardView :card="props.card" class="card" />
-        <ThemeButton @click="deleteCard" class="item delete">Deletar</ThemeButton>
+      <div class="container">
+        <ThemeP class="text" content="Deseja deletar esse card?" />
+        <CardView :card="props.card" />
+        <ButtonOption content="Deletar" @click="cardDelete">
+          <TrashIco />
+        </ButtonOption>
       </div>
     </template>
   </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-.delete {
+.container {
   width: 100%;
-  background-color: rgb(255, 49, 49);
-  color: white;
-}
-.confirm-delete-container {
-  width: 100%;
-  min-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
-  & .card {
-    width: 96%;
-    margin-top: 6px;
-    overflow: auto;
-  }
-  & .item {
-    width: 96%;
-    margin-top: 6px;
-    flex-shrink: 0;
+  & .text {
+    padding: 10px;
   }
 }
 </style>

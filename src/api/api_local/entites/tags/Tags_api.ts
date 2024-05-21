@@ -14,8 +14,13 @@ class TagDb extends Api_localStorage_as_db<ITag> {
     super(key, _schema, _idGenerate)
   }
 
-  public readList(idsList: string[]) {
-    const listOfTags: ITag[] = idsList.map((id) => {
+  /**
+   *
+   * @param tagIds Lista de tagsId
+   * @returns retorna objeto tag completo
+   */
+  public readList(tagIds: string[]) {
+    const listOfTags: ITag[] = tagIds.map((id) => {
       try {
         return this.readOne(id)
       } catch (e) {

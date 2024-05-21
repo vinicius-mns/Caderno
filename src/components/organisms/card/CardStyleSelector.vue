@@ -2,7 +2,7 @@
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import { useCardStyle } from '@/stores/cardStyle'
 import { computed } from 'vue'
-import CardView from './CardView.vue'
+import CardView from '@/components/molecules/card/CardView.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const cardStyle = useCardStyle()
@@ -46,4 +46,3 @@ const setCard = (index: number) => {
   }
 }
 </style>
-@/stores/cardStyle
