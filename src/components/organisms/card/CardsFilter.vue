@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import OptionInLine from '@/components/molecules/OptionInLine.vue'
 import HorizontalCarousel from '@/components/molecules/HorizontalCarousel.vue'
 import TagWithSwitchList from '../tag/TagWithSwitchList.vue'
@@ -140,4 +140,4 @@ const range = window.innerWidth / 2
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->

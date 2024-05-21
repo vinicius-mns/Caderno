@@ -1,30 +1,32 @@
 <script setup lang="ts">
 import RangeImput from '@/components/molecules/RangeImput.vue'
-import { useConfig } from '@/stores/config'
-import { computed } from 'vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import { useStyle } from '@/stores/style'
 
-const { config, cardChengeWidth } = useConfig()
-
 const { atualStyle } = useStyle()
 
-const range = computed(() => config.value.cardWidth)
+const props = defineProps<{
+  width: number
+}>()
 
-const setRange = (e: number) => cardChengeWidth(e)
+const emit = defineEmits<{
+  (e: 'emitWidth', v: number): void
+}>()
+
+const emitWidth = (v: number) => emit('emitWidth', v)
 </script>
 
 <template>
   <div class="range-container">
     <div class="description">
       <ThemeP content="Tamanho dos cards" />
-      <ThemeP :content="`${range}px`" class="range-value" />
+      <ThemeP :content="`${props.width}px`" class="range-value" />
     </div>
     <RangeImput
       :title="{ visible: false, content: 'Quantidade de colunas' }"
       :limit="{ min: 200, max: 860 }"
-      :init-value="range"
-      @emit-value="setRange"
+      :init-value="width"
+      @emit-value="emitWidth"
       class="range"
     />
   </div>

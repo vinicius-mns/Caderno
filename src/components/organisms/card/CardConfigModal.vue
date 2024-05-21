@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import cardChengeWidth from '@/components/organisms/card/CardChangeWidth.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
@@ -57,4 +57,4 @@ svg {
   fill: v-bind('atualStyle.color.text');
   width: 16px;
 }
-</style>
+</style> -->

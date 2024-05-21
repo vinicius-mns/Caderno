@@ -32,7 +32,7 @@ export const useTags = defineStore('tags', () => {
     return tag
   }
 
-  const readList = (ids: string[]) => {
+  const getTagsById = (ids: string[]) => {
     const list = tagsLocalApi.readList(ids)
     return list
   }
@@ -71,7 +71,7 @@ export const useTags = defineStore('tags', () => {
     createOne,
     readOne,
     updateOne,
-    readList,
+    getTagsById,
     deleteOne,
     filterText
   }

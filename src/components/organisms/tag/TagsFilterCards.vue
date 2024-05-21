@@ -1,85 +1,65 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import TagSwitchDouble from './TagSwitchDouble.vue'
-import { useCards } from '@/stores/local/cards'
-import { useTags } from '@/stores/local/tags'
-import CoinButton from '@/components/molecules/CoinButton.vue'
-import FloatModalSlot from '@/components/molecules/FloatModalSlot.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
+import { ref } from 'vue'
 import type { ITag } from '@/api/local'
-import FilterIco from '@/components/atoms/icons/FilterIco.vue'
-import OptionButton from '@/components/molecules/OptionButton.vue'
+import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import FiltersIco from '@/components/atoms/icons/FiltersIco.vue'
+import TagDoubleSectable from '@/components/molecules/tag/TagDoubleSectable.vue'
+import ThemeP from '@/components/atoms/ThemeP.vue'
 
-const cards = useCards()
+const props = defineProps<{ allTags: ITag[] }>()
 
-const tags = useTags()
+const emit = defineEmits<{
+  (e: 'emitTags', v: { includeTags: string[]; excludesTags: string[] }): void
+}>()
 
-const allTags = computed(() => {
-  return tags.tags.map((tag) => ({ tag: tag, status: 'n' as 'l' | 'r' | undefined }))
-})
-
-const reactiveTags = ref(allTags.value)
+const TagsWithStatus = ref(
+  props.allTags.map((tag) => ({ tag: tag, status: 'n' as 'g' | 'r' | 'n' }))
+)
 
 const includeTags = ref([] as string[])
 
 const excludesTags = ref([] as string[])
 
-const handleTags = (v: { tag: ITag; status: 'l' | 'r' | undefined }) => {
-  const tagsList = reactiveTags.value
-  const index = tagsList.findIndex((tag) => tag.tag.id === v.tag.id)
-  tagsList[index] = v
-  reactiveTags.value = tagsList
-  includeTags.value = tagsList.filter((tag) => tag.status === 'r').map((tag) => tag.tag.id)
-  excludesTags.value = tagsList.filter((tag) => tag.status === 'l').map((tag) => tag.tag.id)
+const handleTags = (v: { tag: ITag; status: 'g' | 'r' | 'n' }) => {
+  const TagWithStatus = TagsWithStatus.value
+  const index = TagWithStatus.findIndex((tag) => tag.tag.id === v.tag.id)
+  TagWithStatus[index] = v
+  TagsWithStatus.value = TagWithStatus
+  includeTags.value = TagWithStatus.filter((tag) => tag.status === 'g').map((tag) => tag.tag.id)
+  excludesTags.value = TagWithStatus.filter((tag) => tag.status === 'r').map((tag) => tag.tag.id)
 }
 
 const sendFilter = () => {
-  cards.filterIncludeTag(includeTags.value)
-  cards.filterExcludeTags(excludesTags.value)
+  emit('emitTags', { includeTags: includeTags.value, excludesTags: excludesTags.value })
 }
 </script>
 
 <template>
-  <FloatModalSlot>
-    <template #button-slot>
-      <CoinButton description="Filtrar cards por tags">
-        <FilterIco />
-      </CoinButton>
-    </template>
-    <template #container-slot>
-      <div class="tag-with-switch-list">
-        <div class="tags-container">
-          <div class="context">
-            <ThemeP content="Sem Tag" class="r" />
-            <ThemeP content="Com Tag" class="g" />
-          </div>
-          <TagSwitchDouble
-            v-for="(tag, i) in reactiveTags"
-            :key="i"
-            :tag="tag.tag"
-            :status="tag.status"
-            @emit-tag="handleTags"
-            class="tag"
-          />
-        </div>
-        <OptionButton class="send-filter" @click="sendFilter" content="Filtrar">
-          <FiltersIco />
-        </OptionButton>
-      </div>
-    </template>
-  </FloatModalSlot>
+  <div class="tag-with-switch-list">
+    <div class="describe">
+      <ThemeP content="Sem tag" />
+      <ThemeP content="Com tag" />
+    </div>
+    <div class="tags-container">
+      <TagDoubleSectable v-for="(tag, i) in allTags" :key="i" :tag="tag" @emit-tag="handleTags" />
+    </div>
+    <ButtonOption class="send-filter" @click="sendFilter" content="Filtrar">
+      <FiltersIco />
+    </ButtonOption>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .tag-with-switch-list {
-  width: 100%;
-  min-width: 260px;
-  height: 48dvh;
-  padding: 10px;
+  width: 100;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  & .describe {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 2px;
+  }
   & .tags-container {
     width: 100%;
     height: calc(48dvh - 38px);
