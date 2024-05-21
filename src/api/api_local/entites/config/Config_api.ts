@@ -3,7 +3,7 @@ import { Api_localStorage } from '../../Api_localStorage'
 import { type IConfig, IConfigSchema } from './configTypes'
 
 const initialValue: IConfig = {
-  cardWidth: 202,
+  cardWidth: 428,
   showFilterCards: false
 }
 
