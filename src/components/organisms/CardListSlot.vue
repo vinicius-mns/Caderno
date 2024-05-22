@@ -26,6 +26,7 @@ defineExpose({ close })
           :card="card"
           @emit-card="emitCard"
           class="card"
+          :style="{ animationDelay: i / 30 + 's' }"
         />
       </div>
     </template>
@@ -46,6 +47,13 @@ defineExpose({ close })
     margin: 8px;
     width: v-bind('props.width');
     max-width: 95dvw;
+    padding-top: 80px;
+    animation: init 0.3s forwards;
+  }
+}
+@keyframes init {
+  to {
+    padding-top: 0;
   }
 }
 </style>

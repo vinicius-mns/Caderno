@@ -71,29 +71,3 @@ $margin: 8px;
   }
 }
 </style>
-
-<!-- <template>
-  <CardListSlot
-    ref="cardModal"
-    :all-cards="cardsReverse"
-    @emit-card="cardTargetSet"
-    class="card"
-    :width="props.width"
-  >
-    <div class="container">
-      <FloatModalSlot>
-        <template #button-slot>
-          <ButtonOption content="Editar">
-            <PencilIco />
-          </ButtonOption>
-        </template>
-        <template #container-slot>
-          <div class="container">
-            <CardEditor :card="cardTarget" :all-tags="props.allTags" @emit-card="cardUpdate" />
-          </div>
-        </template>
-      </FloatModalSlot>
-      <CardDelete :card="cardTarget" @emit-delete-id="cardDelete" />
-    </div>
-  </CardListSlot>
-</template> -->
