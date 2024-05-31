@@ -7,7 +7,7 @@ import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import CardView from '../molecules/CardView.vue'
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 
-const props = defineProps<{ tag: ITag; cards: ICard[] }>()
+const props = defineProps<{ tag: ITag; cardsToDelete: ICard[] }>()
 
 const emit = defineEmits<{
   (emit: 'emitDelete', v: ITag): void
@@ -27,7 +27,7 @@ const deletar = () => emit('emitDelete', props.tag)
       <div class="container">
         <ThemeP content="Deseja deletar esses cards?" class="item" />
         <div class="container-cards">
-          <CardView v-for="(card, i) in props.cards" :key="i" :card="card" class="card" />
+          <CardView v-for="(card, i) in props.cardsToDelete" :key="i" :card="card" class="card" />
         </div>
         <ButtonOption content="Deletar cards" @click="deletar" class="item">
           <TrashIco />

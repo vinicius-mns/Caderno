@@ -97,19 +97,6 @@ $boxShadow: v-bind('atualStyle.boxShadow');
   }
   & .float-card {
     position: fixed;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 10px;
-    width: 300px;
-    max-height: 48dvh;
-    max-width: 95dvw;
-    overflow-y: auto;
-    overflow-x: hidden;
-    box-sizing: border-box;
-    border-radius: $borderRadius;
-    background-color: $bgColor;
-    box-shadow: $boxShadow;
-    border: v-bind('atualStyle.border');
     transition: background-color 1s;
     opacity: 0;
     left: v-bind('cursorPosition.x');

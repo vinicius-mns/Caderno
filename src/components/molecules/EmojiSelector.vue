@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import EmojiPlusIco from '@/components/atoms/icons/EmojiPlusIco.vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const props = defineProps<{
   seletedEmoji: string
@@ -32,7 +33,7 @@ const sendSelected = (e: string) => {
       </ThemeButton>
     </template>
     <template #container-slot>
-      <div class="container">
+      <ModalCard class="container">
         <ThemeButton
           v-for="(emoji, i) in props.emojis"
           :key="i"
@@ -41,7 +42,7 @@ const sendSelected = (e: string) => {
         >
           {{ emoji }}
         </ThemeButton>
-      </div>
+      </ModalCard>
     </template>
   </FloatModalSlot>
 </template>
@@ -64,7 +65,9 @@ $buttonSize: 36px;
   }
 }
 .container {
-  width: 100%;
+  width: 300px;
+  height: 48dvh;
+  overflow: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;

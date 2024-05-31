@@ -5,6 +5,7 @@ import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import CardView from '@/components/molecules/CardView.vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const props = defineProps<{
   card: ICard
@@ -25,20 +26,20 @@ const cardDelete = () => emit('emitDeleteId', props.card.id)
       </ButtonOption>
     </template>
     <template #container-slot>
-      <div class="container">
+      <ModalCard class="container">
         <ThemeP class="text" content="Deseja deletar esse card?" />
         <CardView :card="props.card" />
         <ButtonOption content="Deletar" @click="cardDelete">
           <TrashIco />
         </ButtonOption>
-      </div>
+      </ModalCard>
     </template>
   </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
+  width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;

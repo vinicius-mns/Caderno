@@ -5,13 +5,11 @@ import { reactive } from 'vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import EmojiSelector from '@/components/molecules/EmojiSelector.vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const props = defineProps<{
   tag: ITag
   emojis: string[]
-  content: string
 }>()
 
 const emit = defineEmits<{
@@ -38,33 +36,24 @@ const sendContent = () => {
 </script>
 
 <template>
-  <FloatModalSlot>
-    <template #button-slot>
-      <ButtonOption :content="props.content">
-        <PencilIco />
-      </ButtonOption>
-    </template>
-    <template #container-slot>
-      <div class="card-editor-container">
-        <EmojiSelector
-          :seleted-emoji="tagReative.emoji"
-          @change-emoji="setEmoji"
-          :emojis="props.emojis"
-          class="imput"
-        />
-        <ThemeImputText
-          :content="tagReative.content"
-          @emit-content="setContent"
-          key-id="tag-editor"
-          placeholder="Nome da tag"
-          class="imput"
-        />
-        <ButtonOption content="Confirmar" @click="sendContent" class="imput">
-          <CheckIco />
-        </ButtonOption>
-      </div>
-    </template>
-  </FloatModalSlot>
+  <div class="card-editor-container">
+    <EmojiSelector
+      :seleted-emoji="tagReative.emoji"
+      @change-emoji="setEmoji"
+      :emojis="props.emojis"
+      class="imput"
+    />
+    <ThemeImputText
+      :content="tagReative.content"
+      @emit-content="setContent"
+      key-id="tag-editor"
+      placeholder="Nome da tag"
+      class="imput"
+    />
+    <ButtonOption content="Confirmar" @click="sendContent" class="imput">
+      <CheckIco />
+    </ButtonOption>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -73,7 +62,7 @@ const sendContent = () => {
   flex-direction: column;
   align-items: center;
   & .imput {
-    margin: 2.5px;
+    margin: 3px;
   }
 }
 </style>

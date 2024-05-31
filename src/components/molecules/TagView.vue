@@ -2,6 +2,9 @@
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
+import { useStyle } from '@/stores/style'
+
+const { atualStyle } = useStyle()
 
 const props = defineProps<{ tag: ITag }>()
 
@@ -29,6 +32,9 @@ $margin: 3px;
   align-items: center;
   background-color: transparent;
   position: relative;
+  &:hover {
+    background-color: v-bind('atualStyle.color.three');
+  }
   & .emoji {
     font-size: calc($height / 1.8);
   }

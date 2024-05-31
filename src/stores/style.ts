@@ -12,7 +12,7 @@ export const useStyle = defineStore('style-global', () => {
         four: '#282828'
       },
       boxShadow: '',
-      border: 'solid 1px rgb(116, 116, 116)',
+      border: 'solid 1px rgb(65, 65, 65)',
       borderRadius: {
         one: '8px',
         two: '12px',

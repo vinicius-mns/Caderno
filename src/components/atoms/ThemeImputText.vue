@@ -35,10 +35,10 @@ watchEffect(() => {
 <style scoped lang="scss">
 $boxShadow: v-bind('atualStyle.boxShadow');
 $buttonSize: 36px;
-$buttonHoverColor: v-bind('atualStyle.color.three');
+$buttonHoverColor: v-bind('atualStyle.color.four');
 $buttonTextColor: v-bind('atualStyle.color.text');
 $buttonBorderRadius: v-bind('atualStyle.borderRadius.one');
-$buttonBgColor: v-bind('atualStyle.color.two');
+$buttonBgColor: v-bind('atualStyle.color.three');
 .content-input {
   width: 100%;
   height: $buttonSize;

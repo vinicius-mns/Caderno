@@ -6,6 +6,7 @@ import CardListSlot from '../organisms/CardListSlot.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { useCards } from '@/stores/local/cards'
 import CardEditor from '../organisms/CardEditor.vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const cards = useCards()
 
@@ -45,7 +46,7 @@ const cardDelete = (id: string) => {
     class="card"
     :width="props.width"
   >
-    <div class="container">
+    <ModalCard class="container">
       <CardEditor
         :card="cardTarget"
         :all-tags="props.allTags"
@@ -53,7 +54,7 @@ const cardDelete = (id: string) => {
         class="card-editor"
       />
       <CardDelete :card="cardTarget" @emit-delete-id="cardDelete" class="card-delete" />
-    </div>
+    </ModalCard>
   </CardListSlot>
 </template>
 
@@ -61,7 +62,7 @@ const cardDelete = (id: string) => {
 $buttonH: 36px;
 $margin: 8px;
 .container {
-  width: 100%;
+  width: 300px;
   height: 45dvh;
   & .card-editor {
     height: calc(100% - $buttonH - $margin);
