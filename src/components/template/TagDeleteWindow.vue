@@ -6,6 +6,7 @@ import TrashIco from '../atoms/icons/TrashIco.vue'
 import TagView from '../molecules/TagView.vue'
 import WindowModal from '../atoms/WindowModal.vue'
 import { useWindows } from '@/stores/windows'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const tags = useTags()
 
@@ -25,14 +26,14 @@ const deleteTags = () => {
 
 <template>
   <WindowModal title="Deseja deletar tag?" v-if="window.tagDeleteWindow.value" @emit-close="close">
-    <div class="modal-card">
+    <ModalCard class="modal-card">
       <div class="tags-list-container">
         <TagView :tag="props.tag" />
       </div>
       <ButtonOption content="Confirmar" @click="deleteTags">
         <TrashIco />
       </ButtonOption>
-    </div>
+    </ModalCard>
   </WindowModal>
 </template>
 
@@ -43,6 +44,9 @@ const deleteTags = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
   & .tags-list-container {
     width: 100%;
   }

@@ -4,6 +4,7 @@ import TagsFilterCards from '@/components/organisms/TagsFilterCards.vue'
 import { useCards } from '@/stores/local/cards'
 import { useWindows } from '@/stores/windows'
 import WindowModal from '../atoms/WindowModal.vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const cards = useCards()
 
@@ -23,9 +24,9 @@ const filterCards = (v: { includeTags: string[]; excludesTags: string[] }) => {
 
 <template>
   <WindowModal title="Filtrar cards" v-if="window.filterCardsWindow.value" @emit-close="close">
-    <div class="container">
+    <ModalCard class="container">
       <TagsFilterCards :all-tags="props.allTags" @emit-tags="filterCards" />
-    </div>
+    </ModalCard>
   </WindowModal>
 </template>
 
@@ -37,5 +38,8 @@ $buttonSize: 36px;
   height: 48dvh;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+    width: 100dvw;
+  }
 }
 </style>

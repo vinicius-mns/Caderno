@@ -6,6 +6,7 @@ import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import TagSelectable from '@/components/molecules/TagSelectable.vue'
+import ThemeP from '../atoms/ThemeP.vue'
 
 const props = defineProps<{ card: ICard; allTags: ITag[] }>()
 
@@ -52,16 +53,25 @@ const sendCard = () => {
 <template>
   <div class="card-form">
     <div class="tag-section">
+      <ThemeP content="Clique nas tags para adiciona-las ao card" />
       <TagSelectable
         v-for="(tag, i) in allTags"
         :key="i"
         :tag="tag"
         @emit-tag="handleCheckTags"
         :checked="isChecked(tag.id)"
+        class="tag"
       />
     </div>
-    <ThemeTextArea ref="textArea" :content="card.content" class="item" @emit-content="setContent" />
-    <ButtonOption content="Confirmar" @click="sendCard" class="item">
+    <div class="content-section">
+      <ThemeTextArea
+        ref="textArea"
+        :content="card.content"
+        class="textarea"
+        @emit-content="setContent"
+      />
+    </div>
+    <ButtonOption content="Confirmar" @click="sendCard" class="confim-button">
       <CheckIco />
     </ButtonOption>
   </div>
@@ -75,14 +85,24 @@ const sendCard = () => {
   flex-direction: column;
   & .tag-section {
     width: 100%;
-    height: 100%;
+    max-height: 70%;
     box-sizing: border-box;
     overflow: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    & .tag {
+      width: 45%;
+    }
   }
-  & .item {
-    margin-top: 10px;
+  & .content-section {
+    height: 30%;
+    & .textarea {
+      font-size: 15px;
+      margin: 10px 0;
+      height: calc(100% - 20px);
+    }
   }
 }
 </style>

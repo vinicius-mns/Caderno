@@ -42,24 +42,21 @@ const emitClose = () => emit('emitClose')
 $borderRadius: v-bind('atualStyle.borderRadius.two');
 $buttonSize: 36px;
 $cardColor: v-bind('atualStyle.color.one');
-$bgColor: v-bind('atualStyle.color.four');
+$bgColor: v-bind('atualStyle.color.one');
 $boxShadow: v-bind('atualStyle.boxShadow');
 .modal-card-container {
   position: fixed;
   padding: 10px;
   box-sizing: border-box;
-  border-radius: $borderRadius;
-  background-color: $bgColor;
-  box-shadow: $boxShadow;
   left: v-bind(modalPositionX);
   top: v-bind(modalPositionY);
-  border: v-bind('atualStyle.border');
   & header {
     height: 30px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: $bgColor;
     color: v-bind('atualStyle.color.text');
     cursor: grab;
     & .close {
@@ -82,8 +79,9 @@ $boxShadow: v-bind('atualStyle.boxShadow');
   }
   @media screen and (max-width: 768px) {
     padding: 0;
-    left: 0;
-    top: 0;
+    left: auto;
+    top: auto;
+    bottom: 0;
   }
   opacity: 0;
   margin-top: 20px;

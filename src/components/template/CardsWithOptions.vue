@@ -62,8 +62,11 @@ const cardDelete = (id: string) => {
 $buttonH: 36px;
 $margin: 8px;
 .container {
-  width: 300px;
+  width: 320px;
   height: 45dvh;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
   & .card-editor {
     height: calc(100% - $buttonH - $margin);
   }

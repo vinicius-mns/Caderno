@@ -47,6 +47,9 @@ $margin: 3px;
   margin: $margin 0 $margin 0;
   background-color: transparent;
   position: relative;
+  &:hover {
+    background-color: rgb(119, 124, 117);
+  }
   & .emoji {
     font-size: calc($height / 1.8);
   }
@@ -61,7 +64,7 @@ $margin: 3px;
     right: 10px;
     padding: 4px;
     border-radius: 50%;
-    background-color: rgb(90, 122, 77);
+    background-color: rgb(113, 141, 101);
   }
 }
 .check {

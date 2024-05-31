@@ -4,6 +4,7 @@ import TagEditor from '../organisms/TagEditor.vue'
 import { useTags } from '@/stores/local/tags'
 import WindowModal from '../atoms/WindowModal.vue'
 import { useWindows } from '@/stores/windows'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const tags = useTags()
 
@@ -25,9 +26,9 @@ const createTag = (tag: ITag) => {
 
 <template>
   <WindowModal title="Criar tag" v-if="window.tagCreateWindow.value" @emit-close="close">
-    <div class="modal-card" title="Criar tag">
+    <ModalCard class="modal-card" title="Criar tag">
       <TagEditor :emojis="props.allEmoji" :tag="tagInit" @emit-tag="createTag" />
-    </div>
+    </ModalCard>
   </WindowModal>
 </template>
 
@@ -35,5 +36,8 @@ const createTag = (tag: ITag) => {
 .modal-card {
   width: 300px;
   max-height: 48dvh;
+  @media screen and (max-width: 768px) {
+    width: 100dvw;
+  }
 }
 </style>

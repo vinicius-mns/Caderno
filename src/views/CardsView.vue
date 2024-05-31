@@ -87,7 +87,6 @@ const tagTargetSet = (v: ITag) => (tagTarget.value = v)
 
 <style scoped lang="scss">
 .cards-page {
-  width: 80%;
-  margin-left: 20%;
+  width: 100%;
 }
 </style>

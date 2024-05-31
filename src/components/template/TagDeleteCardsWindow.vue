@@ -8,6 +8,7 @@ import CardView from '../molecules/CardView.vue'
 import ButtonOption from '../molecules/ButtonOption.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
 import { computed } from 'vue'
+import ModalCard from '../atoms/ModalCard.vue'
 
 const cards = useCards()
 
@@ -29,7 +30,7 @@ const cardsDelete = () => {
 
 <template>
   <WindowModal title="Deletar cards" v-if="window.tagDeleteCardsWindow.value" @emit-close="close">
-    <div class="modal-card">
+    <ModalCard class="modal-card">
       <ThemeP content="Deseja deletar esses cards?" class="item" />
       <div class="container-cards">
         <CardView v-for="(card, i) in cardsToDelete" :key="i" :card="card" class="card" />
@@ -37,7 +38,7 @@ const cardsDelete = () => {
       <ButtonOption content="Deletar cards" @click="cardsDelete" class="item">
         <TrashIco />
       </ButtonOption>
-    </div>
+    </ModalCard>
   </WindowModal>
 </template>
 
@@ -45,6 +46,9 @@ const cardsDelete = () => {
 .modal-card {
   width: 300px;
   max-height: 48dvh;
+  @media screen and (max-width: 768px) {
+    width: 100dvw;
+  }
   & .container-cards {
     height: 370px;
     width: 100%;

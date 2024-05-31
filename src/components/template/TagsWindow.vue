@@ -29,7 +29,7 @@ const emitTag = (tag: ITag) => emit('emiTag', tag)
 
 <template>
   <WindowModal title="Minhas tags" v-if="window.tagsWindow.value" @emit-close="close">
-    <div class="modal-card">
+    <ModalCard class="modal-card">
       <ButtonOption
         content="Criar nova tag"
         class="tag-create-button"
@@ -58,7 +58,7 @@ const emitTag = (tag: ITag) => emit('emiTag', tag)
           </ButtonOption>
         </ModalCard>
       </TagListSlot>
-    </div>
+    </ModalCard>
   </WindowModal>
 </template>
 
@@ -68,6 +68,9 @@ const emitTag = (tag: ITag) => emit('emiTag', tag)
   max-height: 48dvh;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+    width: 100dvw;
+  }
   & .tag-create-button {
     padding: 20px;
     margin: 4px 0;
