@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 import { ref } from 'vue'
 import CrossIco from './icons/CrossIco.vue'
@@ -28,13 +28,15 @@ const emitClose = () => emit('emitClose')
 
 <template>
   <div class="modal-card-container" :draggable="true" @drag="drag" @dragend="dragend">
-    <header>
-      <p>{{ props.title }}</p>
-      <button class="close" @click="emitClose">
-        <CrossIco />
-      </button>
-    </header>
-    <slot></slot>
+    <div class="xx">
+      <header>
+        <p>{{ props.title }}</p>
+        <button class="close" @click="emitClose">
+          <CrossIco />
+        </button>
+      </header>
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -42,14 +44,19 @@ const emitClose = () => emit('emitClose')
 $borderRadius: v-bind('atualStyle.borderRadius.two');
 $buttonSize: 36px;
 $cardColor: v-bind('atualStyle.color.one');
-$bgColor: v-bind('atualStyle.color.one');
+$bgColor: v-bind('atualStyle.color.two');
 $boxShadow: v-bind('atualStyle.boxShadow');
 .modal-card-container {
   position: fixed;
-  padding: 10px;
-  box-sizing: border-box;
   left: v-bind(modalPositionX);
   top: v-bind(modalPositionY);
+
+  border-radius: $borderRadius;
+  box-sizing: border-box;
+  background-color: $bgColor;
+  border: v-bind('atualStyle.border');
+  overflow: hidden;
+
   & header {
     height: 30px;
     width: 100%;
@@ -59,6 +66,7 @@ $boxShadow: v-bind('atualStyle.boxShadow');
     background-color: $bgColor;
     color: v-bind('atualStyle.color.text');
     cursor: grab;
+    padding: 5px 0;
     & .close {
       position: absolute;
       right: 10px;
@@ -93,4 +101,4 @@ $boxShadow: v-bind('atualStyle.boxShadow');
     margin-top: 0;
   }
 }
-</style>
+</style> -->
