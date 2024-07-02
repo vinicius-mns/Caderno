@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { ref, watchEffect, onMounted } from 'vue'
 
-const { atualStyle } = useStyle()
+const style = useStyle()
 
 const props = defineProps<{
   content: string
@@ -20,44 +20,56 @@ const clear = () => {
   contentReactive.value = ''
 }
 
+const autoHeight = () => {
+  const myTextArea = textArea.value
+  if (myTextArea) {
+    const textHeight = myTextArea.scrollHeight
+    const height = myTextArea.offsetHeight
+    if (textHeight >= 500) {
+      myTextArea.style.height = '500px'
+    } else if (textHeight >= height) {
+      myTextArea.style.height = `${textHeight}px`
+    }
+  }
+}
+
 watchEffect(() => {
   emit('emitContent', contentReactive.value)
 })
 
 defineExpose({ clear })
 
-onMounted(() => textArea.value?.focus())
+onMounted(() => {
+  autoHeight()
+  textArea.value?.focus()
+})
 </script>
 
 <template>
   <textarea
     ref="textArea"
     id="textarea"
+    @keydown="autoHeight"
     v-model="contentReactive"
     class="theme-textarea"
     placeholder="digite aqui"
+    spellcheck="false"
   >
   </textarea>
 </template>
 
 <style scoped lang="scss">
-$boxShadow: v-bind('atualStyle.boxShadow');
-$buttonSize: 36px;
-$buttonHoverColor: v-bind('atualStyle.color.three');
-$buttonTextColor: v-bind('atualStyle.color.text');
-$buttonBorderRadius: v-bind('atualStyle.borderRadius');
-$buttonBgColor: v-bind('atualStyle.color.two');
 .theme-textarea {
-  // height: 100%;
   width: 100%;
-  background-color: transparent;
-  border-radius: 8px;
-  border: v-bind('atualStyle.border');
-  color: $buttonTextColor;
+  border-radius: v-bind('style.atualStyle.borderRadius.one');
+  resize: none;
   overflow: auto;
   outline: none;
   box-sizing: border-box;
   padding: 20px;
-  resize: none;
+  color: v-bind('style.atualStyle.color.text');
+  background-color: v-bind('style.atualStyle.color.three');
+  border: none;
+  transition: all 0.3s;
 }
 </style>
