@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
-
-const { atualStyle } = useStyle()
 
 const emit = defineEmits<{
   (e: 'open', v: void): void
@@ -77,11 +74,6 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-$borderRadius: v-bind('atualStyle.borderRadius.two');
-$buttonSize: 36px;
-$cardColor: v-bind('atualStyle.color.one');
-$bgColor: v-bind('atualStyle.color.four');
-$boxShadow: v-bind('atualStyle.boxShadow');
 .container-float-modal {
   & .glass {
     position: fixed;
@@ -93,28 +85,20 @@ $boxShadow: v-bind('atualStyle.boxShadow');
     width: 100dvw;
     height: 100dvh;
     background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
   }
   & .float-card {
     position: fixed;
-    transition: background-color 1s;
     opacity: 0;
     left: v-bind('cursorPosition.x');
     top: v-bind('cursorPosition.y');
-    animation: initDesk 0.3s forwards;
+    animation: initModal 0.3s forwards;
     margin-top: 20px;
   }
 }
-@keyframes initDesk {
+@keyframes initModal {
   to {
     opacity: 100%;
     margin-top: 0;
   }
 }
-// @keyframes initMobile {
-//   to {
-//     height: 48vh;
-//     opacity: 100%;
-//   }
-// }
 </style>
