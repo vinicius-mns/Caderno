@@ -2,7 +2,7 @@
 import { useStyle } from '@/stores/style'
 import { nextTick, reactive, ref } from 'vue'
 
-const { atualStyle } = useStyle()
+const style = useStyle()
 
 const props = defineProps<{
   content: string
@@ -44,20 +44,17 @@ const openCard = (e: MouseEvent) => {
 
 <template>
   <div class="float-card-description" @mousemove="openCard" @mouseleave="closeFlotCard">
-    <p class="description-text" v-if="showFlotCard" ref="card">{{ props.content }}</p>
     <slot></slot>
+    <p class="description-text" v-if="showFlotCard" ref="card">{{ props.content }}</p>
   </div>
 </template>
 
 <style scoped lang="scss">
-$color: v-bind('atualStyle.color.text');
-$backColor: v-bind('atualStyle.color.one');
 .description-text {
-  z-index: 1;
   position: fixed;
   padding: 10px;
-  color: $color;
-  background-color: $backColor;
+  color: v-bind('style.atualStyle.color.text');
+  background-color: v-bind('style.atualStyle.color.one');
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');
   left: v-bind('cursorPosition.x');
