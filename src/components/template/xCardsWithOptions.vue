@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import { computed, ref } from 'vue'
@@ -74,4 +74,4 @@ $margin: 8px;
     margin-top: $margin;
   }
 }
-</style>
+</style> -->

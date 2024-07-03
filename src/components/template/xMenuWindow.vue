@@ -1,9 +1,8 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import CardChangeWidth from '@/components/organisms/CardChangeWidth.vue'
 import { useConfig } from '@/stores/config'
 import WindowModal from '../atoms/WindowModal.vue'
 import { useWindows } from '@/stores/windows'
-import ModalCard from '../atoms/ModalCard.vue'
 
 const config = useConfig()
 
@@ -22,17 +21,19 @@ const cardWidthSet = (v: number) => {
 
 <template>
   <WindowModal title="Menu" @emit-close="close" v-if="windows.MenuWindow.value">
-    <ModalCard class="container">
+    <div class="container">
       <CardChangeWidth :width="props.width" @emit-width="cardWidthSet" />
-    </ModalCard>
+    </div>
   </WindowModal>
 </template>
 
 <style scoped lang="scss">
 .container {
   width: 300px;
+  padding: 10px;
+  box-sizing: border-box;
   @media screen and (max-width: 768px) {
     width: 100dvw;
   }
 }
-</style>
+</style> -->
