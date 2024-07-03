@@ -10,12 +10,10 @@ import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import AddCardIco from '@/components/atoms/icons/AddCardIco.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import GearIco from '@/components/atoms/icons/GearIco.vue'
-import MenuIco from '../atoms/icons/MenuIco.vue'
 import { useTags } from '@/stores/local/tags'
 
 const window = useWindows()
