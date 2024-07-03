@@ -37,16 +37,15 @@ const emitTag = (v: 'r' | 'g' | 'n') => {
 </template>
 
 <style scoped lang="scss">
-$height: 36px;
-$margin: 3px;
+$height: 42px;
+$margin: 4px;
 .tag-Selectable {
   display: flex;
   align-items: center;
   flex-shrink: 0;
   width: 100%;
   height: $height;
-  margin: $margin 0 $margin 0;
-  background-color: transparent;
+  margin: $margin 0;
   position: relative;
   & .emoji {
     font-size: calc($height / 1.8);
