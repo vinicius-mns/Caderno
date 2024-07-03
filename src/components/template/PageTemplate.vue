@@ -2,15 +2,7 @@
 import { useStyle } from '@/stores/style'
 import CrossIco from '../atoms/icons/CrossIco.vue'
 import { useWindows } from '@/stores/windows'
-import { onMounted, onUnmounted, ref } from 'vue'
-import CoinButton from '../molecules/CoinButton.vue'
-import AppsIco from '../atoms/icons/AppsIco.vue'
-import FloatModalSlot from '../atoms/FloatModalSlot.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
-import GearIco from '../atoms/icons/GearIco.vue'
-import ModalCard from '../atoms/ModalCard.vue'
-import CardIco from '../atoms/icons/CardIco.vue'
-
+import { onMounted, onUnmounted } from 'vue'
 const style = useStyle()
 
 const windows = useWindows()
