@@ -4,7 +4,6 @@ import type { ITag } from '@/api/local'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import FiltersIco from '@/components/atoms/icons/FiltersIco.vue'
 import TagDoubleSectable from '@/components/molecules/TagDoubleSectable.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const props = defineProps<{ allTags: ITag[] }>()
 
@@ -20,6 +19,10 @@ const includeTags = ref([] as string[])
 
 const excludesTags = ref([] as string[])
 
+const sendFilter = () => {
+  emit('emitTags', { includeTags: includeTags.value, excludesTags: excludesTags.value })
+}
+
 const handleTags = (v: { tag: ITag; status: 'g' | 'r' | 'n' }) => {
   const TagWithStatus = TagsWithStatus.value
   const index = TagWithStatus.findIndex((tag) => tag.tag.id === v.tag.id)
@@ -27,21 +30,20 @@ const handleTags = (v: { tag: ITag; status: 'g' | 'r' | 'n' }) => {
   TagsWithStatus.value = TagWithStatus
   includeTags.value = TagWithStatus.filter((tag) => tag.status === 'g').map((tag) => tag.tag.id)
   excludesTags.value = TagWithStatus.filter((tag) => tag.status === 'r').map((tag) => tag.tag.id)
-}
-
-const sendFilter = () => {
-  emit('emitTags', { includeTags: includeTags.value, excludesTags: excludesTags.value })
+  sendFilter()
 }
 </script>
 
 <template>
   <div class="tag-with-switch-list">
-    <div class="describe">
-      <ThemeP content="Sem tag" />
-      <ThemeP content="Com tag" />
-    </div>
     <div class="tags-container">
-      <TagDoubleSectable v-for="(tag, i) in allTags" :key="i" :tag="tag" @emit-tag="handleTags" />
+      <TagDoubleSectable
+        v-for="(tag, i) in allTags"
+        :key="i"
+        :tag="tag"
+        class="tag"
+        @emit-tag="handleTags"
+      />
     </div>
     <ButtonOption class="send-filter" @click="sendFilter" content="Filtrar">
       <FiltersIco />
@@ -62,9 +64,14 @@ const sendFilter = () => {
   }
   & .tags-container {
     width: 100%;
-    height: calc(48dvh - 38px);
-    overflow: auto;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
     margin-bottom: 10px;
+    justify-content: space-evenly;
+    & .tag {
+      width: 48%;
+    }
     & .context {
       width: 100%;
       display: flex;
