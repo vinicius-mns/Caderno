@@ -21,7 +21,10 @@ const props = defineProps<{ content: string }>()
 <style scoped lang="scss">
 .option-button-container {
   width: 100%;
+  height: 40px;
   flex-shrink: 0;
+  flex-grow: 0;
+  border: none;
   & .option-button {
     height: 100%;
     width: 100%;
