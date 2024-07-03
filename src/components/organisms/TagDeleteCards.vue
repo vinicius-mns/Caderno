@@ -1,54 +1,65 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
-import TrashIco from '@/components/atoms/icons/TrashIco.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
+import ThemeP from '../atoms/ThemeP.vue'
 import CardView from '../molecules/CardView.vue'
+import ButtonOption from '../molecules/ButtonOption.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
+import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
+import { useStyle } from '@/stores/style'
 
-const props = defineProps<{ tag: ITag; cardsToDelete: ICard[] }>()
+const { atualStyle } = useStyle()
 
-const emit = defineEmits<{
-  (emit: 'emitDelete', v: ITag): void
+const props = defineProps<{
+  cardsToDeleteView: ICard[]
+  tag: ITag
 }>()
 
-const deletar = () => emit('emitDelete', props.tag)
+const emit = defineEmits<{
+  (e: 'deleteCardsByTagId', v: string): void
+}>()
+
+const cardsDelete = () => emit('deleteCardsByTagId', props.tag.id)
 </script>
 
 <template>
-  <FloatModalSlot>
-    <template #button-slot>
-      <ButtonOption content="Deletar Cards com tag">
-        <TrashIco />
-      </ButtonOption>
-    </template>
-    <template #container-slot>
-      <div class="container">
-        <ThemeP content="Deseja deletar esses cards?" class="item" />
-        <div class="container-cards">
-          <CardView v-for="(card, i) in props.cardsToDelete" :key="i" :card="card" class="card" />
-        </div>
-        <ButtonOption content="Deletar cards" @click="deletar" class="item">
-          <TrashIco />
-        </ButtonOption>
-      </div>
-    </template>
-  </FloatModalSlot>
+  <div class="container">
+    <div class="description">
+      <ThemeP content="Deletar cards com essa tag?" class="item" />
+      <span>{{ props.tag.emoji }}</span>
+    </div>
+    <div class="container-cards">
+      <CardView v-for="(card, i) in props.cardsToDeleteView" :key="i" :card="card" class="card" />
+    </div>
+    <ButtonOption content="Deletar cards" @click="cardsDelete" class="button-delete">
+      <TrashIco />
+    </ButtonOption>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
-  height: 100%;
+  width: 500px;
+  max-width: 95dvw;
+  max-height: 80dvh;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  & .item {
-    margin: 3px;
+  padding: 15px;
+  box-sizing: border-box;
+  & .description {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    & span {
+      font-size: 28px;
+      text-shadow: black 4px 4px;
+    }
   }
   & .container-cards {
-    height: 370px;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -57,7 +68,12 @@ const deletar = () => emit('emitDelete', props.tag)
     overflow-x: hidden;
     & .card {
       width: 98%;
+      position: relative;
+      margin-bottom: 20px;
     }
+  }
+  & .button-delete {
+    margin-top: 10px;
   }
 }
 </style>
