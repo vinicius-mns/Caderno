@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import EmojiPlusIco from '@/components/atoms/icons/EmojiPlusIco.vue'
+import ModalCard from '../atoms/ModalCard.vue'
+import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 
 const props = defineProps<{
   seletedEmoji: string
@@ -22,49 +23,53 @@ const sendSelected = (e: string) => {
 </script>
 
 <template>
-  <FloatModalSlot ref="modal" class="container-selectemoji">
-    <template #button-slot>
-      <ThemeButton class="emoji-button" v-if="props.seletedEmoji">{{
-        props.seletedEmoji
-      }}</ThemeButton>
-      <ThemeButton class="emoji-button" v-else>
-        <EmojiPlusIco class="emoji-plus" />
-      </ThemeButton>
-    </template>
-    <template #container-slot>
-      <div class="container">
-        <ThemeButton
-          v-for="(emoji, i) in props.emojis"
-          :key="i"
-          @click="() => sendSelected(emoji)"
-          class="option"
-        >
-          {{ emoji }}
+  <div>
+    <FloatModalSlot ref="modal">
+      <template #button-slot>
+        <ThemeButton class="emoji-button" v-if="props.seletedEmoji">
+          {{ props.seletedEmoji }}
         </ThemeButton>
-      </div>
-    </template>
-  </FloatModalSlot>
+        <ThemeButton class="emoji-button" v-else>
+          <EmojiPlusIco class="emoji-plus" />
+        </ThemeButton>
+      </template>
+      <template #container-slot>
+        <ModalCard class="container">
+          <ThemeButton
+            v-for="(emoji, i) in props.emojis"
+            :key="i"
+            @click="() => sendSelected(emoji)"
+            class="option"
+          >
+            {{ emoji }}
+          </ThemeButton>
+        </ModalCard>
+      </template>
+    </FloatModalSlot>
+  </div>
 </template>
 
 <style scoped lang="scss">
-$buttonSize: 36px;
-.container-selectemoji {
-  & .emoji-button {
-    font-size: $buttonSize;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    & .emoji-plus {
-      height: calc($buttonSize / 1.2);
-      width: calc($buttonSize / 1.2);
-    }
+$buttonSize: 46px;
+.emoji-button {
+  font-size: calc($buttonSize / 1.8);
+  width: $buttonSize;
+  height: $buttonSize;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & .emoji-plus {
+    height: calc($buttonSize / 1.8);
+    width: calc($buttonSize / 1.8);
   }
 }
+
 .container {
-  width: 100%;
+  width: 360px;
+  max-width: 92%;
+  height: 45dvh;
+  overflow: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;

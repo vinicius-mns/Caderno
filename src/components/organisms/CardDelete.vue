@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
@@ -18,32 +17,39 @@ const cardDelete = () => emit('emitDeleteId', props.card.id)
 </script>
 
 <template>
-  <FloatModalSlot>
-    <template #button-slot>
-      <ButtonOption content="Deletar">
-        <TrashIco />
-      </ButtonOption>
-    </template>
-    <template #container-slot>
-      <div class="container">
-        <ThemeP class="text" content="Deseja deletar esse card?" />
-        <CardView :card="props.card" />
-        <ButtonOption content="Deletar" @click="cardDelete">
-          <TrashIco />
-        </ButtonOption>
-      </div>
-    </template>
-  </FloatModalSlot>
+  <div class="container">
+    <ThemeP class="text" content="Deseja deletar esse card?" />
+    <div class="card-section">
+      <CardView :card="props.card" class="card" />
+    </div>
+    <ButtonOption content="Deletar" @click="cardDelete" class="delete-button">
+      <TrashIco />
+    </ButtonOption>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .container {
-  width: 100%;
+  width: 500px;
+  max-width: 95dvw;
+  height: 100%;
+  max-height: 80dvh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: 15px;
+  box-sizing: border-box;
   & .text {
-    padding: 10px;
+    margin-bottom: 10px;
+  }
+  & .card-section {
+    height: 100%;
+    overflow-y: auto;
+    & .card {
+      margin: 0;
+    }
+  }
+  & .delete-button {
+    margin-top: 10px;
   }
 }
 </style>

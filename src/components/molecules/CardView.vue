@@ -52,7 +52,6 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
 </template>
 
 <style scoped lang="scss">
-$margin: 5px;
 .card-container {
   width: 100%;
   height: 100%;
@@ -60,7 +59,7 @@ $margin: 5px;
   align-items: center;
   flex-direction: column;
   height: auto;
-  margin: $margin;
+  margin: 5px;
   cursor: pointer;
   & header {
     width: 95%;
@@ -98,6 +97,7 @@ $margin: 5px;
     padding: 0 10px 0 10px;
     box-sizing: border-box;
     font-size: 14px;
+    overflow-wrap: break-word;
   }
 }
 </style>

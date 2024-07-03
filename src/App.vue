@@ -2,20 +2,14 @@
 import { RouterView } from 'vue-router'
 import { useStyle } from '@/stores/style'
 
-const { atualStyle } = useStyle()
+const style = useStyle()
 </script>
 
 <template>
-  <div class="body">
-    <RouterView />
-  </div>
+  <RouterView />
 </template>
 
 <style lang="scss">
-.body {
-  background-color: v-bind('atualStyle.color.one');
-  min-height: 100dvh;
-}
 a,
 strong {
   padding: 3px;
@@ -31,12 +25,10 @@ td {
   text-align: left;
   padding: 8px;
 }
-th {
-  // color: $textColor;
-}
 svg {
-  fill: v-bind('atualStyle.color.text');
-  height: 16px;
-  width: 16px;
+  fill: v-bind('style.atualStyle.color.text');
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
 }
 </style>

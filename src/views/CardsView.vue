@@ -1,47 +1,43 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import CardsPage from '@/components/template/CardsPage.vue'
+import PageTemplate from '@/components/template/PageTemplate.vue'
+import { useConfig } from '@/stores/config'
 import { useCards } from '@/stores/local/cards'
 import { useTags } from '@/stores/local/tags'
-import CardsWithOptions from '@/components/template/CardsWithOptions.vue'
-import { useConfig } from '@/stores/config'
-import ActionsContainer from '@/components/atoms/ActionsContainer.vue'
-import TagsAction from '@/components/template/actions/TagsActions.vue'
+import { computed } from 'vue'
+import CardsWindows from '@/components/template/CardsWindows.vue'
 import { useEmoji } from '@/stores/emojis'
-import CardCreateAction from '@/components/template/actions/CardCreateAction.vue'
-import FilterCardsAction from '@/components/template/actions/FilterCardsAction.vue'
-import CardMenuAction from '@/components/template/actions/CardMenuAction.vue'
-
-const tags = useTags()
+import CardsBottom from '@/components/template/CardsBottom.vue'
 
 const cards = useCards()
 
-const config = useConfig()
+const tags = useTags()
+
+const options = useConfig()
 
 const emojis = useEmoji()
 
 const allEmojis = emojis.getAll()
 
-const allcards = computed(() => cards.cards)
+const allCards = computed(() => cards.cards)
 
 const allTags = computed(() => tags.tags)
 
-const allConfig = computed(() => config.config.value)
+const cardWindth = computed(() => options.config.value.cardWidth)
 </script>
 
 <template>
-  <div>
-    <CardsWithOptions
-      :all-tags="allTags"
-      :allcards="allcards"
-      :width="`${allConfig.cardWidth}px`"
-    />
-    <ActionsContainer>
-      <CardMenuAction :width="allConfig.cardWidth" />
-      <TagsAction :all-tags="allTags" :emojis="allEmojis" />
-      <FilterCardsAction :all-tags="allTags" />
-      <CardCreateAction :all-tags="allTags" :all-emojis="allEmojis" />
-    </ActionsContainer>
-  </div>
+  <PageTemplate>
+    <template #main>
+      <CardsPage :allcards="allCards" :all-tags="allTags" :width="`${cardWindth}px`" />
+    </template>
+    <template #aside>
+      <CardsBottom :all-tags="allTags" />
+    </template>
+    <template #windows>
+      <CardsWindows :all-tags="allTags" :all-emojis="allEmojis" :cardWidth="cardWindth" />
+    </template>
+  </PageTemplate>
 </template>
 
 <style scoped lang="scss"></style>

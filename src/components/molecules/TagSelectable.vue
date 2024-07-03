@@ -37,16 +37,16 @@ const emitTag = () => {
 
 <style scoped lang="scss">
 $height: 36px;
-$margin: 3px;
+$margin: 4px;
 .tag-Selectable {
+  width: 100%;
+  height: $height;
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  width: 100%;
-  height: $height;
-  margin: $margin 0 $margin 0;
-  background-color: transparent;
+  margin-top: 5px;
   position: relative;
+  border: none;
   & .emoji {
     font-size: calc($height / 1.8);
   }
@@ -61,7 +61,7 @@ $margin: 3px;
     right: 10px;
     padding: 4px;
     border-radius: 50%;
-    background-color: rgb(90, 122, 77);
+    background-color: rgb(113, 141, 101);
   }
 }
 .check {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStyle } from '@/stores/style'
 
-const { atualStyle } = useStyle()
+const style = useStyle()
 
 const props = defineProps<{ content: string }>()
 </script>
@@ -12,7 +12,7 @@ const props = defineProps<{ content: string }>()
 
 <style scoped lang="scss">
 .paragraph {
-  color: v-bind('atualStyle.color.text');
+  color: v-bind('style.atualStyle.color.text');
   margin: 0;
   padding: 0;
 }

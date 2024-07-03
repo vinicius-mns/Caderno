@@ -12,27 +12,27 @@ const emitTag = () => emit('emitTag', props.tag)
 
 <template>
   <ThemeButton :title="props.tag.content" @click="emitTag" class="tag-container">
-    <p class="emoji">{{ props.tag.emoji }}</p>
+    <span class="emoji">{{ props.tag.emoji }}</span>
     <ThemeP class="content" :content="props.tag.content" />
   </ThemeButton>
 </template>
 
 <style scoped lang="scss">
-$height: 36px;
-$margin: 3px;
+$height: 42px;
+$margin: 4px;
 .tag-container {
   width: 100%;
   height: $height;
   flex-shrink: 0;
-  margin: $margin 0 $margin 0;
+  margin: $margin 0;
   display: flex;
   align-items: center;
-  background-color: transparent;
   position: relative;
   & .emoji {
-    font-size: calc($height / 1.8);
+    font-size: calc($height / 2.2);
   }
   & .content {
+    font-size: 13px;
     margin-left: 10px;
     overflow: hidden;
     text-overflow: ellipsis;

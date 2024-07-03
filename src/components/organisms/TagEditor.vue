@@ -5,13 +5,10 @@ import { reactive } from 'vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import EmojiSelector from '@/components/molecules/EmojiSelector.vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 
 const props = defineProps<{
   tag: ITag
   emojis: string[]
-  content: string
 }>()
 
 const emit = defineEmits<{
@@ -38,42 +35,46 @@ const sendContent = () => {
 </script>
 
 <template>
-  <FloatModalSlot>
-    <template #button-slot>
-      <ButtonOption :content="props.content">
-        <PencilIco />
-      </ButtonOption>
-    </template>
-    <template #container-slot>
-      <div class="card-editor-container">
-        <EmojiSelector
-          :seleted-emoji="tagReative.emoji"
-          @change-emoji="setEmoji"
-          :emojis="props.emojis"
-          class="imput"
-        />
-        <ThemeImputText
-          :content="tagReative.content"
-          @emit-content="setContent"
-          key-id="tag-editor"
-          placeholder="Nome da tag"
-          class="imput"
-        />
-        <ButtonOption content="Confirmar" @click="sendContent" class="imput">
-          <CheckIco />
-        </ButtonOption>
-      </div>
-    </template>
-  </FloatModalSlot>
+  <div class="card-editor-container">
+    <div class="tag-area">
+      <EmojiSelector
+        :seleted-emoji="tagReative.emoji"
+        @change-emoji="setEmoji"
+        :emojis="props.emojis"
+      />
+      <ThemeImputText
+        @emit-content="setContent"
+        :init-content="tagReative.content"
+        key-id="tag-editor"
+        placeholder="Nome da tag"
+        class="imput-text"
+      />
+    </div>
+    <ButtonOption content="Confirmar" @click="sendContent" class="imput">
+      <CheckIco />
+    </ButtonOption>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .card-editor-container {
+  width: 340px;
+  max-width: 95dvw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  & .imput {
-    margin: 2.5px;
+  padding: 15px;
+  box-sizing: border-box;
+  & .tag-area {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    & .imput-text {
+      width: calc(100% - 55px);
+      height: 42px;
+    }
   }
 }
 </style>
