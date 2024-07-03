@@ -2,9 +2,17 @@
 import { useStyle } from '@/stores/style'
 import FloatDescription from '../atoms/FloatDescription.vue'
 
-const { atualStyle } = useStyle()
+const style = useStyle()
 
-const props = defineProps<{ description: string }>()
+const props = withDefaults(
+  defineProps<{
+    size?: string
+    description: string
+  }>(),
+  {
+    size: '40px'
+  }
+)
 </script>
 
 <template>
@@ -16,32 +24,25 @@ const props = defineProps<{ description: string }>()
 </template>
 
 <style scoped lang="scss">
-$boxShadow: v-bind('atualStyle.boxShadow');
-$buttonSize: 48px;
-$buttonHoverColor: v-bind('atualStyle.color.three');
-$buttonTextColor: v-bind('atualStyle.color.text');
-$buttonBorderRadius: v-bind('atualStyle.borderRadius');
-$buttonBgColor: v-bind('atualStyle.color.two');
+$buttonSize: v-bind('props.size');
 .coin-button-container {
   height: $buttonSize;
   width: $buttonSize;
-  margin: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: $boxShadow;
-  background-color: $buttonBgColor;
   border-radius: 50%;
-  color: $buttonTextColor;
-  border: $buttonTextColor solid 1px;
+  border: none;
+  color: white;
   overflow: hidden;
   outline: none;
   cursor: pointer;
+  background-color: v-bind('style.atualStyle.color.four');
   &:hover {
-    background-color: $buttonHoverColor;
+    background-color: v-bind('style.atualStyle.color.four');
   }
   &:active {
-    background-color: $buttonBgColor;
+    background-color: v-bind('style.atualStyle.color.one');
   }
 }
 </style>
