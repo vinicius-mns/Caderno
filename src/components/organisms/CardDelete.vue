@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import CardView from '@/components/molecules/CardView.vue'
+import type { Icard } from '@/stores/cards/Interfaces'
 
 const props = defineProps<{
-  card: ICard
+  card: Icard
 }>()
 
 const emit = defineEmits<{

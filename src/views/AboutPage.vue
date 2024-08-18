@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 </script>
 
 <template>
@@ -98,8 +98,8 @@ const { atualStyle } = useStyle()
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: v-bind('atualStyle.color.one');
-  color: v-bind('atualStyle.color.text');
+  background-color: v-bind('stylePage.atualColor.back');
+  color: v-bind('stylePage.atualColor.text');
   padding-bottom: 80px;
   & h1 {
     // font-size: 2.5rem;
@@ -157,22 +157,22 @@ const { atualStyle } = useStyle()
   width: 100%;
   // flex-shrink: 0;
   // overflow: hidden;
-  & .link-x {
-    background-color: v-bind('atualStyle.color.two');
-    height: 50px;
-    width: 100%;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    & button {
-      background-color: rgb(120, 120, 168);
-      font-size: 16px;
-      height: 40px;
-      width: 80%;
-    }
-  }
+  // & .link-x {
+  //   background-color: v-bind('atualStyle.color.two');
+  //   height: 50px;
+  //   width: 100%;
+  //   padding: 0;
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   text-decoration: none;
+  //   & button {
+  //     background-color: rgb(120, 120, 168);
+  //     font-size: 16px;
+  //     height: 40px;
+  //     width: 80%;
+  //   }
+  // }
   & ul {
     width: 100%;
     flex-shrink: 0;

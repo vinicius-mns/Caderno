@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref, watchEffect, onMounted } from 'vue'
 
-const style = useStyle()
+const style = useStylesPage()
 
 const props = defineProps<{
   content: string
@@ -61,15 +61,15 @@ onMounted(() => {
 <style scoped lang="scss">
 .theme-textarea {
   width: 100%;
-  border-radius: v-bind('style.atualStyle.borderRadius.one');
+  border-radius: v-bind('style.borderRadius.inside');
   resize: none;
   overflow: auto;
   outline: none;
-  box-sizing: border-box;
   padding: 20px;
-  color: v-bind('style.atualStyle.color.text');
-  background-color: v-bind('style.atualStyle.color.three');
+  color: v-bind('style.atualColor.text');
+  background-color: v-bind('style.atualColor.front');
   border: none;
   transition: all 0.3s;
+  box-sizing: border-box;
 }
 </style>

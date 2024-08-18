@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
 import CardsView from '@/views/CardsView.vue'
 import About from '@/views/AboutPage.vue'
-import ConfigPage from '@/views/ConfigPage.vue'
+import PasseCards from '@/views/PasseCards.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -28,9 +28,9 @@ const router = createRouter({
       component: CardsView
     },
     {
-      path: '/config',
-      name: 'config',
-      component: ConfigPage
+      path: '/passe',
+      name: 'passe',
+      component: PasseCards
     }
   ]
 })

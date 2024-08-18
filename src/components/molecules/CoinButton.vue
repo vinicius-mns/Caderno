@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
 import FloatDescription from '../atoms/FloatDescription.vue'
+import ThemeButton from '../atoms/ThemeButton.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const style = useStyle()
+const stylePage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
@@ -17,9 +18,11 @@ const props = withDefaults(
 
 <template>
   <FloatDescription :content="props.description">
-    <button class="coin-button-container">
+    <ThemeButton class="coin-button-container">
       <slot></slot>
-    </button>
+    </ThemeButton>
+    <!-- <button >
+    </button> -->
   </FloatDescription>
 </template>
 
@@ -32,17 +35,9 @@ $buttonSize: v-bind('props.size');
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: none;
-  color: white;
   overflow: hidden;
   outline: none;
-  cursor: pointer;
-  background-color: v-bind('style.atualStyle.color.four');
-  &:hover {
-    background-color: v-bind('style.atualStyle.color.four');
-  }
-  &:active {
-    background-color: v-bind('style.atualStyle.color.one');
-  }
+  background-color: transparent;
+  border: solid 1px v-bind('stylePage.atualColor.border');
 }
 </style>

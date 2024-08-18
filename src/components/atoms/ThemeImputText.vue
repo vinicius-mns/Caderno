@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref, watchEffect } from 'vue'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
@@ -41,10 +41,9 @@ watchEffect(() => {
 .content-input {
   width: 100%;
   height: 36px;
-  box-shadow: v-bind('atualStyle.boxShadow');
-  background-color: v-bind('atualStyle.color.three');
-  border-radius: v-bind('atualStyle.borderRadius.one');
-  color: v-bind('atualStyle.color.text');
+  background-color: v-bind('stylePage.atualColor.front');
+  border-radius: v-bind('stylePage.borderRadius.inside');
+  color: v-bind('stylePage.atualColor.text');
   border: none;
   overflow: hidden;
   outline: none;
@@ -52,8 +51,8 @@ watchEffect(() => {
   padding-left: 20px;
   padding-right: 20px;
   font-size: 16px;
-  &:hover {
-    background-color: v-bind('atualStyle.color.four');
-  }
+  // &:hover {
+  //   background-color: v-bind('atualStyle.color.four');
+  // }
 }
 </style>

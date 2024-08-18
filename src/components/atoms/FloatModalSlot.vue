@@ -84,7 +84,7 @@ defineExpose({
     margin: 0;
     width: 100dvw;
     height: 100dvh;
-    background-color: rgba(0, 0, 0, 0.4);
+    // background-color: rgba(0, 0, 0, 0.9);
   }
   & .float-card {
     position: fixed;

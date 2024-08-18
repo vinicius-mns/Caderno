@@ -1,36 +1,32 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import { reactive } from 'vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import EmojiSelector from '@/components/molecules/EmojiSelector.vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 
 const props = defineProps<{
-  tag: ITag
+  tag: Itag
   emojis: string[]
 }>()
 
 const emit = defineEmits<{
-  (e: 'emitTag', v: ITag): void
+  (e: 'emitTagUpdated', v: { emoji: string; name: string; atualName: string }): void
 }>()
 
-const tagReative = reactive<ITag>({
-  id: props.tag.id,
-  content: props.tag.content,
-  emoji: props.tag.emoji
+const tagReative = reactive({
+  emoji: props.tag[0],
+  name: props.tag[1],
+  atualName: props.tag[1]
 })
 
-const setContent = (content: string) => (tagReative.content = content)
+const nameSet = (name: string) => (tagReative.name = name)
 
-const setEmoji = (emoji: string) => (tagReative.emoji = emoji)
+const emojiSet = (emoji: string) => (tagReative.emoji = emoji)
 
 const sendContent = () => {
-  emit('emitTag', {
-    id: props.tag.id,
-    content: tagReative.content,
-    emoji: tagReative.emoji
-  })
+  emit('emitTagUpdated', tagReative)
 }
 </script>
 
@@ -39,12 +35,12 @@ const sendContent = () => {
     <div class="tag-area">
       <EmojiSelector
         :seleted-emoji="tagReative.emoji"
-        @change-emoji="setEmoji"
+        @change-emoji="emojiSet"
         :emojis="props.emojis"
       />
       <ThemeImputText
-        @emit-content="setContent"
-        :init-content="tagReative.content"
+        @emit-content="nameSet"
+        :init-content="tagReative.name"
         key-id="tag-editor"
         placeholder="Nome da tag"
         class="imput-text"

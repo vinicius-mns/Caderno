@@ -1,7 +1,20 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{
+    backgroundColor?: 'front' | 'back'
+    padding?: string
+    borderRadius?: 'inside' | 'outside'
+  }>(),
+  {
+    backgroundColor: 'back',
+    padding: '15px',
+    borderRadius: 'outside'
+  }
+)
 </script>
 
 <template>
@@ -12,10 +25,10 @@ const { atualStyle } = useStyle()
 
 <style scoped lang="scss">
 .modal-card-container {
-  padding: 15px;
+  padding: v-bind('props.padding');
   box-sizing: border-box;
-  border-radius: v-bind('atualStyle.borderRadius.two');
-  background-color: v-bind('atualStyle.color.two');
-  box-shadow: v-bind('atualStyle.boxShadow');
+  border-radius: v-bind('stylePage.borderRadius[props.borderRadius]');
+  background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
+  border: solid 1px v-bind('stylePage.atualColor.border');
 }
 </style>

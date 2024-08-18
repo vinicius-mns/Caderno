@@ -3,32 +3,33 @@ import ThemeP from '../atoms/ThemeP.vue'
 import CardView from '../molecules/CardView.vue'
 import ButtonOption from '../molecules/ButtonOption.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
-import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
-import { useStyle } from '@/stores/style'
-
-const { atualStyle } = useStyle()
+import type { Itag } from '@/stores/tags/Interfaces'
+import type { Icard } from '@/stores/cards/Interfaces'
 
 const props = defineProps<{
-  cardsToDeleteView: ICard[]
-  tag: ITag
+  cardsToDelete: Icard[]
+  tag: Itag
 }>()
 
 const emit = defineEmits<{
-  (e: 'deleteCardsByTagId', v: string): void
+  (e: 'deleteCardsById', v: string[]): void
 }>()
 
-const cardsDelete = () => emit('deleteCardsByTagId', props.tag.id)
+const cardsDelete = () =>
+  emit(
+    'deleteCardsById',
+    props.cardsToDelete.map(({ id }) => id)
+  )
 </script>
 
 <template>
   <div class="container">
     <div class="description">
       <ThemeP content="Deletar cards com essa tag?" class="item" />
-      <span>{{ props.tag.emoji }}</span>
+      <span>{{ props.tag[0] }}</span>
     </div>
     <div class="container-cards">
-      <CardView v-for="(card, i) in props.cardsToDeleteView" :key="i" :card="card" class="card" />
+      <CardView v-for="(card, i) in props.cardsToDelete" :key="i" :card="card" class="card" />
     </div>
     <ButtonOption content="Deletar cards" @click="cardsDelete" class="button-delete">
       <TrashIco />

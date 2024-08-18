@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref } from 'vue'
-import { useStyle } from '@/stores/style'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   options: string[]
@@ -36,8 +36,7 @@ const emitSelected = () => emit('emitSelected', select.value)
 
 <style scoped lang="scss">
 $buttonSize: 36px;
-$color: v-bind('atualStyle.color.text');
-$boxShadow: v-bind('atualStyle.boxShadow');
+$color: v-bind('stylePage.atualColor.text');
 .emojis-container {
   padding: 10px;
   width: 95%;

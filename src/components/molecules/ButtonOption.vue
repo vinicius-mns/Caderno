@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const props = defineProps<{ content: string }>()
+const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{
+    content: string
+    visible?: boolean
+    fontSize?: string
+  }>(),
+  {
+    visible: false,
+    fontSize: '14px'
+  }
+)
 </script>
 
 <template>
-  <ThemeButton class="option-button-container">
+  <ThemeButton :class="[props.visible ? 'visible' : 'transparent', 'option-button-container']">
     <div class="option-button">
       <div class="ico">
         <slot></slot>
@@ -24,7 +37,6 @@ const props = defineProps<{ content: string }>()
   height: 40px;
   flex-shrink: 0;
   flex-grow: 0;
-  border: none;
   & .option-button {
     height: 100%;
     width: 100%;
@@ -38,6 +50,7 @@ const props = defineProps<{ content: string }>()
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-left: 10px;
     }
     & .text {
       flex-shrink: 0;
@@ -46,13 +59,21 @@ const props = defineProps<{ content: string }>()
       display: flex;
       align-items: center;
       & p {
-        padding-left: 10px;
-        font-size: 14px;
+        margin-left: 10px;
+        padding-right: 10px;
         overflow: hidden;
         text-overflow: ellipsis;
         text-wrap: nowrap;
+        font-size: v-bind('props.fontSize');
       }
     }
   }
+}
+.visible {
+  background-color: v-bind('stylePage.atualColor.front');
+  // border: solid 1px v-bind('stylePage.atualColor.border');
+}
+.transparent {
+  background-color: transparent;
 }
 </style>

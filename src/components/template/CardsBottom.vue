@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import TagsFilterCards from '../organisms/TagsFilterCards.vue'
 import TagsWithOptions from '../organisms/TagsWithOptions.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
 import CoinButton from '../molecules/CoinButton.vue'
 import { useWindows } from '@/stores/windows'
-import { useCards } from '@/stores/local/cards'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import AddCardIco from '@/components/atoms/icons/AddCardIco.vue'
-import SearchImput from '../molecules/SearchImput.vue'
+// import SearchImput from '../molecules/SearchImput.vue'
 import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import GearIco from '@/components/atoms/icons/GearIco.vue'
-import { useTags } from '@/stores/local/tags'
+import { useTags } from '@/stores/tags/tags'
+import type { Itag } from '@/stores/tags/Interfaces'
+import { computed } from 'vue'
+import { useCards } from '@/stores/cards/cards'
 
 const window = useWindows()
 
@@ -22,24 +23,102 @@ const cards = useCards()
 
 const tags = useTags()
 
-const props = defineProps<{
-  allTags: ITag[]
-}>()
+const allTags = computed(() => tags.tags)
 
-const filterCards = (v: { includeTags: string[]; excludesTags: string[] }) => {
-  cards.filterIncludeTag(v.includeTags)
-  cards.filterExcludeTags(v.excludesTags)
+// const getTagIds = (tag: Itag[]) => tag.map(({ id }) => id)
+
+const includeTags = computed(() => tags.includeTags)
+
+const excludeTags = computed(() => tags.excludeTags)
+
+// const updateAllCards = async () => {
+//   await tags.init()
+//   const include = getTagIds(tags.includeTags)
+//   const exclude = getTagIds(tags.excludeTags)
+//   await cards.init({ includeTags: include, excludeTags: exclude })
+// }
+
+const openTagCreate = () => window.tagCreate.open(['', ''])
+
+const openTagDelete = (tag: Itag) => window.tagDelete.open(tag)
+
+const openTagUpdate = (tag: Itag) => window.tagEditor.open(tag)
+
+const openTagDeleteCard = async (tag: Itag) => {
+  const allCards = await cards.read({ includeTags: [tag[1]], excludeTags: [] })
+  if (allCards) {
+    window.tagDeleteCard.open({ tag, cards: allCards })
+  }
 }
 
-const tagCreateOpen = () => window.open.tagCreate({ content: '', emoji: '', id: '' })
+const openCardCreate = async () => {
+  window.cardCreate.open({ content: '', date: new Date(), tags: [], id: '' })
+}
 
-const deleteTagOpen = (tag: ITag) => window.open.tagDelete(tag)
+const addIncludeTags = async (name: string) => {
+  await tags.filter('includeTags').addTofilter(name)
 
-const deleteCardsWithTagOpen = (tag: ITag) => window.open.tagDeleteCards(tag)
+  await cards.atualizeReactiveCards({
+    includeTags: includeTags.value,
+    excludeTags: excludeTags.value
+  })
+}
 
-const updateTagOpen = (tag: ITag) => window.open.tagUpdate(tag)
+const removeIncludeTags = async (name: string) => {
+  await tags.filter('includeTags').removeToFilter(name)
 
-const searchTagText = (v: string) => tags.filterText(v)
+  await cards.atualizeReactiveCards({
+    includeTags: includeTags.value,
+    excludeTags: excludeTags.value
+  })
+}
+
+const addExcludeTags = async (name: string) => {
+  await tags.filter('excludeTags').addTofilter(name)
+
+  await cards.atualizeReactiveCards({
+    includeTags: includeTags.value,
+    excludeTags: excludeTags.value
+  })
+}
+
+const removeExcludeTags = async (name: string) => {
+  await tags.filter('excludeTags').removeToFilter(name)
+
+  await cards.atualizeReactiveCards({
+    includeTags: includeTags.value,
+    excludeTags: excludeTags.value
+  })
+}
+
+// const searchTagText = (v: string) => tags.filterText(v)
+
+// const includeTags = {
+//   addToFilter: async (id: string) => {
+//     await cardsFilter.filterMethods('includeTags').addToFilter(id)
+//     cards.filterIncludeTag(cardsFilter.filterValues.includeTags)
+//   },
+//   removeToFilter: async (id: string) => {
+//     await cardsFilter.filterMethods('includeTags').removeToFilter(id)
+//     cards.filterIncludeTag(cardsFilter.filterValues.includeTags)
+//   }
+// }
+
+// const excludeTags = {
+//   addToFilter: async (id: string) => {
+//     await cardsFilter.filterMethods('excludeTags').addToFilter(id)
+//     cards.filterExcludeTags(cardsFilter.filterValues.excludeTags)
+//   },
+//   removeToFilter: async (id: string) => {
+//     await cardsFilter.filterMethods('excludeTags').removeToFilter(id)
+//     cards.filterExcludeTags(cardsFilter.filterValues.excludeTags)
+//   }
+// }
+
+const cleanAllTags = () => {
+  tags.filter('includeTags').clear()
+  tags.filter('excludeTags').clear()
+}
 </script>
 
 <template>
@@ -48,7 +127,7 @@ const searchTagText = (v: string) => tags.filterText(v)
       class="coin-button"
       size="50px"
       description="configuraćão"
-      @click="window.open.config"
+      @click="() => window.config.open(null)"
     >
       <GearIco />
     </CoinButton>
@@ -60,21 +139,26 @@ const searchTagText = (v: string) => tags.filterText(v)
       </template>
       <template #container-slot>
         <ModalCard class="modal-card">
-          <SearchImput
+          <!-- <SearchImput
             class="input-option"
             placeholder="Pesquisar tag"
             key-id="search-tag"
             @emit-content="searchTagText"
-          />
-          <ButtonOption content="Criar tag" class="input-option" @click="tagCreateOpen">
+          /> -->
+          <ButtonOption
+            content="Criar tag"
+            class="input-option"
+            @click="openTagCreate"
+            :visible="true"
+          >
             <PencilIco />
           </ButtonOption>
           <div class="tags">
             <TagsWithOptions
-              :all-tags="props.allTags"
-              @update="updateTagOpen"
-              @delete="deleteTagOpen"
-              @delete-cards-with-tag="deleteCardsWithTagOpen"
+              :all-tags="allTags"
+              @update="openTagUpdate"
+              @delete="openTagDelete"
+              @delete-cards-with-tag="openTagDeleteCard"
             />
           </div>
         </ModalCard>
@@ -88,24 +172,28 @@ const searchTagText = (v: string) => tags.filterText(v)
       </template>
       <template #container-slot>
         <ModalCard class="modal-card">
-          <SearchImput
+          <!-- <SearchImput
             class="input-option"
             placeholder="Pesquisar tag"
             key-id="search-tag-filter"
             @emit-content="searchTagText"
-          />
+          /> -->
           <div class="tags">
-            <TagsFilterCards :allTags="props.allTags" @emit-tags="filterCards" />
+            <TagsFilterCards
+              :allTags="allTags"
+              :include-tags="includeTags"
+              :exclude-tags="excludeTags"
+              @include-tag-add="addIncludeTags"
+              @include-tag-remove="removeIncludeTags"
+              @exclude-tag-add="addExcludeTags"
+              @exclude-tag-remove="removeExcludeTags"
+              @clean-all="cleanAllTags"
+            />
           </div>
         </ModalCard>
       </template>
     </FloatModalSlot>
-    <CoinButton
-      description="Criar Card"
-      class="coin-button"
-      size="50px"
-      @click="window.open.cardCreate"
-    >
+    <CoinButton description="Criar Card" class="coin-button" size="50px" @click="openCardCreate">
       <AddCardIco />
     </CoinButton>
   </div>

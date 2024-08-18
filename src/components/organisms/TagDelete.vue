@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import TagView from '@/components/molecules/TagView.vue'
+import TagView from '../molecules/TagView.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 
-const props = defineProps<{ tag: ITag }>()
+const props = defineProps<{ tag: Itag }>()
 
 const emit = defineEmits<{
-  (emit: 'emitDelete', v: ITag): void
+  (emit: 'emitDelete', v: Itag): void
 }>()
 
 const deletar = () => emit('emitDelete', props.tag)

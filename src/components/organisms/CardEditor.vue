@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { ICard } from '@/api/local'
+import { ref } from 'vue'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import TagSelectable from '@/components/molecules/TagSelectable.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import ShareIco from '../atoms/icons/ShareIco.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
@@ -15,17 +12,23 @@ import ModalCard from '../atoms/ModalCard.vue'
 import PlusTag from '../atoms/icons/PlusTag.vue'
 import MessageModal from '../molecules/MessageModal.vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
-import { useCardStyle } from '@/stores/cardStyle'
+import CheckBoxBase from '../atoms/CheckBoxBase.vue'
+import TagView from '../molecules/TagView.vue'
+// import SearchImput from '../molecules/SearchImput.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import { useStylesCard } from '@/stores/stylesCard/stylesCard'
+import type { Itag } from '@/stores/tags/Interfaces'
+import type { Icard } from '@/stores/cards/Interfaces'
 
-const cardStyle = useCardStyle()
+const stylesCard = useStylesCard()
 
-const props = defineProps<{ type: 'editor' | 'create'; card: ICard; allTags: ITag[] }>()
+const props = defineProps<{ type: 'editor' | 'create'; card: Icard; allTags: Itag[] }>()
 
 const emit = defineEmits<{
-  (e: 'cardAdd', v: ICard): void
-  (e: 'cardCreate', v: ICard): void
-  (e: 'cardUpdate', v: ICard): void
-  (e: 'cardDelete', v: ICard): void
+  (e: 'cardAdd', v: Icard): void
+  (e: 'cardCreate', v: Icard): void
+  (e: 'cardUpdate', v: Icard): void
+  (e: 'cardDelete', v: Icard): void
 }>()
 
 const messageModalRef = ref<InstanceType<typeof MessageModal>>()
@@ -37,26 +40,22 @@ const cardContent = ref(props.card.content)
 
 const cardTags = ref(props.card.tags)
 
-const tagsView = computed(
-  () =>
-    cardTags.value.map((id: string) =>
-      props.allTags.find((tag) => tag.id === id)
-    ) as unknown as ITag[]
-)
+const tagsList = ref(props.allTags)
 
-const isChecked = (id: string) => cardTags.value.includes(id)
+const tagIsChecked = (name: string) => cardTags.value.map((tag) => tag[1]).includes(name)
 
 const setContent = (v: string) => (cardContent.value = v)
 
-const handleCheckTags = (tagCheck: { tag: ITag; check: boolean }) => {
-  const addCheckTagId = (tag: ITag) => {
-    cardTags.value = [...cardTags.value, tag.id]
+const addOrRemoveTag = (name: string) => {
+  const tag = tagsList.value.find((tag) => tag[1] === name)
+
+  if (tag) {
+    if (tagIsChecked(tag[1])) {
+      cardTags.value = cardTags.value.filter((Xtag) => Xtag[1] !== tag[1])
+    } else {
+      cardTags.value = [...cardTags.value, tag]
+    }
   }
-  const removeCheckTagId = (tag: ITag) => {
-    const atualCheckedTagIds = cardTags.value
-    cardTags.value = atualCheckedTagIds.filter((id) => id !== tag.id)
-  }
-  tagCheck.check ? addCheckTagId(tagCheck.tag) : removeCheckTagId(tagCheck.tag)
 }
 
 const clearAll = () => {
@@ -104,6 +103,18 @@ const cardDelete = () => {
   })
   clearAll()
 }
+// const searchTag = (content: string) => {
+//   tagsList.value = props.allTags.filter((tag) =>
+//     tag.content.toLowerCase().includes(content.toLowerCase())
+//   )
+// }
+
+// const tagsView = computed(
+//   () =>
+//     cardTags.value.map((id: string) =>
+//       props.allTags.find((tag) => tag.id === id)
+//     ) as unknown as Itag[]
+// )
 </script>
 
 <template>
@@ -117,27 +128,32 @@ const cardDelete = () => {
             </CoinButton>
           </template>
           <template #container-slot>
-            <ModalCard class="modal-card">
-              <div class="tags-selector">
-                <TagSelectable
-                  v-for="(tag, i) in allTags"
-                  :key="i"
-                  :tag="tag"
-                  @emit-tag="handleCheckTags"
-                  :checked="isChecked(tag.id)"
-                  class="tag"
-                />
-              </div>
-            </ModalCard>
+            <FlexContainer flex-direction="column">
+              <ModalCard class="modal-card">
+                <!-- <SearchImput
+                  key-id="search-tag-card-editor"
+                  placeholder="pesquisar tag"
+                  @emit-content="searchTag"
+                /> -->
+                <FlexContainer flex-wrap="wrap" :style="{ 'overflow-x': 'auto' }">
+                  <CheckBoxBase
+                    v-for="(tag, i) in tagsList"
+                    :key="i"
+                    :id="tag[1]"
+                    :is-checked="tagIsChecked(tag[1])"
+                    checkbox-name="select-tag-in-card"
+                    @select="addOrRemoveTag"
+                    :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
+                  >
+                    <TagView :tag="tag" />
+                  </CheckBoxBase>
+                </FlexContainer>
+              </ModalCard>
+            </FlexContainer>
           </template>
         </FloatModalSlot>
-        <CoinButton
-          v-for="(cardTag, i) in tagsView"
-          :key="i"
-          :description="cardTag.content"
-          class="tag"
-        >
-          <ThemeP :content="cardTag.emoji" class="tag-emoji" />
+        <CoinButton v-for="(cardTag, i) in cardTags" :key="i" :description="cardTag[1]" class="tag">
+          <ThemeP :content="cardTag[0]" class="tag-emoji" />
         </CoinButton>
       </div>
       <div class="actions">
@@ -164,21 +180,32 @@ const cardDelete = () => {
         :content="card.content"
         class="textarea"
         @emit-content="setContent"
-        :style="cardStyle.atualCardSyle"
+        :style="stylesCard.atualStyle"
       />
       <ButtonOption
         content="Confirmar edição"
         @click="cardUpdate"
         class="confirmn-button"
         v-show="props.type === 'editor'"
+        :visible="true"
       >
         <CheckIco />
       </ButtonOption>
       <div class="buttons-sub-container" v-show="props.type === 'create'">
-        <ButtonOption @click="cardCreate" content="Confirmar criação" class="button-create-card">
+        <ButtonOption
+          @click="cardCreate"
+          content="Confirmar criação"
+          class="button-create-card"
+          :visible="true"
+        >
           <CheckIco />
         </ButtonOption>
-        <ButtonOption content="Adicionar cartão" @click="cardAdd" class="button-add-card">
+        <ButtonOption
+          content="Adicionar cartão"
+          @click="cardAdd"
+          class="button-add-card"
+          :visible="true"
+        >
           <PlusIco />
         </ButtonOption>
       </div>
@@ -228,9 +255,9 @@ const cardDelete = () => {
           flex-wrap: wrap;
           justify-content: center;
           overflow: auto;
-          & .tag {
-            margin: 3px;
+          & .tag-selectable {
             width: calc(50% - 6px);
+            margin: 3px;
             flex-shrink: 0;
           }
         }
@@ -241,7 +268,7 @@ const cardDelete = () => {
       & .tag {
         margin-left: 10px;
         & .tag-emoji {
-          font-size: 22px;
+          font-size: 16px;
         }
       }
     }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { nextTick, reactive, ref } from 'vue'
 
-const style = useStyle()
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   content: string
@@ -53,8 +53,10 @@ const openCard = (e: MouseEvent) => {
 .description-text {
   position: fixed;
   padding: 10px;
-  color: v-bind('style.atualStyle.color.text');
-  background-color: v-bind('style.atualStyle.color.one');
+  color: v-bind('stylePage.atualColor.text');
+  background-color: v-bind('stylePage.atualColor.front');
+  border-radius: v-bind('stylePage.borderRadius.inside');
+  border: solid 1px v-bind('stylePage.atualColor.border');
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');
   left: v-bind('cursorPosition.x');

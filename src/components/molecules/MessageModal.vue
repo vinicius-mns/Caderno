@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref, watchEffect } from 'vue'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 
 const showMessage = ref(false)
 const closeMessage = () => (showMessage.value = false)
@@ -28,7 +28,7 @@ watchEffect(() => {
 
 <style scoped lang="scss">
 .container-message {
-  background-color: v-bind('atualStyle.color.two');
+  background-color: v-bind('stylePage.atualColor.front');
   display: flex;
   flex-direction: column;
   align-items: center;
