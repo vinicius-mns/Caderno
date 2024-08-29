@@ -33,11 +33,21 @@ const cardRepositionX = () => {
   }
 }
 
+const cardRepositionY = () => {
+  const cardHeight = card.value?.clientHeight as number
+  const cardInBottonSide = parseInt(cursorPosition.y) > window.innerHeight / 2
+  const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight - 12}px`
+  const cardTranslateToBottom = `${parseInt(cursorPosition.y) + 12}px`
+  if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
+  else cursorPosition.y = cardTranslateToBottom
+}
+
 const openCard = (e: MouseEvent) => {
   setCursorPostion(e)
   openFlotCard()
   nextTick(() => {
     cardRepositionX()
+    cardRepositionY()
   })
 }
 </script>
@@ -60,14 +70,14 @@ const openCard = (e: MouseEvent) => {
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');
   left: v-bind('cursorPosition.x');
-  transform: translate(0, -120%);
   opacity: 0;
   animation: init 0.2s forwards;
+  margin-top: 20px;
 }
 @keyframes init {
   to {
     opacity: 100%;
-    transform: translate(0, -180%);
+    margin-top: 0;
   }
 }
 </style>
