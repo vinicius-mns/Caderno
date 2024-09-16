@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref } from 'vue'
 
@@ -83,4 +83,4 @@ $color: v-bind('stylePage.atualColor.text');
     }
   }
 }
-</style>
+</style> -->

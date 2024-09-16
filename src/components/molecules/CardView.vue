@@ -13,7 +13,7 @@ const props = defineProps<{ card: Icard }>()
 
 const emit = defineEmits<{ (e: 'emitCard', v: Icard): void }>()
 
-const showOn = true
+const showOn = false
 
 const showTags = ref(!showOn)
 
@@ -41,7 +41,7 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
     @mouseleave="showTagsOff"
   >
     <header>
-      <div class="date">
+      <div class="date" v-show="showTags">
         <FloatDescription :content="cardDate">
           <CalcDate class="date-text" :date="props.card.date" />
         </FloatDescription>

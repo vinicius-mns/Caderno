@@ -2,6 +2,7 @@
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import FlexContainer from '../atoms/FlexContainer.vue'
 
 const stylePage = useStylesPage()
 
@@ -20,14 +21,14 @@ const props = withDefaults(
 
 <template>
   <ThemeButton :class="[props.visible ? 'visible' : 'transparent', 'option-button-container']">
-    <div class="option-button">
-      <div class="ico">
+    <FlexContainer align-items="center" justify-center="center" class="teste">
+      <FlexContainer class="ico" align-items="center" justify-content="center">
         <slot></slot>
-      </div>
-      <div class="text">
+      </FlexContainer>
+      <FlexContainer class="text">
         <ThemeP :content="props.content" />
-      </div>
-    </div>
+      </FlexContainer>
+    </FlexContainer>
   </ThemeButton>
 </template>
 
@@ -37,41 +38,30 @@ const props = withDefaults(
   height: 40px;
   flex-shrink: 0;
   flex-grow: 0;
-  & .option-button {
-    height: 100%;
+  & .container-flex {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    & .ico {
-      flex-shrink: 0;
-      height: 100%;
-      width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    height: 100%;
+  }
+  & .ico {
+    flex-shrink: 0;
+    margin-left: 15px;
+    margin-right: 5px;
+  }
+  & .text {
+    flex-shrink: 0;
+    width: 100%;
+    & p {
       margin-left: 10px;
-    }
-    & .text {
-      flex-shrink: 0;
-      width: calc(100% - 30px);
-      height: 100%;
-      display: flex;
-      align-items: center;
-      & p {
-        margin-left: 10px;
-        padding-right: 10px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
-        font-size: v-bind('props.fontSize');
-      }
+      padding-right: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      font-size: v-bind('props.fontSize');
     }
   }
 }
 .visible {
   background-color: v-bind('stylePage.atualColor.front');
-  // border: solid 1px v-bind('stylePage.atualColor.border');
 }
 .transparent {
   background-color: transparent;

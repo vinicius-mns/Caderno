@@ -24,9 +24,6 @@ import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
-import GearIco from '../atoms/icons/GearIco.vue'
-import BaseHr from '../atoms/BaseHr.vue'
-import TagsWithOptions from '../organisms/TagsWithOptions.vue'
 
 const style = useStylesPage()
 
@@ -42,11 +39,7 @@ const width = computed(() => `${config.config.value.cardWidth}px`)
 
 const openCardUpdate = (card: Icard) => window.cardEdit.open(card)
 
-const openTagCreate = () => {
-  window.tagCreate.open(['', ''])
-}
-
-const openCardCreate = () => {
+const openCardCreate = async () => {
   window.cardCreate.open({ content: '', date: new Date(), id: '', tags: [] })
 }
 
@@ -113,76 +106,55 @@ const cleanAllTags = () => {
 </script>
 
 <template>
-  <FlexContainer class="main-container" align-items="center" justify-content="center">
-    <ModalCard class="card-container">
-      <FlexContainer flex-direction="row" align-items="center">
-        <ButtonOption
-          content="Criar tag"
-          class="button create-tag"
-          :visible="true"
-          @click="openTagCreate"
-        >
-          <TagIco />
-        </ButtonOption>
-        <ButtonOption
-          content="Criar cards"
-          class="button create-card"
-          :visible="true"
-          @click="openCardCreate"
-        >
-          <PencilIco />
-        </ButtonOption>
-        <hr />
-        <FloatModalSlot>
-          <template #button-slot>
-            <CoinButton description="Tags" :border="false" class="button">
-              <TagIco />
-            </CoinButton>
-          </template>
-          <template #container-slot>
-            <TagsWithOptions :all-tags="allTags" />
-          </template>
-        </FloatModalSlot>
-        <CoinButton
-          description="Configurações"
-          :border="false"
-          class="button"
-          @click="window.config.open"
-        >
-          <GearIco />
+  <FlexContainer class="cards-header" align-items="end" flex-direction="row">
+    <FloatModalSlot>
+      <template #button-slot>
+        <CoinButton description="Filtrar cards" size="40px">
+          <FilterIco />
         </CoinButton>
-      </FlexContainer>
-    </ModalCard>
+      </template>
+      <template #container-slot>
+        <ModalCard class="modal-card" :style="{ width: '360px', height: '60dvh' }">
+          <TagsFilterCards
+            :allTags="allTags"
+            :include-tags="includeTags"
+            :exclude-tags="excludeTags"
+            @include-tag-add="addIncludeTags"
+            @include-tag-remove="removeIncludeTags"
+            @exclude-tag-add="addExcludeTags"
+            @exclude-tag-remove="removeExcludeTags"
+            @clean-all="cleanAllTags"
+          />
+        </ModalCard>
+      </template>
+    </FloatModalSlot>
+    <FlexContainer class="cards-filter">
+      <TagsFiltredsList
+        :include-tags="includeTags"
+        :exclude-tags="excludeTags"
+        @include-tag-remove="removeIncludeTag"
+        @exclude-tag-remove="removeExcludeTags"
+      />
+    </FlexContainer>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
-.main-container {
+.cards-header {
   position: fixed;
-  bottom: 0;
-  height: 80px;
+  top: 0;
+  height: 60px;
   width: 100dvw;
-}
-.card-container {
-  bottom: 20px;
-  width: 440px;
-  left: 50%;
-  padding: 5px;
-  // background-color: v-bind('style.atualColor.back');
-  border: none;
-  & hr {
-    height: 35px;
-    margin: 5px 3px;
+  padding-left: 50px;
+  background-color: v-bind('style.atualColor.front');
+  & .cards-filter {
+    max-width: calc(100dvw - 400px);
   }
-  & .button {
-    margin: 5px 3px;
-  }
-  & .create-tag {
-    width: 130px;
-  }
-  & .create-card {
-    flex-shrink: 1;
-    width: 100%;
+  & .create-card-container {
+    overflow: hidden;
+    & hr {
+      width: 100%;
+    }
   }
 }
 </style>

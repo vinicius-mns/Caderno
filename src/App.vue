@@ -40,7 +40,6 @@ td {
   padding: 8px;
 }
 hr {
-  border: solid 1px red;
   border: solid 1px v-bind('stylesPage.atualColor.border');
 }
 svg {

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import CoinButton from '../molecules/CoinButton.vue'
 import CardIco from '../atoms/icons/CardIco.vue'
 </script>
@@ -13,4 +13,4 @@ import CardIco from '../atoms/icons/CardIco.vue'
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->

@@ -22,6 +22,8 @@ import ThemeP from '../atoms/ThemeP.vue'
 import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
+import AddTagIco from '../atoms/icons/AddTagIco.vue'
+import TagIco from '../atoms/icons/TagIco.vue'
 
 const style = useStylesPage()
 
@@ -104,43 +106,11 @@ const cleanAllTags = () => {
 </script>
 
 <template>
-  <FlexContainer flex-direction="column" class="card-main-container">
-    <FlexContainer class="cards-header" align-items="end" flex-direction="row">
-      <FloatModalSlot>
-        <template #button-slot>
-          <CoinButton description="Filtrar cards" size="40px">
-            <FilterIco />
-          </CoinButton>
-        </template>
-        <template #container-slot>
-          <ModalCard class="modal-card" :style="{ width: '360px', height: '60dvh' }">
-            <TagsFilterCards
-              :allTags="allTags"
-              :include-tags="includeTags"
-              :exclude-tags="excludeTags"
-              @include-tag-add="addIncludeTags"
-              @include-tag-remove="removeIncludeTags"
-              @exclude-tag-add="addExcludeTags"
-              @exclude-tag-remove="removeExcludeTags"
-              @clean-all="cleanAllTags"
-            />
-          </ModalCard>
-        </template>
-      </FloatModalSlot>
-      <FlexContainer class="cards-filter">
-        <TagsFiltredsList
-          :include-tags="includeTags"
-          :exclude-tags="excludeTags"
-          @include-tag-remove="removeIncludeTag"
-          @exclude-tag-remove="removeExcludeTags"
-        />
-      </FlexContainer>
-    </FlexContainer>
+  <div class="cards-main-container">
     <FlexContainer
       flex-wrap="wrap"
       :align-items="'start'"
       justify-content="center"
-      :style="{ with: '40px' }"
       class="cards-main"
     >
       <CardView
@@ -151,33 +121,17 @@ const cleanAllTags = () => {
         @emit-card="openCardUpdate"
       />
     </FlexContainer>
-  </FlexContainer>
+  </div>
 </template>
 
 <style scoped lang="scss">
-.card-main-container {
+.cards-main-container {
+  background-color: v-bind('style.atualColor.front');
   width: 100%;
-  & .cards-header {
-    z-index: 1;
-    position: sticky;
-    top: 0;
-    height: 60px;
-    padding-left: 50px;
-    background-color: v-bind('style.atualColor.front');
-    & .cards-filter {
-      max-width: calc(100dvw - 400px);
-    }
-    & .create-card-container {
-      overflow: hidden;
-      & hr {
-        width: 100%;
-      }
-    }
-  }
+  padding-top: 60px;
+  padding-bottom: 100px;
   & .cards-main {
-    margin-top: 30px;
-    min-height: 50px;
-    padding-bottom: 80px;
+    padding-top: 20px;
     & .card {
       width: v-bind('width');
       max-width: 95dvw;

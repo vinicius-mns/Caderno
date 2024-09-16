@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const stylePage = useStylesPage()
@@ -37,4 +37,4 @@ const stylePage = useStylesPage()
     }
   }
 }
-</style>
+</style> -->

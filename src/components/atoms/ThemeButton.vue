@@ -2,6 +2,11 @@
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{ backgroundColor?: 'name' | 'text' | 'back' | 'front' | 'hover' | 'border' }>(),
+  { backgroundColor: 'back' }
+)
 </script>
 
 <template>
@@ -15,7 +20,7 @@ const stylePage = useStylesPage()
   // height: 36px;
   display: flex;
   align-items: center;
-  background-color: v-bind('stylePage.atualColor.back');
+  background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
   border-radius: v-bind('stylePage.borderRadius.inside');
   color: v-bind('stylePage.atualColor.text');
   border: none;

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import CardsPage from '@/components/template/CardsPage.vue'
 import PageTemplate2 from '@/components/template/PageTemplate2.vue'
 import PageTemplate from '@/components/template/PageTemplate.vue'
@@ -35,8 +35,11 @@ onMounted(async () => {
     <template #main>
       <CardsPage />
     </template>
-    <template #aside>
-      <CardsSide />
+    <template #sibedar-full>
+      <CardsSide type="full" />
+    </template>
+    <template #sidebar-mini>
+      <CardsSide type="mini" />
     </template>
     <template #windows>
       <CardCreateWindow />
@@ -46,4 +49,4 @@ onMounted(async () => {
   </PageTemplate2>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->

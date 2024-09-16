@@ -71,7 +71,7 @@ const emitCleanAll = () => emit('cleanAll')
         :key="i"
         :is-checked="isChecked('includeTags', tag[1])"
         :id="tag[1]"
-        :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
+        class="check-button"
         @select="() => handleIncludeTag(tag[1])"
       >
         <TagView :tag="tag" />
@@ -88,7 +88,7 @@ const emitCleanAll = () => emit('cleanAll')
         :key="i"
         :is-checked="isChecked('excludeTags', tag[1])"
         :id="tag[1]"
-        :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
+        class="check-button"
         @select="() => handleExcludeTag(tag[1])"
       >
         <TagView :tag="tag" />
@@ -105,4 +105,9 @@ const emitCleanAll = () => emit('cleanAll')
   </FlexContainer>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.check-button {
+  width: calc(50% - 4px);
+  margin: 2px;
+}
+</style>

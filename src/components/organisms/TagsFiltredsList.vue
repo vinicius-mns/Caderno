@@ -3,7 +3,6 @@ import FlexContainer from '../atoms/FlexContainer.vue'
 import TagView from '../molecules/TagView.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
-import ThemeP from '../atoms/ThemeP.vue'
 
 const props = defineProps<{
   includeTags: Itag[]

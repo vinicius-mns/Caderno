@@ -11,6 +11,7 @@ import ThemeButton from '../atoms/ThemeButton.vue'
 import TagView from '../molecules/TagView.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import ThemeP from '../atoms/ThemeP.vue'
 
 const props = defineProps<{ allTags: Itag[] }>()
 
@@ -19,6 +20,7 @@ const emit = defineEmits<{
   (e: 'delete', v: Itag): void
   (e: 'update', v: Itag): void
   (e: 'deleteCardsWithTag', v: Itag): void
+  (e: 'createTag', v: void): void
 }>()
 
 const tagTarget = ref<Itag>(['', ''])
@@ -33,29 +35,39 @@ const emitUpdate = () => emit('update', tagTarget.value)
 
 const emitDelete = () => emit('delete', tagTarget.value)
 
+const emitCreateTag = () => emit('createTag')
+
 const emitDeleteCardsWithTag = () => emit('deleteCardsWithTag', tagTarget.value)
 </script>
 
 <template>
-  <div class="container">
-    <FloatModalSlot ref="modal">
-      <template #button-slot>
-        <FlexContainer flex-wrap="wrap">
-          <ThemeButton
-            v-for="(tag, i) in props.allTags"
-            :key="i"
-            @click="() => tagTargetSet(tag)"
-            :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
-          >
-            <TagView :tag="tag" class="tag" />
-          </ThemeButton>
-        </FlexContainer>
-        <!-- <div class="container-tags">
-        </div> -->
-      </template>
-      <template #container-slot>
-        <div @click="modalClose">
-          <ModalCard class="options-container">
+  <ModalCard class="container">
+    <FlexContainer class="sub-container" flex-direction="column">
+      <ThemeP content="Minhas tag:" class="my-tags-text" />
+      <ButtonOption
+        content="Criar nova Tag"
+        class="button-create-tag"
+        :visible="true"
+        @click="emitCreateTag"
+      >
+        <PencilIco />
+      </ButtonOption>
+      <FloatModalSlot ref="modal">
+        <template #button-slot>
+          <FlexContainer flex-wrap="wrap">
+            <ThemeButton
+              class="tag"
+              v-for="(tag, i) in props.allTags"
+              :key="i"
+              @click="() => tagTargetSet(tag)"
+              background-color="front"
+            >
+              <TagView :tag="tag" />
+            </ThemeButton>
+          </FlexContainer>
+        </template>
+        <template #container-slot>
+          <ModalCard class="options-container" @click="modalClose">
             <span>{{ tagTarget[0] }}</span>
             <ButtonOption content="Editar tag" @click="emitUpdate">
               <PencilIco />
@@ -70,40 +82,41 @@ const emitDeleteCardsWithTag = () => emit('deleteCardsWithTag', tagTarget.value)
               <TrashIco />
             </ButtonOption>
           </ModalCard>
-        </div>
-      </template>
-    </FloatModalSlot>
-  </div>
+        </template>
+      </FloatModalSlot>
+    </FlexContainer>
+  </ModalCard>
 </template>
 
 <style scoped lang="scss">
 .container {
-  height: 100%;
-  width: 100%;
-  overflow-y: auto;
-  & .tag {
-    margin-left: 10px;
-  }
-  // .container-tags {
-  //   width: 100%;
-  //   height: 100%;
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   justify-content: space-evenly;
-  //   & .tag {
-  //     margin: 3px 0;
-  //     width: 48%;
-  //   }
-  // }
-}
-.options-container {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  & span {
-    font-size: 40px;
-    text-shadow: 5px 2px 2px;
+  height: 55dvh;
+  width: 340px;
+  & .sub-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    & .my-tags-text {
+      margin-left: 4px;
+    }
+    & .tag {
+      width: calc(50% - 6px);
+      margin: 3px;
+    }
+    & .button-create-tag {
+      width: calc(100% - 6px);
+      margin: 3px;
+    }
+    .options-container {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      & span {
+        font-size: 40px;
+        text-shadow: 5px 2px 2px;
+      }
+    }
   }
 }
 </style>
