@@ -35,9 +35,9 @@ const cardRepositionX = () => {
 
 const cardRepositionY = () => {
   const cardHeight = card.value?.clientHeight as number
-  const cardInBottonSide = parseInt(cursorPosition.y) > window.innerHeight / 2
+  const cardInBottonSide = parseInt(cursorPosition.y) > 90
   const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight - 12}px`
-  const cardTranslateToBottom = `${parseInt(cursorPosition.y) + 12}px`
+  const cardTranslateToBottom = `${parseInt(cursorPosition.y) + 19}px`
   if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
   else cursorPosition.y = cardTranslateToBottom
 }
