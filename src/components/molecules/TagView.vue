@@ -1,39 +1,35 @@
 <script setup lang="ts">
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
+import FlexContainer from '../atoms/FlexContainer.vue'
 
-const props = defineProps<{ tag: ITag }>()
-
-const emit = defineEmits<{ (e: 'emitTag', v: ITag): void }>()
-
-const emitTag = () => emit('emitTag', props.tag)
+const props = withDefaults(defineProps<{ tag: Itag; tagEmojiSize?: string }>(), {
+  tagEmojiSize: '18px'
+})
 </script>
 
 <template>
-  <ThemeButton :title="props.tag.content" @click="emitTag" class="tag-container">
-    <span class="emoji">{{ props.tag.emoji }}</span>
-    <ThemeP class="content" :content="props.tag.content" />
-  </ThemeButton>
+  <FlexContainer :title="props.tag[1]" class="tag-container" align-items="center">
+    <FlexContainer align-items="center" :style="{ height: '100%' }" class="emoji">
+      <span>{{ props.tag[0] }}</span>
+    </FlexContainer>
+    <ThemeP class="content" :content="props.tag[1]" />
+  </FlexContainer>
 </template>
 
 <style scoped lang="scss">
-$height: 42px;
-$margin: 4px;
+$height: 33px;
 .tag-container {
-  width: 100%;
   height: $height;
+  width: 100%;
   flex-shrink: 0;
-  margin: $margin 0;
-  display: flex;
-  align-items: center;
-  position: relative;
   & .emoji {
-    font-size: calc($height / 2.2);
+    margin-left: 10px;
+    font-size: v-bind('props.tagEmojiSize');
   }
   & .content {
-    font-size: 13px;
     margin-left: 10px;
+    padding-right: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;

@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const style = useStyle()
+const stylePage = useStylesPage()
 
-const props = defineProps<{ content: string }>()
+const props = withDefaults(
+  defineProps<{
+    content: string
+    size?: string
+  }>(),
+  {
+    size: '14px'
+  }
+)
 </script>
 
 <template>
@@ -12,7 +20,8 @@ const props = defineProps<{ content: string }>()
 
 <style scoped lang="scss">
 .paragraph {
-  color: v-bind('style.atualStyle.color.text');
+  color: v-bind('stylePage.atualColor.text');
+  font-size: v-bind('props.size');
   margin: 0;
   padding: 0;
 }

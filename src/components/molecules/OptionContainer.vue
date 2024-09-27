@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import CaretIco from '@/components/atoms/icons/CaretIco.vue'
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref } from 'vue'
 
-const style = useStyle()
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   title: string
@@ -40,7 +40,7 @@ const showOptionToggle = () => (showOption.value = !showOption.value)
     & h2 {
       margin-left: 5px;
       font-weight: 100;
-      color: v-bind('style.atualStyle.color.text');
+      color: v-bind('stylePage.atualColor.text');
     }
   }
   & .option {

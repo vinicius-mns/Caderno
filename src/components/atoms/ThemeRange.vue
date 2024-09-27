@@ -1,8 +1,5 @@
 <script setup lang="ts">
-// import { useStyle } from '@/stores/style'
 import { computed, reactive, ref, watchEffect } from 'vue'
-
-// const { style } = useStyle()
 
 const props = defineProps<{
   initValue: number

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
-import { ref, watchEffect, onMounted } from 'vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import { ref, onMounted } from 'vue'
 
-const style = useStyle()
+const style = useStylesPage()
 
 const props = defineProps<{
   content: string
+  id: string
 }>()
 
 const emit = defineEmits<{
@@ -18,6 +19,10 @@ const contentReactive = ref(props.content)
 
 const clear = () => {
   contentReactive.value = ''
+}
+
+const sendContent = () => {
+  emit('emitContent', contentReactive.value)
 }
 
 const autoHeight = () => {
@@ -33,9 +38,14 @@ const autoHeight = () => {
   }
 }
 
-watchEffect(() => {
-  emit('emitContent', contentReactive.value)
-})
+const clicked = () => {
+  sendContent()
+  autoHeight()
+}
+
+// watchEffect(() => {
+//   emit('emitContent', contentReactive.value)
+// })
 
 defineExpose({ clear })
 
@@ -48,8 +58,8 @@ onMounted(() => {
 <template>
   <textarea
     ref="textArea"
-    id="textarea"
-    @keydown="autoHeight"
+    :id="props.id"
+    @input="clicked"
     v-model="contentReactive"
     class="theme-textarea"
     placeholder="digite aqui"
@@ -61,15 +71,16 @@ onMounted(() => {
 <style scoped lang="scss">
 .theme-textarea {
   width: 100%;
-  border-radius: v-bind('style.atualStyle.borderRadius.one');
+  border-radius: v-bind('style.borderRadius.inside');
   resize: none;
   overflow: auto;
   outline: none;
-  box-sizing: border-box;
   padding: 20px;
-  color: v-bind('style.atualStyle.color.text');
-  background-color: v-bind('style.atualStyle.color.three');
+  color: v-bind('style.atualColor.text');
+  background-color: v-bind('style.atualColor.front');
   border: none;
   transition: all 0.3s;
+  box-sizing: border-box;
+  font-size: 16px;
 }
 </style>

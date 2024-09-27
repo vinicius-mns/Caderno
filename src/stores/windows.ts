@@ -1,81 +1,55 @@
-import type { ICard } from '@/api/api_local/entites/cards/CardsTypes'
-import type { ITag } from '@/api/api_local/entites/tags/TagsTypes'
+import type { Itag } from '@/stores/tags/Interfaces'
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
-
-type IShow =
-  | ''
-  | 'Criar card'
-  | 'Editar card'
-  | 'Deletar card'
-  | 'Criar tag'
-  | 'Editar tag'
-  | 'Deletar cards com tag'
-  | 'Deletar tag'
-  | 'Configurações'
-
-interface IProps {
-  cardProps: ICard
-  tagProps: ITag
-}
+import { ref, type UnwrapRef } from 'vue'
+import type { Icard } from './cards/Interfaces'
 
 export const useWindows = defineStore('windows', () => {
-  const opened = ref(false)
-  const show = ref<IShow>('')
+  const newWindow = <T>(v: { title: string; props: T }) => {
+    const title = v.title
+    const show = ref(false)
+    const props = ref<T>(v.props)
 
-  const props = reactive<IProps>({
-    cardProps: { content: '', date: new Date(), id: '404', tags: [] },
-    tagProps: { content: '', emoji: '', id: '' }
-  })
-
-  const close = () => (opened.value = false)
-
-  const open = {
-    cardCreate: () => {
-      opened.value = true
-      show.value = 'Criar card'
-    },
-    cardUpdate: (card: ICard) => {
-      props.cardProps = card
-      opened.value = true
-      show.value = 'Editar card'
-    },
-    cardDelete: (card: ICard) => {
-      props.cardProps = card
-      opened.value = true
-      show.value = 'Deletar card'
-    },
-    tagCreate: (tag: ITag) => {
-      props.tagProps = tag
-      opened.value = true
-      show.value = 'Criar tag'
-    },
-    tagUpdate: (tag: ITag) => {
-      props.tagProps = tag
-      opened.value = true
-      show.value = 'Editar tag'
-    },
-    tagDeleteCards: (tag: ITag) => {
-      props.tagProps = tag
-      opened.value = true
-      show.value = 'Deletar cards com tag'
-    },
-    tagDelete: (tag: ITag) => {
-      props.tagProps = tag
-      opened.value = true
-      show.value = 'Deletar tag'
-    },
-    config: () => {
-      opened.value = true
-      show.value = 'Configurações'
+    const open = (newProps: T) => {
+      props.value = newProps as UnwrapRef<T>
+      show.value = true
     }
+
+    const close = () => (show.value = false)
+
+    return { title, show, props, open, close }
   }
 
+  const initTag: Itag = ['', '']
+
+  const initCard: Icard = { content: '', date: new Date(), id: '', tags: [] }
+
+  const cardCreate = newWindow({ title: 'Criar novo card', props: initCard })
+
+  const cardEdit = newWindow({ title: 'Editar card', props: initCard })
+
+  const cardDelete = newWindow({ title: 'Deletar card', props: initCard })
+
+  const tagCreate = newWindow({ title: 'Criar tag', props: initTag })
+
+  const tagEditor = newWindow({ title: 'Editar tag', props: initTag })
+
+  const tagDeleteCard = newWindow({ title: 'Deletar cards', props: initTag })
+
+  const tagDelete = newWindow({ title: 'Deletar tag', props: initTag })
+
+  const config = newWindow({ title: 'Configuracoes', props: null })
+
+  const errorMessage = newWindow({ props: '', title: 'Error' })
+
   return {
-    opened,
-    props,
-    show,
-    open,
-    close
+    cardCreate,
+    cardEdit,
+    cardDelete,
+    tagCreate,
+    tagEditor,
+    tagDeleteCard,
+    tagDelete,
+    config,
+    errorMessage
   }
 })

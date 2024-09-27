@@ -78,7 +78,11 @@ $buttonSize: 46px;
     width: 40px;
     margin: 2.5px;
     font-size: 30px;
+    border: none;
     background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import RangeImput from '@/components/molecules/RangeImput.vue'
 import ThemeP from '@/components/atoms/ThemeP.vue'
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   width: number
@@ -47,8 +47,8 @@ const emitWidth = (v: number) => emit('emitWidth', v)
     & .range-value {
       width: 40%;
       text-align: center;
-      background-color: v-bind('atualStyle.color.two');
-      border-radius: v-bind('atualStyle.borderRadius.one');
+      background-color: v-bind('stylePage.atualColor.front');
+      border-radius: v-bind('stylePage.borderRadius.inside');
     }
   }
 }

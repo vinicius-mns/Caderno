@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { reactive } from 'vue'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
@@ -44,8 +44,7 @@ const emitChecked = () => {
 <style scoped lang="scss">
 $buttonSize: calc(36px - 10px);
 $margin: 5px;
-$especialColor: v-bind('atualStyle.color.two');
-$borderRadius: v-bind('atualStyle.borderRadius');
+$borderRadius: v-bind('stylePage.borderRadius.inside');
 .switch {
   height: $buttonSize;
   display: flex;

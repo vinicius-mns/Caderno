@@ -1,43 +1,32 @@
 <script setup lang="ts">
-import CardsPage from '@/components/template/CardsPage.vue'
-import PageTemplate from '@/components/template/PageTemplate.vue'
-import { useConfig } from '@/stores/config'
-import { useCards } from '@/stores/local/cards'
-import { useTags } from '@/stores/local/tags'
-import { computed } from 'vue'
-import CardsWindows from '@/components/template/CardsWindows.vue'
-import { useEmoji } from '@/stores/emojis'
+import CardsTop from '@/components/template/CadsTop.vue'
 import CardsBottom from '@/components/template/CardsBottom.vue'
+import CardsMain from '@/components/template/CardsMain.vue'
+import WindowsAll from '@/components/template/windows/WindowsAll.vue'
+import { useCards } from '@/stores/cards/cards'
+import { useTags } from '@/stores/tags/tags'
+import { onMounted } from 'vue'
 
 const cards = useCards()
 
 const tags = useTags()
 
-const options = useConfig()
-
-const emojis = useEmoji()
-
-const allEmojis = emojis.getAll()
-
-const allCards = computed(() => cards.cards)
-
-const allTags = computed(() => tags.tags)
-
-const cardWindth = computed(() => options.config.value.cardWidth)
+onMounted(async () => {
+  await tags.init()
+  await cards.init({
+    includeTags: tags.getNames(tags.includeTags),
+    excludeTags: tags.getNames(tags.excludeTags)
+  })
+})
 </script>
 
 <template>
-  <PageTemplate>
-    <template #main>
-      <CardsPage :allcards="allCards" :all-tags="allTags" :width="`${cardWindth}px`" />
-    </template>
-    <template #aside>
-      <CardsBottom :all-tags="allTags" />
-    </template>
-    <template #windows>
-      <CardsWindows :all-tags="allTags" :all-emojis="allEmojis" :cardWidth="cardWindth" />
-    </template>
-  </PageTemplate>
+  <div>
+    <CardsMain />
+    <CardsTop />
+    <CardsBottom />
+    <WindowsAll />
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

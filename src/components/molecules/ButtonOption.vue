@@ -1,20 +1,38 @@
 <script setup lang="ts">
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import AngleRight from '../atoms/icons/AngleRight.vue'
 
-const props = defineProps<{ content: string }>()
+const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{
+    content: string
+    visible?: boolean
+    fontSize?: string
+    indicator?: '' | 'arrow-right'
+  }>(),
+  {
+    visible: false,
+    fontSize: '14px',
+    indicator: ''
+  }
+)
 </script>
 
 <template>
-  <ThemeButton class="option-button-container">
-    <div class="option-button">
-      <div class="ico">
+  <ThemeButton :class="[props.visible ? 'visible' : 'transparent', 'option-button-container']">
+    <FlexContainer align-items="center" justify-center="center" class="teste">
+      <FlexContainer class="ico" align-items="center" justify-content="center">
         <slot></slot>
-      </div>
-      <div class="text">
+      </FlexContainer>
+      <FlexContainer class="text">
         <ThemeP :content="props.content" />
-      </div>
-    </div>
+      </FlexContainer>
+    </FlexContainer>
+    <AngleRight v-if="indicator === 'arrow-right'" class="indicator" />
   </ThemeButton>
 </template>
 
@@ -24,35 +42,37 @@ const props = defineProps<{ content: string }>()
   height: 40px;
   flex-shrink: 0;
   flex-grow: 0;
-  border: none;
-  & .option-button {
-    height: 100%;
+  position: relative;
+  & .container-flex {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    & .ico {
-      flex-shrink: 0;
-      height: 100%;
-      width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    & .text {
-      flex-shrink: 0;
-      width: calc(100% - 30px);
-      height: 100%;
-      display: flex;
-      align-items: center;
-      & p {
-        padding-left: 10px;
-        font-size: 14px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
-      }
+    height: 100%;
+  }
+  & .ico {
+    flex-shrink: 0;
+    margin-left: 15px;
+    margin-right: 5px;
+  }
+  & .indicator {
+    position: absolute;
+    right: 6px;
+  }
+  & .text {
+    flex-shrink: 0;
+    width: 100%;
+    & p {
+      margin-left: 10px;
+      padding-right: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      font-size: v-bind('props.fontSize');
     }
   }
+}
+.visible {
+  background-color: v-bind('stylePage.atualColor.front');
+}
+.transparent {
+  background-color: transparent;
 }
 </style>

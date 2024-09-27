@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { nextTick, reactive, ref } from 'vue'
 
-const style = useStyle()
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   content: string
@@ -33,11 +33,21 @@ const cardRepositionX = () => {
   }
 }
 
+const cardRepositionY = () => {
+  const cardHeight = card.value?.clientHeight as number
+  const cardInBottonSide = parseInt(cursorPosition.y) > 90
+  const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight - 12}px`
+  const cardTranslateToBottom = `${parseInt(cursorPosition.y) + 19}px`
+  if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
+  else cursorPosition.y = cardTranslateToBottom
+}
+
 const openCard = (e: MouseEvent) => {
   setCursorPostion(e)
   openFlotCard()
   nextTick(() => {
     cardRepositionX()
+    cardRepositionY()
   })
 }
 </script>
@@ -53,19 +63,21 @@ const openCard = (e: MouseEvent) => {
 .description-text {
   position: fixed;
   padding: 10px;
-  color: v-bind('style.atualStyle.color.text');
-  background-color: v-bind('style.atualStyle.color.one');
+  color: v-bind('stylePage.atualColor.text');
+  background-color: v-bind('stylePage.atualColor.front');
+  border-radius: v-bind('stylePage.borderRadius.inside');
+  border: solid 1px v-bind('stylePage.atualColor.border');
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');
   left: v-bind('cursorPosition.x');
-  transform: translate(0, -120%);
   opacity: 0;
   animation: init 0.2s forwards;
+  margin-top: 20px;
 }
 @keyframes init {
   to {
     opacity: 100%;
-    transform: translate(0, -180%);
+    margin-top: 0;
   }
 }
 </style>

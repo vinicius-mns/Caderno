@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { useStyle } from '@/stores/style'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const { atualStyle } = useStyle()
+const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{ backgroundColor?: 'name' | 'text' | 'back' | 'front' | 'hover' | 'border' }>(),
+  { backgroundColor: 'back' }
+)
 </script>
 
 <template>
@@ -12,20 +17,37 @@ const { atualStyle } = useStyle()
 
 <style scoped lang="scss">
 .button {
-  height: 36px;
-  box-shadow: v-bind('atualStyle.boxShadow');
-  background-color: v-bind('atualStyle.color.three');
-  border-radius: v-bind('atualStyle.borderRadius.one');
-  color: v-bind('atualStyle.color.text');
+  // height: 36px;
+  display: flex;
+  align-items: center;
+  background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
+  border-radius: v-bind('stylePage.borderRadius.inside');
+  color: v-bind('stylePage.atualColor.text');
   border: none;
   overflow: hidden;
   outline: none;
   cursor: pointer;
+  transition: all 0.1s;
+  margin: 0;
+  padding: 0;
   &:hover {
-    background-color: v-bind('atualStyle.color.four');
+    background-color: v-bind('stylePage.atualColor.hover');
+    // animation: hoverAnitation 0.3s;
   }
   &:active {
-    background-color: v-bind('atualStyle.color.one');
+    transform: scale(0.95);
+    background-color: v-bind('stylePage.atualColor.back');
+  }
+}
+@keyframes hoverAnitation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
