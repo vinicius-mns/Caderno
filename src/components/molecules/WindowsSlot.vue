@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import CrossIco from '../atoms/icons/CrossIco.vue'
 import { onMounted, onUnmounted } from 'vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-
-const stylePage = useStylesPage()
+import ThemeP from '../atoms/ThemeP.vue'
+import ModalCard from '../atoms/ModalCard.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
 
 const props = defineProps<{
   title: string
@@ -30,15 +30,17 @@ onUnmounted(() => {
 
 <template>
   <div class="glass">
-    <div class="windows">
-      <header>
-        <p>{{ props.title }}</p>
-        <button class="close" @click="emitClose">
-          <CrossIco />
-        </button>
-      </header>
-      <slot></slot>
-    </div>
+    <ModalCard class="windows">
+      <FlexContainer align-items="center" flex-direction="column">
+        <header>
+          <ThemeP :content="props.title" />
+          <button class="close" @click="emitClose">
+            <CrossIco />
+          </button>
+        </header>
+        <slot></slot>
+      </FlexContainer>
+    </ModalCard>
   </div>
 </template>
 
@@ -52,29 +54,24 @@ onUnmounted(() => {
   position: fixed;
   left: 0;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  // /* From https://css.glass */
-  // background: rgba(0, 0, 0, 0.13);
-  // border-radius: 16px;
-  // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  // backdrop-filter: blur(2px);
-  // -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   & .windows {
+    padding: 0;
     position: fixed;
-    transition: all 1s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: v-bind('stylePage.borderRadius.outside');
-    background-color: v-bind('stylePage.atualColor.back');
-    border: solid 1px v-bind('stylePage.atualColor.border');
+    transition: all 0.3s;
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
+    // border-radius: v-bind('stylePage.borderRadius.outside');
+    // background-color: v-bind('stylePage.atualColor.back');
+    // border: solid 1px v-bind('stylePage.atualColor.border');
     & header {
       height: 30px;
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: v-bind('stylePage.atualColor.text');
       padding: 15px;
       & .close {
         position: absolute;

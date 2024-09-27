@@ -70,7 +70,6 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
   align-items: center;
   flex-direction: column;
   height: auto;
-  margin: 5px;
   cursor: pointer;
   & header {
     width: 100%;

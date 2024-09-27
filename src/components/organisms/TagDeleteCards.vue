@@ -12,14 +12,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'deleteCardsById', v: string[]): void
+  (e: 'deleteCardsById', v: void): void
 }>()
 
-const cardsDelete = () =>
-  emit(
-    'deleteCardsById',
-    props.cardsToDelete.map(({ id }) => id)
-  )
+const cardsDelete = () => emit('deleteCardsById')
 </script>
 
 <template>

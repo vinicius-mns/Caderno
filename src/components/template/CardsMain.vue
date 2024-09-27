@@ -24,6 +24,7 @@ import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
+import CardWithOption from '../organisms/CardWithOption.vue'
 
 const style = useStylesPage()
 
@@ -53,6 +54,13 @@ const allTags = computed(() => tags.tags)
 const includeTags = computed(() => tags.includeTags)
 
 const excludeTags = computed(() => tags.excludeTags)
+
+const cardsRenderUpdate = async () => {
+  await cards.atualizeReactiveCards({
+    includeTags: includeTags.value,
+    excludeTags: excludeTags.value
+  })
+}
 
 const removeIncludeTag = async (tagId: string) => {
   await tags.filter('includeTags').removeToFilter(tagId)
@@ -103,6 +111,11 @@ const cleanAllTags = () => {
   tags.filter('includeTags').clear()
   tags.filter('excludeTags').clear()
 }
+
+const cardUpdate = async (card: Icard) => {
+  await cards.update(card)
+  await cardsRenderUpdate()
+}
 </script>
 
 <template>
@@ -113,12 +126,15 @@ const cleanAllTags = () => {
       justify-content="center"
       class="cards-main"
     >
-      <CardView
+      <CardWithOption
         v-for="(card, i) in cardsReverse"
         :key="i"
         :card="card"
         class="card"
-        @emit-card="openCardUpdate"
+        :all-tags="tags.tags"
+        @update="openCardUpdate"
+        @delete="window.cardDelete.open"
+        @tag-updated="cardUpdate"
       />
     </FlexContainer>
   </div>
@@ -135,6 +151,7 @@ const cleanAllTags = () => {
     & .card {
       width: v-bind('width');
       max-width: 95dvw;
+      margin: 5px;
     }
   }
 }

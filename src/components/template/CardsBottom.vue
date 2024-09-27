@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
 import CardView from '../molecules/CardView.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import TagsFiltredsList from '../organisms/TagsFiltredsList.vue'
@@ -26,7 +26,8 @@ import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
 import GearIco from '../atoms/icons/GearIco.vue'
 import BaseHr from '../atoms/BaseHr.vue'
-import TagsWithOptions from '../organisms/TagsWithOptions.vue'
+import TagWithOptions from '../organisms/TagWithOptions.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 
 const style = useStylesPage()
 
@@ -110,6 +111,14 @@ const cleanAllTags = () => {
   tags.filter('includeTags').clear()
   tags.filter('excludeTags').clear()
 }
+
+// const useTag = () => {
+//   const tagRef = ref<Itag>(['', ''])
+
+//   const openCreateTag = (tag: Itag) => {
+//     window.tagCreate.open(tag)
+//   }
+// }
 </script>
 
 <template>
@@ -124,6 +133,7 @@ const cleanAllTags = () => {
         >
           <TagIco />
         </ButtonOption>
+
         <ButtonOption
           content="Criar cards"
           class="button create-card"
@@ -132,17 +142,43 @@ const cleanAllTags = () => {
         >
           <PencilIco />
         </ButtonOption>
+
         <hr />
+
         <FloatModalSlot>
           <template #button-slot>
             <CoinButton description="Tags" :border="false" class="button">
               <TagIco />
             </CoinButton>
           </template>
+
           <template #container-slot>
-            <TagsWithOptions :all-tags="allTags" />
+            <ModalCard class="tags-card">
+              <FlexContainer flex-direction="column" class="tags-flex-container">
+                <FlexContainer flex-wrap="wrap" class="tags-area">
+                  <TagWithOptions
+                    v-for="(tag, i) in allTags"
+                    :key="i"
+                    :tag="tag"
+                    @update-tag="window.tagEditor.open"
+                    @delete-tag="window.tagDelete.open"
+                    @delete-cards-withtag="window.tagDeleteCard.open"
+                  />
+                </FlexContainer>
+
+                <ButtonOption
+                  content="Criar tag"
+                  :visible="true"
+                  class="create-tag-button"
+                  @click="window.tagCreate.open(['', ''])"
+                >
+                  <PencilIco />
+                </ButtonOption>
+              </FlexContainer>
+            </ModalCard>
           </template>
         </FloatModalSlot>
+
         <CoinButton
           description="Configurações"
           :border="false"
@@ -166,23 +202,42 @@ const cleanAllTags = () => {
 .card-container {
   bottom: 20px;
   width: 440px;
+  max-width: 95dvw;
   left: 50%;
   padding: 5px;
-  // background-color: v-bind('style.atualColor.back');
   border: none;
   & hr {
     height: 35px;
     margin: 5px 3px;
   }
+  & .tags-card {
+    width: 340px;
+    height: 55dvh;
+    & .tags-flex-container {
+      height: 100%;
+      & .tags-area {
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        flex-shrink: 1;
+      }
+      & .create-tag-button {
+        margin-top: 10px;
+      }
+    }
+  }
   & .button {
     margin: 5px 3px;
   }
   & .create-tag {
-    width: 130px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
   }
   & .create-card {
+    flex-grow: 1.5;
     flex-shrink: 1;
-    width: 100%;
+    flex-basis: 0;
   }
 }
 </style>

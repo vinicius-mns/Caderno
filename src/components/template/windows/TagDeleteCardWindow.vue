@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import TagDeleteCards from '@/components/organisms/TagDeleteCards.vue'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
+import { computed, ref, watch } from 'vue'
+import type { Icard } from '@/stores/cards/Interfaces'
+import { useTags } from '@/stores/tags/tags'
 
 const window = useWindows()
 
@@ -11,28 +13,36 @@ const cards = useCards()
 
 const tags = useTags()
 
-// const updateAllCards = async () => {
-//   const getTagIds = (tag: Itag[]) => tag.map(({ id }) => id)
-//   const includeTags = getTagIds(tags.includeTags)
-//   const excludeTags = getTagIds(tags.excludeTags)
-//   await cards.init({ includeTags, excludeTags })
-// }
+const cardsRef = ref<Icard[]>([])
 
-const deleteCardsById = async (cardIds: string[]) => {
-  //tomara que eu lembre de melhorar essa funcao:
-  // ela faz varias chamadas a api, mas da para melhorar para do 1 chamada
-  // so preciso criar a funcao na api
-  cardIds.forEach(async (id) => {
-    await cards.deleteCard(id)
-  })
+const tag = computed(() => window.tagDeleteCard.props)
 
-  await cards.atualizeReactiveCards({
+const updateReactivecards = () => {
+  cards.atualizeReactiveCards({
     includeTags: tags.includeTags,
     excludeTags: tags.excludeTags
   })
+}
+
+const deleteCardsById = async () => {
+  const promises = cardsRef.value.map((card) => cards.deleteCard(card.id))
+
+  await Promise.all(promises)
 
   window.tagDeleteCard.close()
+
+  updateReactivecards()
 }
+
+watch(tag, async () => {
+  const tagName = tag.value[1]
+
+  if (tagName !== '') {
+    const cardsFind = await cards.read({ includeTags: [tagName], excludeTags: [] })
+
+    cardsRef.value = cardsFind
+  }
+})
 </script>
 
 <template>
@@ -41,11 +51,7 @@ const deleteCardsById = async (cardIds: string[]) => {
     :title="window.tagDeleteCard.title"
     @close="window.tagDeleteCard.close"
   >
-    <TagDeleteCards
-      :cards-to-delete="window.tagDeleteCard.props.cards"
-      :tag="window.tagDeleteCard.props.tag"
-      @delete-cards-by-id="deleteCardsById"
-    />
+    <TagDeleteCards :cards-to-delete="cardsRef" :tag="tag" @delete-cards-by-id="deleteCardsById" />
   </WindowsSlot>
 </template>
 

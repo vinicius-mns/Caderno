@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import { ref, watchEffect, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const style = useStylesPage()
 
 const props = defineProps<{
   content: string
+  id: string
 }>()
 
 const emit = defineEmits<{
@@ -18,6 +19,10 @@ const contentReactive = ref(props.content)
 
 const clear = () => {
   contentReactive.value = ''
+}
+
+const sendContent = () => {
+  emit('emitContent', contentReactive.value)
 }
 
 const autoHeight = () => {
@@ -33,9 +38,14 @@ const autoHeight = () => {
   }
 }
 
-watchEffect(() => {
-  emit('emitContent', contentReactive.value)
-})
+const clicked = () => {
+  sendContent()
+  autoHeight()
+}
+
+// watchEffect(() => {
+//   emit('emitContent', contentReactive.value)
+// })
 
 defineExpose({ clear })
 
@@ -48,8 +58,8 @@ onMounted(() => {
 <template>
   <textarea
     ref="textArea"
-    id="textarea"
-    @keydown="autoHeight"
+    :id="props.id"
+    @input="clicked"
     v-model="contentReactive"
     class="theme-textarea"
     placeholder="digite aqui"
@@ -71,5 +81,6 @@ onMounted(() => {
   border: none;
   transition: all 0.3s;
   box-sizing: border-box;
+  font-size: 16px;
 }
 </style>

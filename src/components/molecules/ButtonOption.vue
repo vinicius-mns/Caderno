@@ -3,6 +3,7 @@ import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import FlexContainer from '../atoms/FlexContainer.vue'
+import AngleRight from '../atoms/icons/AngleRight.vue'
 
 const stylePage = useStylesPage()
 
@@ -11,10 +12,12 @@ const props = withDefaults(
     content: string
     visible?: boolean
     fontSize?: string
+    indicator?: '' | 'arrow-right'
   }>(),
   {
     visible: false,
-    fontSize: '14px'
+    fontSize: '14px',
+    indicator: ''
   }
 )
 </script>
@@ -29,6 +32,7 @@ const props = withDefaults(
         <ThemeP :content="props.content" />
       </FlexContainer>
     </FlexContainer>
+    <AngleRight v-if="indicator === 'arrow-right'" class="indicator" />
   </ThemeButton>
 </template>
 
@@ -38,6 +42,7 @@ const props = withDefaults(
   height: 40px;
   flex-shrink: 0;
   flex-grow: 0;
+  position: relative;
   & .container-flex {
     width: 100%;
     height: 100%;
@@ -46,6 +51,10 @@ const props = withDefaults(
     flex-shrink: 0;
     margin-left: 15px;
     margin-right: 5px;
+  }
+  & .indicator {
+    position: absolute;
+    right: 6px;
   }
   & .text {
     flex-shrink: 0;

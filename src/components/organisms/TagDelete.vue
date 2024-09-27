@@ -7,10 +7,10 @@ import type { Itag } from '@/stores/tags/Interfaces'
 const props = defineProps<{ tag: Itag }>()
 
 const emit = defineEmits<{
-  (emit: 'emitDelete', v: Itag): void
+  (emit: 'delete', v: Itag): void
 }>()
 
-const deletar = () => emit('emitDelete', props.tag)
+const deletar = () => emit('delete', props.tag)
 </script>
 
 <template>

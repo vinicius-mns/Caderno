@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{ tag: Itag; tagEmojiSize?: string }>(), 
 </template>
 
 <style scoped lang="scss">
-$height: 32px;
+$height: 33px;
 .tag-container {
   height: $height;
   width: 100%;

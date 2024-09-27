@@ -30,5 +30,6 @@ const props = withDefaults(
   border-radius: v-bind('stylePage.borderRadius[props.borderRadius]');
   background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
   border: solid 1px v-bind('stylePage.atualColor.border');
+  box-shadow: v-bind('stylePage.atualColor.back') 0px 8px 28px;
 }
 </style>

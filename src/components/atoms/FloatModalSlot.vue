@@ -84,7 +84,9 @@ defineExpose({
     margin: 0;
     width: 100dvw;
     height: 100dvh;
-    // background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 16px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
   }
   & .float-card {
     position: fixed;

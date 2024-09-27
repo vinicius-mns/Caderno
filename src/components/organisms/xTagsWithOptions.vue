@@ -67,8 +67,9 @@ const emitDeleteCardsWithTag = () => emit('deleteCardsWithTag', tagTarget.value)
           </FlexContainer>
         </template>
         <template #container-slot>
-          <ModalCard class="options-container" @click="modalClose">
-            <span>{{ tagTarget[0] }}</span>
+          <ModalCard class="options-container" @click="modalClose" background-color="front">
+            <!-- <span>{{ tagTarget[0] }}</span> -->
+            <TagView :tag="tagTarget" class="tag-preview" />
             <ButtonOption content="Editar tag" @click="emitUpdate">
               <PencilIco />
             </ButtonOption>
@@ -108,10 +109,13 @@ const emitDeleteCardsWithTag = () => emit('deleteCardsWithTag', tagTarget.value)
       margin: 3px;
     }
     .options-container {
-      width: 300px;
+      width: 260px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      & .tag-preview {
+        margin: 10px 0;
+      }
       & span {
         font-size: 40px;
         text-shadow: 5px 2px 2px;
