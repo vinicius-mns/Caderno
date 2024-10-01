@@ -146,6 +146,7 @@ const cardUpdate = async (card: Icard) => {
   width: 100%;
   padding-top: 60px;
   padding-bottom: 100px;
+  min-height: 100dvh;
   & .cards-main {
     padding-top: 20px;
     & .card {
