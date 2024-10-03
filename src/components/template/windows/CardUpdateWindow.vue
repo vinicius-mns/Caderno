@@ -27,7 +27,15 @@ const tags = useTags()
 
 const allTags = computed(() => tags.tags)
 
-const useCard = () => {
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
+
+const executeAndCloseModal = (callBack: () => void) => {
+  callBack()
+
+  modal.value?.close()
+}
+
+const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
   const cardRef = ref<Icard>({} as Icard)
 
   const _closeWindows = () => window.cardEdit.close()
@@ -39,7 +47,7 @@ const useCard = () => {
   }
 
   const setTags = (tags: Itag[]) => {
-    set({ ...cardRef.value, tags })
+    closeModalCallback(() => set({ ...cardRef.value, tags }))
   }
 
   const saveUpdate = async () => {
@@ -62,7 +70,7 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
+const card = useCard(executeAndCloseModal)
 
 watchEffect(() => card.set(window.cardEdit.props))
 </script>
@@ -75,7 +83,7 @@ watchEffect(() => card.set(window.cardEdit.props))
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer flex-direction="column" align-items="center" class="base-width">
-        <FloatModalSlot class="max-width">
+        <FloatModalSlot class="max-width" ref="modal">
           <template #button-slot>
             <FlexContainer align-items="center">
               <CoinButton
@@ -85,9 +93,11 @@ watchEffect(() => card.set(window.cardEdit.props))
               >
                 <AddTagIco />
               </CoinButton>
+
               <TagsSelectedView :tags-selected="card.cardRef.value.tags" />
             </FlexContainer>
           </template>
+
           <template #container-slot>
             <TagSelector
               :all-tags="allTags"
@@ -96,6 +106,7 @@ watchEffect(() => card.set(window.cardEdit.props))
             />
           </template>
         </FloatModalSlot>
+
         <ThemeTextArea
           :style="cardStyle.atualStyle"
           id="card-editor"
@@ -103,6 +114,7 @@ watchEffect(() => card.set(window.cardEdit.props))
           @emit-content="card.setContent"
         />
       </FlexContainer>
+
       <ButtonOption
         content="Confirmar alteração"
         :visible="true"
