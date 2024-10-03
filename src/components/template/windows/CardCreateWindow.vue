@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
@@ -21,7 +21,6 @@ import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
 import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const window = useWindows()
 
@@ -30,6 +29,14 @@ const cardStyle = useStylesCard()
 const cards = useCards()
 
 const tags = useTags()
+
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
+
+const executeAndCloseModal = (callBack: () => void) => {
+  callBack()
+
+  modal.value?.close()
+}
 
 const allTags = computed(() => tags.tags)
 
@@ -51,7 +58,7 @@ const useTrashWidth = () => {
   }
 }
 
-const useCard = () => {
+const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
   const defaultCard = reactive<Icard>({
     id: '0',
     content: '',
@@ -67,7 +74,9 @@ const useCard = () => {
   const setGlobalTags = (tags: Itag[]) => {
     props.baseCard = { ...props.baseCard, tags }
 
-    if (props.cards.length <= 1) props.cards = [props.baseCard]
+    if (props.cards.length <= 1) {
+      closeModalCallback(() => (props.cards = [props.baseCard]))
+    }
   }
 
   const push = () => {
@@ -117,7 +126,7 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
+const card = useCard(executeAndCloseModal)
 
 const trashWidth = computed(() => card.props.cards.map(() => useTrashWidth()))
 
@@ -138,7 +147,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           <PencilIco />
         </CoinButton>
 
-        <FloatModalSlot>
+        <FloatModalSlot ref="modal">
           <template #button-slot>
             <CoinButton description="Adicionar tag" :border="false" background-color="transparent">
               <AddTagIco />
@@ -165,7 +174,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
         class="base-width card-to-create"
         flex-direction="column"
       >
-        <FloatModalSlot>
+        <FloatModalSlot ref="modalList">
           <template #button-slot>
             <FlexContainer>
               <CoinButton
@@ -188,6 +197,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
             />
           </template>
         </FloatModalSlot>
+
         <FlexContainer @mouseenter="trashWidth[i].open" @mouseleave="trashWidth[i].close">
           <ThemeTextArea
             :id="`create-card-${i}`"
@@ -206,6 +216,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           </ThemeButton>
         </FlexContainer>
       </FlexContainer>
+
       <FlexContainer class="bottom container">
         <ThemeButton class="add-card" background-color="front" @click="card.push">
           <FloatDescription content="Adicionar novo card" class="full-content">
