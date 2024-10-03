@@ -130,8 +130,8 @@ const cardUpdate = async (card: Icard) => {
         v-for="(card, i) in cardsReverse"
         :key="i"
         :card="card"
-        class="card"
         :all-tags="tags.tags"
+        :width="width"
         @update="openCardUpdate"
         @delete="window.cardDelete.open"
         @tag-updated="cardUpdate"
@@ -149,11 +149,6 @@ const cardUpdate = async (card: Icard) => {
   min-height: 100dvh;
   & .cards-main {
     padding-top: 20px;
-    & .card {
-      width: v-bind('width');
-      max-width: 95dvw;
-      margin: 5px;
-    }
   }
 }
 </style>
