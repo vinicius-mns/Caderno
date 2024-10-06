@@ -6,16 +6,16 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import TagSelector from '@/components/molecules/TagSelector.vue'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import CoinButton from '@/components/molecules/CoinButton.vue'
 import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
 import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 
 const cardStyle = useStylesCard()
 
@@ -86,13 +86,13 @@ watchEffect(() => card.set(window.cardEdit.props))
         <FloatModalSlot class="max-width" ref="modal">
           <template #button-slot>
             <FlexContainer align-items="center">
-              <CoinButton
-                description="Adicionar tag"
+              <ButtonCoinSlot
+                content="Adicionar tag"
                 :border="false"
                 background-color="transparent"
               >
                 <AddTagIco />
-              </CoinButton>
+              </ButtonCoinSlot>
 
               <TagsSelectedView :tags-selected="card.cardRef.value.tags" />
             </FlexContainer>
@@ -115,14 +115,14 @@ watchEffect(() => card.set(window.cardEdit.props))
         />
       </FlexContainer>
 
-      <ButtonOption
+      <ButtonSlot
         content="Confirmar alteração"
-        :visible="true"
+        background-color="transparent"
         @click="card.saveUpdate"
         class="confirm-button base-width"
       >
         <PencilIco />
-      </ButtonOption>
+      </ButtonSlot>
     </FlexContainer>
   </WindowsSlot>
 </template>

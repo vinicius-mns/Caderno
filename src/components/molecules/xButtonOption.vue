@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import FlexContainer from '../../atoms/FlexContainer.vue'
-import AngleRight from '../../atoms/icons/AngleRight.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import AngleRight from '../atoms/icons/AngleRight.vue'
 
 const stylePage = useStylesPage()
 
@@ -75,4 +75,4 @@ const props = withDefaults(
 .transparent {
   background-color: transparent;
 }
-</style>
+</style> -->

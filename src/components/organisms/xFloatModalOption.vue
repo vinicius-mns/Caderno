@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ButtonOption from '@/components/molecules/ButtonOption.vue'
 
@@ -18,4 +18,4 @@ const props = defineProps<{ contentButton: string }>()
   </FloatModalSlot>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->

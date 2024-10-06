@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeP from '../atoms/ThemeP.vue'
-import CoinButton from '../molecules/CoinButton.vue'
+import ButtonCoinSlot from './ButtonCoinSlot.vue'
 
 const props = defineProps<{ tagsSelected: Itag[] }>()
 </script>
 
 <template>
   <FlexContainer class="tags-selected-container">
-    <CoinButton
+    <ButtonCoinSlot
       v-for="(tag, i) in props.tagsSelected"
       :key="i"
-      :description="tag[1]"
-      class="tag"
+      :content="tag[1]"
       :border="false"
+      class="tag"
       background-color="transparent"
     >
       <ThemeP :content="tag[0]" class="tag-emoji" />
-    </CoinButton>
+    </ButtonCoinSlot>
   </FlexContainer>
 </template>
 

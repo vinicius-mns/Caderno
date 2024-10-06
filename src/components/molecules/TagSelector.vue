@@ -4,9 +4,9 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
-import BaseButtonSlot from './buttons/BaseButtonSlot.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
+import ButtonSlot from './ButtonSlot.vue'
 
 const props = defineProps<{ tagsSelected: Itag[]; allTags: Itag[] }>()
 
@@ -74,14 +74,14 @@ const emitSelected = () => emit('emitSelected', tagsSelected.value)
       </CheckBoxBase>
     </FlexContainer>
 
-    <BaseButtonSlot
+    <ButtonSlot
       content="Confirmar alteração"
       :class="[isModify ? '' : 'block', 'confirm-button']"
-      :visible="true"
-      @click="emitSelected()"
+      background-color="transparent"
+      @click="emitSelected"
     >
       <CheckIco />
-    </BaseButtonSlot>
+    </ButtonSlot>
   </ModalCard>
 </template>
 

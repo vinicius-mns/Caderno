@@ -8,10 +8,8 @@ import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import PlusIco from '@/components/atoms/icons/PlusIco.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
 import FloatDescription from '@/components/atoms/FloatDescription.vue'
-import CoinButton from '@/components/molecules/CoinButton.vue'
 import TagSelector from '@/components/molecules/TagSelector.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
@@ -21,6 +19,8 @@ import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
 import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
+import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 
 const window = useWindows()
 
@@ -143,15 +143,15 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer class="top container">
-        <CoinButton description="Criar tag" :border="false" background-color="transparent">
+        <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
           <PencilIco />
-        </CoinButton>
+        </ButtonCoinSlot>
 
         <FloatModalSlot ref="modal">
           <template #button-slot>
-            <CoinButton description="Adicionar tag" :border="false" background-color="transparent">
+            <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
               <AddTagIco />
-            </CoinButton>
+            </ButtonCoinSlot>
           </template>
 
           <template #container-slot>
@@ -177,13 +177,13 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
         <FloatModalSlot ref="modalList">
           <template #button-slot>
             <FlexContainer>
-              <CoinButton
-                description="Adicionar tag"
+              <ButtonCoinSlot
+                content="Adicionar tag"
                 :border="false"
                 background-color="transparent"
               >
                 <AddTagIco />
-              </CoinButton>
+              </ButtonCoinSlot>
 
               <TagsSelectedView :tags-selected="card.props.cards[i].tags" />
             </FlexContainer>
@@ -226,9 +226,9 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           </FloatDescription>
         </ThemeButton>
 
-        <ButtonOption content="Salvar" class="send-card" :visible="true" @click="card.createAll">
+        <ButtonSlot content="Salvar" class="send-card" :visible="true" @click="card.createAll">
           <SendIco />
-        </ButtonOption>
+        </ButtonSlot>
       </FlexContainer>
     </FlexContainer>
   </WindowsSlot>

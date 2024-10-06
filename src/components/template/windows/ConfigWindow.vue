@@ -24,6 +24,7 @@ const CardChangeWidth = (n: number) => {
   <WindowsSlot v-if="window.config.show" :title="window.config.title" @close="window.config.close">
     <div class="config-container">
       <CardConfig :width="cardWidth" @emit-width="CardChangeWidth" />
+
       <PageConfig @emit-color="style.setColor" />
     </div>
   </WindowsSlot>

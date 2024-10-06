@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import { reactive } from 'vue'
-import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import EmojiSelector from '@/components/molecules/EmojiSelector.vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import CheckIco from '../atoms/icons/CheckIco.vue'
 
 const props = defineProps<{
   tag: Itag
@@ -38,6 +38,7 @@ const sendContent = () => {
         @change-emoji="emojiSet"
         :emojis="props.emojis"
       />
+
       <ThemeImputText
         @emit-content="nameSet"
         :init-content="tagReative.name"
@@ -46,9 +47,10 @@ const sendContent = () => {
         class="imput-text"
       />
     </div>
-    <ButtonOption content="Confirmar" @click="sendContent" class="imput">
+
+    <ButtonSlot content="Confirmar" @click="sendContent" class="imput">
       <CheckIco />
-    </ButtonOption>
+    </ButtonSlot>
   </div>
 </template>
 

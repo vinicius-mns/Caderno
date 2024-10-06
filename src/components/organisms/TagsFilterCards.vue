@@ -4,10 +4,10 @@ import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
 import RadioBase from '../atoms/RadioBase.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
 
 const props = defineProps<{
   allTags: Itag[]
@@ -60,6 +60,7 @@ const emitCleanAll = () => emit('cleanAll')
         <ThemeP :content="option" />
       </RadioBase>
     </FlexContainer>
+
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Com tag'"
       flex-wrap="wrap"
@@ -77,6 +78,7 @@ const emitCleanAll = () => emit('cleanAll')
         <TagView :tag="tag" />
       </CheckBoxBase>
     </FlexContainer>
+
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Sem tag'"
       flex-wrap="wrap"
@@ -94,14 +96,10 @@ const emitCleanAll = () => emit('cleanAll')
         <TagView :tag="tag" />
       </CheckBoxBase>
     </FlexContainer>
-    <ButtonOption
-      :visible="true"
-      content="Limpar filtro"
-      :style="{ 'margin-top': '5px' }"
-      @click="emitCleanAll"
-    >
+
+    <ButtonSlot content="Limpar filtro" :style="{ 'margin-top': '5px' }" @click="emitCleanAll">
       <EraserIco />
-    </ButtonOption>
+    </ButtonSlot>
   </FlexContainer>
 </template>
 

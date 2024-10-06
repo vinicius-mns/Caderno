@@ -27,6 +27,7 @@ onMounted(async () => {
   <OptionContainer title="Page">
     <OptionContainer title="Estilo">
       <ThemeP content="Selecione um estilo:" :style="{ margin: '5px' }" />
+
       <FlexContainer flex-wrap="wrap">
         <RadioButton
           v-for="(color, i) in allColor"
@@ -39,6 +40,7 @@ onMounted(async () => {
         >
           <FlexContainer flex-direction="column" :style="{ width: '100%' }">
             <ThemeP :content="color.name" :style="{ marginBottom: '5px' }" />
+
             <FlexContainer flex-wrap="nowrap">
               <div :style="{ backgroundColor: color.back, height: '40px', width: '100%' }"></div>
               <div :style="{ backgroundColor: color.front, height: '40px', width: '100%' }"></div>
@@ -49,9 +51,11 @@ onMounted(async () => {
         </RadioButton>
       </FlexContainer>
     </OptionContainer>
+
     <OptionContainer title="Medidas">
       <ThemeP content="nada ainda" />
     </OptionContainer>
+
     <OptionContainer title="Outros">
       <ThemeP content="nada ainda" />
     </OptionContainer>

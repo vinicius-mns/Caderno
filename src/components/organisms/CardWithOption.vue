@@ -9,11 +9,13 @@ import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 
 import CardView from '../molecules/CardView.vue'
 import TagSelector from '../molecules/TagSelector.vue'
-import ButtonEdit from '../molecules/buttons/ButtonEdit.vue'
-import ButtonDelete from '../molecules/buttons/ButtonDelete.vue'
-import ButtonTags from '../molecules/buttons/ButtonTags.vue'
-import ButtonSearch from '../molecules/buttons/ButtonSearch.vue'
-import ButtonShare from '../molecules/buttons/ButtonShare.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import SearchIco from '../atoms/icons/SearchIco.vue'
+import TagIco from '../atoms/icons/TagIco.vue'
+import PencilIco from '../atoms/icons/PencilIco.vue'
+import ShareIco from '../atoms/icons/ShareIco.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
 
 const props = defineProps<{ card: Icard; allTags: Itag[]; width: string }>()
 
@@ -73,18 +75,32 @@ const { mouseInSet, showTagSelector } = useMouse()
 
       <template #container-slot>
         <ModalCard class="modal-card" background-color="front">
-          <ButtonSearch
+          <ButtonSlot
             content="Visualizar"
             @click="executeAndCloseModal(() => emit('view', props.card))"
-          />
+          >
+            <SearchIco />
+          </ButtonSlot>
 
-          <ButtonEdit @click="executeAndCloseModal(() => emit('update', props.card))" />
+          <ButtonSlot
+            content="Editar"
+            @click="executeAndCloseModal(() => emit('update', props.card))"
+          >
+            <PencilIco />
+          </ButtonSlot>
 
-          <ButtonShare @click="executeAndCloseModal(() => emit('share', props.card))" />
+          <ButtonSlot
+            content="Compartilhar"
+            @click="executeAndCloseModal(() => emit('share', props.card))"
+          >
+            <ShareIco />
+          </ButtonSlot>
 
           <FloatModalSlot>
             <template #button-slot>
-              <ButtonTags />
+              <ButtonSlot content="Tags">
+                <TagIco />
+              </ButtonSlot>
             </template>
 
             <template #container-slot>
@@ -96,14 +112,21 @@ const { mouseInSet, showTagSelector } = useMouse()
             </template>
           </FloatModalSlot>
 
-          <ButtonDelete @click="executeAndCloseModal(() => emit('delete', props.card))" />
+          <ButtonSlot
+            content="Deletar"
+            @click="executeAndCloseModal(() => emit('delete', props.card))"
+          >
+            <TrashIco />
+          </ButtonSlot>
         </ModalCard>
       </template>
     </FloatModalSlot>
 
     <FloatModalSlot class="tag-editor" v-show="showTagSelector" ref="modal2">
       <template #button-slot>
-        <ButtonTags :minimize="true" />
+        <ButtonCoinSlot content="Tags">
+          <TagIco />
+        </ButtonCoinSlot>
       </template>
 
       <template #container-slot>

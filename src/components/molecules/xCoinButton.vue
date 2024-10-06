@@ -1,6 +1,6 @@
-<script setup lang="ts">
-import FloatDescription from '../../atoms/FloatDescription.vue'
-import ThemeButton from '../../atoms/ThemeButton.vue'
+<!-- <script setup lang="ts">
+import FloatDescription from '../atoms/FloatDescription.vue'
+import ThemeButton from '../atoms/ThemeButton.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const stylePage = useStylesPage()
@@ -58,4 +58,4 @@ $buttonSize: v-bind('props.size');
 .no-border {
   border: none;
 }
-</style>
+</style> -->

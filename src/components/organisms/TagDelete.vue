@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TrashIco from '@/components/atoms/icons/TrashIco.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
 import TagView from '../molecules/TagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 
@@ -16,9 +16,10 @@ const deletar = () => emit('delete', props.tag)
 <template>
   <div class="container">
     <TagView :tag="props.tag" class="item" />
-    <ButtonOption content="Deletar" @click="deletar" class="item">
+
+    <ButtonSlot content="Deletar" @click="deletar" class="item">
       <TrashIco />
-    </ButtonOption>
+    </ButtonSlot>
   </div>
 </template>
 

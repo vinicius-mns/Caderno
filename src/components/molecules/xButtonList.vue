@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
@@ -89,4 +89,4 @@ const togggleShow = () => (show.value = !show.value)
 .transparent {
   background-color: transparent;
 }
-</style>
+</style> -->
