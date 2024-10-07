@@ -3,7 +3,7 @@ import type { IColorPage } from '@/stores/stylesPage/interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import OptionContainer from '../molecules/OptionContainer.vue'
-import RadioButton from '../molecules/RadioButton.vue'
+import RadioBase from '../atoms/RadioBase.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { onMounted, ref } from 'vue'
 
@@ -29,14 +29,15 @@ onMounted(async () => {
       <ThemeP content="Selecione um estilo:" :style="{ margin: '5px' }" />
 
       <FlexContainer flex-wrap="wrap">
-        <RadioButton
+        <RadioBase
           v-for="(color, i) in allColor"
           :id="color.name"
           :key="i"
-          name="select-color"
-          :checked-value="stylePage.atualColor.name"
-          @select="emitColor"
           :style="{ flex: '1 0 200px' }"
+          :checked-value="stylePage.atualColor.name"
+          radio-name="select-color"
+          class="color-radio-option"
+          @select="emitColor"
         >
           <FlexContainer flex-direction="column" :style="{ width: '100%' }">
             <ThemeP :content="color.name" :style="{ marginBottom: '5px' }" />
@@ -48,7 +49,7 @@ onMounted(async () => {
               <div :style="{ backgroundColor: color.text, height: '40px', width: '100%' }"></div>
             </FlexContainer>
           </FlexContainer>
-        </RadioButton>
+        </RadioBase>
       </FlexContainer>
     </OptionContainer>
 
@@ -62,4 +63,9 @@ onMounted(async () => {
   </OptionContainer>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.color-radio-option {
+  margin: 1px;
+  padding: 10px;
+}
+</style>

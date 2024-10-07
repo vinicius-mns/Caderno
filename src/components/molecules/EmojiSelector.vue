@@ -29,10 +29,12 @@ const sendSelected = (e: string) => {
         <ThemeButton class="emoji-button" v-if="props.seletedEmoji">
           {{ props.seletedEmoji }}
         </ThemeButton>
+
         <ThemeButton class="emoji-button" v-else>
           <EmojiPlusIco class="emoji-plus" />
         </ThemeButton>
       </template>
+
       <template #container-slot>
         <ModalCard class="container">
           <ThemeButton
