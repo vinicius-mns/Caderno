@@ -59,28 +59,28 @@ const useTrashWidth = () => {
 }
 
 const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
-  const defaultCard = reactive<Icard>({
+  const templateCard = {
     id: '0',
     content: '',
     date: new Date(),
     tags: []
-  })
+  }
 
-  const props = reactive<{ baseCard: Icard; cards: Icard[] }>({
-    baseCard: defaultCard,
+  const props = reactive<{ globalTags: Itag[]; cards: Icard[] }>({
+    globalTags: [],
     cards: []
   })
 
   const setGlobalTags = (tags: Itag[]) => {
-    props.baseCard = { ...props.baseCard, tags }
+    closeModalCallback(() => {
+      props.globalTags = tags
 
-    if (props.cards.length <= 1) {
-      closeModalCallback(() => (props.cards = [props.baseCard]))
-    }
+      if (props.cards.length <= 1) props.cards = [{ ...templateCard, tags }]
+    })
   }
 
   const push = () => {
-    props.cards.push(props.baseCard)
+    props.cards.push({ ...templateCard, tags: props.globalTags })
   }
 
   const remove = (index: number) => {
@@ -109,14 +109,13 @@ const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
       excludeTags: tags.excludeTags
     })
 
-    props.cards = [defaultCard]
+    props.cards = [{ ...templateCard, tags: props.globalTags }]
 
     window.cardCreate.close()
   }
 
   return {
     props,
-    defaultCard,
     setGlobalTags,
     push,
     setContent,
@@ -157,13 +156,13 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           <template #container-slot>
             <TagSelector
               :all-tags="allTags"
-              :tags-selected="card.props.baseCard.tags"
+              :tags-selected="card.props.globalTags"
               @emit-selected="card.setGlobalTags"
             />
           </template>
         </FloatModalSlot>
 
-        <TagsSelectedView :tags-selected="card.props.baseCard.tags" />
+        <TagsSelectedView :tags-selected="card.props.globalTags" />
       </FlexContainer>
 
       <hr class="base-width" />

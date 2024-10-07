@@ -46,8 +46,8 @@ const emitCleanAll = () => emit('cleanAll')
 </script>
 
 <template>
-  <FlexContainer flex-direction="column" :style="{ height: '100%' }">
-    <FlexContainer justify-content="space-between" :style="{ width: '100%' }">
+  <FlexContainer flex-direction="column" class="cards-filter-container">
+    <FlexContainer justify-content="space-between" class="tags-selector-options">
       <RadioBase
         v-for="(option, i) in tagsTypeRoutes"
         radio-name="filter-tags"
@@ -64,7 +64,7 @@ const emitCleanAll = () => emit('cleanAll')
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Com tag'"
       flex-wrap="wrap"
-      :style="{ overflow: 'auto' }"
+      class="tags-selectable-container"
     >
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
@@ -82,7 +82,7 @@ const emitCleanAll = () => emit('cleanAll')
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Sem tag'"
       flex-wrap="wrap"
-      :style="{ overflow: 'auto' }"
+      class="tags-selectable-container"
     >
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
@@ -97,15 +97,35 @@ const emitCleanAll = () => emit('cleanAll')
       </CheckBoxBase>
     </FlexContainer>
 
-    <ButtonSlot content="Limpar filtro" :style="{ 'margin-top': '5px' }" @click="emitCleanAll">
+    <ButtonSlot content="Limpar filtro" class="button-eraser" @click="emitCleanAll">
       <EraserIco />
     </ButtonSlot>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
-.check-button {
-  width: calc(50% - 4px);
-  margin: 2px;
+.cards-filter-container {
+  height: 100%;
+  overflow: hidden;
+
+  & .tags-selector-options {
+    width: 100%;
+    height: 100%;
+  }
+
+  & .tags-selectable-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+
+    & .check-button {
+      width: calc(50% - 4px);
+      margin: 2px;
+    }
+  }
+
+  & .button-eraser {
+    margin-top: 10px;
+  }
 }
 </style>

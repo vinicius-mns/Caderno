@@ -114,7 +114,7 @@ const cleanAllTags = () => {
       </template>
 
       <template #container-slot>
-        <ModalCard class="modal-card" :style="{ width: '360px', height: '60dvh' }">
+        <ModalCard class="modal-card">
           <TagsFilterCards
             :allTags="allTags"
             :include-tags="includeTags"
@@ -148,9 +148,19 @@ const cleanAllTags = () => {
   width: 100dvw;
   padding-left: 50px;
   background-color: v-bind('style.atualColor.front');
+
+  & .modal-card {
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    max-width: 95dvw;
+    max-height: 60dvh;
+  }
+
   & .cards-filter {
     max-width: calc(100dvw - 400px);
   }
+
   & .create-card-container {
     overflow: hidden;
     & hr {

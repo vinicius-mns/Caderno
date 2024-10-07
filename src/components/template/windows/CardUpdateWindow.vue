@@ -117,7 +117,6 @@ watchEffect(() => card.set(window.cardEdit.props))
 
       <ButtonSlot
         content="Confirmar alteração"
-        background-color="transparent"
         @click="card.saveUpdate"
         class="confirm-button base-width"
       >

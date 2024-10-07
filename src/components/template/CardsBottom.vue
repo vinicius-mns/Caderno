@@ -125,11 +125,11 @@ const cleanAllTags = () => {
   <FlexContainer class="main-container" align-items="center" justify-content="center">
     <ModalCard class="card-container">
       <FlexContainer flex-direction="row" align-items="center">
-        <ButtonSlot content="Criar tag" class="button create-tag" @click="openTagCreate">
+        <ButtonSlot content="Criar tag" class="button-x create-tag" @click="openTagCreate">
           <TagIco />
         </ButtonSlot>
 
-        <ButtonSlot content="Criar cards" class="button create-card" @click="openCardCreate">
+        <ButtonSlot content="Criar cards" class="button-x create-card" @click="openCardCreate">
           <PencilIco />
         </ButtonSlot>
 
@@ -137,7 +137,7 @@ const cleanAllTags = () => {
 
         <FloatModalSlot>
           <template #button-slot>
-            <ButtonCoinSlot content="Tags" :border="false" class="button">
+            <ButtonCoinSlot content="Tags" :border="false" class="button-x">
               <TagIco />
             </ButtonCoinSlot>
           </template>
@@ -171,7 +171,7 @@ const cleanAllTags = () => {
         <ButtonCoinSlot
           content="Configurações"
           :border="false"
-          class="button"
+          class="button-x"
           @click="window.config.open"
         >
           <GearIco />
@@ -200,10 +200,14 @@ const cleanAllTags = () => {
     margin: 5px 3px;
   }
   & .tags-card {
+    display: flex;
+    flex-direction: column;
     width: 340px;
-    height: 55dvh;
+    max-height: 55dvh;
+
     & .tags-flex-container {
       height: 100%;
+      overflow: hidden;
       & .tags-area {
         height: 100%;
         width: 100%;
@@ -215,7 +219,7 @@ const cleanAllTags = () => {
       }
     }
   }
-  & .button {
+  & .button-x {
     margin: 5px 3px;
   }
   & .create-tag {

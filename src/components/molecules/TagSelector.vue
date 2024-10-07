@@ -60,7 +60,7 @@ const emitSelected = () => emit('emitSelected', tagsSelected.value)
 
 <template>
   <ModalCard class="modal-card-tags">
-    <FlexContainer flex-wrap="wrap" :style="{ 'overflow-x': 'auto' }" class="tags">
+    <FlexContainer flex-wrap="wrap" class="tags">
       <CheckBoxBase
         v-for="(tag, i) in tagsList"
         :key="i"
@@ -68,7 +68,7 @@ const emitSelected = () => emit('emitSelected', tagsSelected.value)
         :is-checked="tagIsChecked(tag[1])"
         checkbox-name="select-tag-in-card"
         @select="addOrRemoveTag"
-        :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
+        class="tag-selectable"
       >
         <TagView :tag="tag" />
       </CheckBoxBase>
@@ -77,7 +77,6 @@ const emitSelected = () => emit('emitSelected', tagsSelected.value)
     <ButtonSlot
       content="Confirmar alteração"
       :class="[isModify ? '' : 'block', 'confirm-button']"
-      background-color="transparent"
       @click="emitSelected"
     >
       <CheckIco />
@@ -91,11 +90,18 @@ const emitSelected = () => emit('emitSelected', tagsSelected.value)
   flex-direction: column;
   width: 350px;
   max-width: 95dvw;
-  height: 50dvh;
+  max-height: 50dvh;
 
   & .tags {
     height: 100%;
     overflow: auto;
+    overflow-x: auto;
+  }
+
+  & .tag-selectable {
+    width: calc(50% - 4px);
+    margin: 2px;
+    height: 40px;
   }
 
   & .confirm-button {
