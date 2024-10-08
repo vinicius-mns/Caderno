@@ -14,16 +14,15 @@ import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import TagsFilterCards from '../organisms/TagsFilterCards.vue'
-import CoinButton from '../molecules/CoinButton.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CardCreateIco from '../atoms/icons/CardCreateIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 
 const style = useStylesPage()
 
@@ -109,12 +108,13 @@ const cleanAllTags = () => {
   <FlexContainer class="cards-header" align-items="end" flex-direction="row">
     <FloatModalSlot>
       <template #button-slot>
-        <CoinButton description="Filtrar cards" size="40px">
+        <ButtonCoinSlot content="Filtrar cards">
           <FilterIco />
-        </CoinButton>
+        </ButtonCoinSlot>
       </template>
+
       <template #container-slot>
-        <ModalCard class="modal-card" :style="{ width: '360px', height: '60dvh' }">
+        <ModalCard class="modal-card">
           <TagsFilterCards
             :allTags="allTags"
             :include-tags="includeTags"
@@ -128,6 +128,7 @@ const cleanAllTags = () => {
         </ModalCard>
       </template>
     </FloatModalSlot>
+
     <FlexContainer class="cards-filter">
       <TagsFiltredsList
         :include-tags="includeTags"
@@ -147,9 +148,19 @@ const cleanAllTags = () => {
   width: 100dvw;
   padding-left: 50px;
   background-color: v-bind('style.atualColor.front');
+
+  & .modal-card {
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    max-width: 95dvw;
+    max-height: 60dvh;
+  }
+
   & .cards-filter {
     max-width: calc(100dvw - 400px);
   }
+
   & .create-card-container {
     overflow: hidden;
     & hr {

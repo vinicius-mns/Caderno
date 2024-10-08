@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { Itag } from '@/stores/tags/Interfaces'
-import ModalCard from '../atoms/ModalCard.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
+import CheckIco from '../atoms/icons/CheckIco.vue'
+import ModalCard from '../atoms/ModalCard.vue'
+import ButtonSlot from './ButtonSlot.vue'
 
 const props = defineProps<{ tagsSelected: Itag[]; allTags: Itag[] }>()
 
@@ -20,6 +22,7 @@ const tagsSelectedAdd = (tag: Itag) => (tagsSelected.value = [...tagsSelected.va
 
 const tagsSelectedRemove = (tag: Itag) => {
   const tags = tagsSelected.value
+
   tagsSelected.value = tags.filter((t) => t[1] !== tag[1])
 }
 
@@ -32,38 +35,82 @@ const addOrRemoveTag = (name: string) => {
     if (tagIsChecked(tag[1])) tagsSelectedRemove(tag)
     else tagsSelectedAdd(tag)
   }
-
-  emit('emitSelected', tagsSelected.value)
 }
+
+const isModify = computed(() => {
+  if (tagsSelected.value.length !== props.tagsSelected.length) return true
+
+  const tagsAtualSort = [...props.tagsSelected].sort()
+
+  const tagsRefSort = [...tagsSelected.value].sort()
+
+  for (let i = 0; i < tagsAtualSort.length; i += 1) {
+    const tagsAtualSortName = tagsAtualSort[i][1]
+
+    const tagsRefSortName = tagsRefSort[i][1]
+
+    if (tagsAtualSortName !== tagsRefSortName) return true
+  }
+
+  return false
+})
+
+const emitSelected = () => emit('emitSelected', tagsSelected.value)
 </script>
 
 <template>
-  <FlexContainer flex-direction="column">
-    <ModalCard class="modal-card">
-      <FlexContainer flex-wrap="wrap" :style="{ 'overflow-x': 'auto' }">
-        <CheckBoxBase
-          v-for="(tag, i) in tagsList"
-          :key="i"
-          :id="tag[1]"
-          :is-checked="tagIsChecked(tag[1])"
-          checkbox-name="select-tag-in-card"
-          @select="addOrRemoveTag"
-          :style="{ width: 'calc(50% - 4px)', margin: '2px' }"
-        >
-          <TagView :tag="tag" />
-        </CheckBoxBase>
-      </FlexContainer>
-    </ModalCard>
-  </FlexContainer>
+  <ModalCard class="modal-card-tags">
+    <FlexContainer flex-wrap="wrap" class="tags">
+      <CheckBoxBase
+        v-for="(tag, i) in tagsList"
+        :key="i"
+        :id="tag[1]"
+        :is-checked="tagIsChecked(tag[1])"
+        checkbox-name="select-tag-in-card"
+        @select="addOrRemoveTag"
+        class="tag-selectable"
+      >
+        <TagView :tag="tag" />
+      </CheckBoxBase>
+    </FlexContainer>
+
+    <ButtonSlot
+      content="Confirmar alteração"
+      :class="[isModify ? '' : 'block', 'confirm-button']"
+      @click="emitSelected"
+    >
+      <CheckIco />
+    </ButtonSlot>
+  </ModalCard>
 </template>
 
 <style scoped lang="scss">
-.modal-card {
-  box-sizing: border-box;
+.modal-card-tags {
+  display: flex;
+  flex-direction: column;
   width: 350px;
   max-width: 95dvw;
   max-height: 50dvh;
-  display: flex;
-  flex-direction: column;
+
+  & .tags {
+    height: 100%;
+    overflow: auto;
+    overflow-x: auto;
+  }
+
+  & .tag-selectable {
+    width: calc(50% - 4px);
+    margin: 2px;
+    height: 40px;
+  }
+
+  & .confirm-button {
+    margin-top: 10px;
+  }
+
+  & .block {
+    cursor: not-allowed;
+    opacity: 30%;
+  }
 }
 </style>

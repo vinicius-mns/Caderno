@@ -48,4 +48,8 @@ svg {
   width: 18px;
   flex-shrink: 0;
 }
+
+code {
+  background-color: rgba(141, 141, 141, 0.432);
+}
 </style>

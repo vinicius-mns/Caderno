@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ThemeP from '../atoms/ThemeP.vue'
 import CardView from '../molecules/CardView.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
-import TrashIco from '../atoms/icons/TrashIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import type { Icard } from '@/stores/cards/Interfaces'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
 
 const props = defineProps<{
   cardsToDelete: Icard[]
@@ -22,14 +22,17 @@ const cardsDelete = () => emit('deleteCardsById')
   <div class="container">
     <div class="description">
       <ThemeP content="Deletar cards com essa tag?" class="item" />
+
       <span>{{ props.tag[0] }}</span>
     </div>
+
     <div class="container-cards">
       <CardView v-for="(card, i) in props.cardsToDelete" :key="i" :card="card" class="card" />
     </div>
-    <ButtonOption content="Deletar cards" @click="cardsDelete" class="button-delete">
+
+    <ButtonSlot content="Deletar cards" @click="cardsDelete" class="button-delete">
       <TrashIco />
-    </ButtonOption>
+    </ButtonSlot>
   </div>
 </template>
 

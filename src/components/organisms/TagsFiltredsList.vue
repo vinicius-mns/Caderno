@@ -32,6 +32,7 @@ const excludeTagRemove = (id: string) => emit('excludeTagRemove', id)
         <TagView :tag="tag" tag-emoji-size="12px" />
       </ThemeButton>
     </FlexContainer>
+
     <FlexContainer>
       <ThemeButton
         v-for="(tag, i) in props.excludeTags"

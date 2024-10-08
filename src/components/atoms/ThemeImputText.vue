@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 const stylePage = useStylesPage()
 
@@ -21,13 +21,14 @@ const emit = defineEmits<{
 
 const contentReactive = ref(props.initContent)
 
-watchEffect(() => {
+const emitContent = () => {
   emit('emitContent', contentReactive.value)
-})
+}
 </script>
 
 <template>
   <input
+    @input="emitContent"
     autocomplete="off"
     type="text"
     :id="keyId"

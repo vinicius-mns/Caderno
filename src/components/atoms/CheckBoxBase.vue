@@ -39,6 +39,8 @@ input {
   border-radius: v-bind('stylePage.borderRadius.inside');
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
   &:hover {
     background-color: v-bind('stylePage.atualColor.hover');
     animation: hoverAnitation 0.2s;

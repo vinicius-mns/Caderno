@@ -14,12 +14,10 @@ import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import TagsFilterCards from '../organisms/TagsFilterCards.vue'
-import CoinButton from '../molecules/CoinButton.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CardCreateIco from '../atoms/icons/CardCreateIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
@@ -28,6 +26,8 @@ import GearIco from '../atoms/icons/GearIco.vue'
 import BaseHr from '../atoms/BaseHr.vue'
 import TagWithOptions from '../organisms/TagWithOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 
 const style = useStylesPage()
 
@@ -125,31 +125,21 @@ const cleanAllTags = () => {
   <FlexContainer class="main-container" align-items="center" justify-content="center">
     <ModalCard class="card-container">
       <FlexContainer flex-direction="row" align-items="center">
-        <ButtonOption
-          content="Criar tag"
-          class="button create-tag"
-          :visible="true"
-          @click="openTagCreate"
-        >
+        <ButtonSlot content="Criar tag" class="button-x create-tag" @click="openTagCreate">
           <TagIco />
-        </ButtonOption>
+        </ButtonSlot>
 
-        <ButtonOption
-          content="Criar cards"
-          class="button create-card"
-          :visible="true"
-          @click="openCardCreate"
-        >
+        <ButtonSlot content="Criar cards" class="button-x create-card" @click="openCardCreate">
           <PencilIco />
-        </ButtonOption>
+        </ButtonSlot>
 
         <hr />
 
         <FloatModalSlot>
           <template #button-slot>
-            <CoinButton description="Tags" :border="false" class="button">
+            <ButtonCoinSlot content="Tags" :border="false" class="button-x">
               <TagIco />
-            </CoinButton>
+            </ButtonCoinSlot>
           </template>
 
           <template #container-slot>
@@ -166,27 +156,26 @@ const cleanAllTags = () => {
                   />
                 </FlexContainer>
 
-                <ButtonOption
+                <ButtonSlot
                   content="Criar tag"
-                  :visible="true"
                   class="create-tag-button"
                   @click="window.tagCreate.open(['', ''])"
                 >
                   <PencilIco />
-                </ButtonOption>
+                </ButtonSlot>
               </FlexContainer>
             </ModalCard>
           </template>
         </FloatModalSlot>
 
-        <CoinButton
-          description="Configurações"
+        <ButtonCoinSlot
+          content="Configurações"
           :border="false"
-          class="button"
+          class="button-x"
           @click="window.config.open"
         >
           <GearIco />
-        </CoinButton>
+        </ButtonCoinSlot>
       </FlexContainer>
     </ModalCard>
   </FlexContainer>
@@ -211,10 +200,14 @@ const cleanAllTags = () => {
     margin: 5px 3px;
   }
   & .tags-card {
+    display: flex;
+    flex-direction: column;
     width: 340px;
-    height: 55dvh;
+    max-height: 55dvh;
+
     & .tags-flex-container {
       height: 100%;
+      overflow: hidden;
       & .tags-area {
         height: 100%;
         width: 100%;
@@ -226,7 +219,7 @@ const cleanAllTags = () => {
       }
     }
   }
-  & .button {
+  & .button-x {
     margin: 5px 3px;
   }
   & .create-tag {
