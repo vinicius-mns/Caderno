@@ -21,6 +21,10 @@ const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
 }>()
 
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
+
+const closeModal = () => modal.value?.close()
+
 const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) => {
   const alltags: Itag[] = p.allTags
 
@@ -82,10 +86,16 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
 }
 
 const tags = useTags(props, emit)
+
+const emitTagsAndCloseModal = () => {
+  emit('emitSelected', tags.tagsSelected.value)
+
+  closeModal()
+}
 </script>
 
 <template>
-  <FloatModalSlot ref="modalList" class="max-width">
+  <FloatModalSlot ref="modal" class="max-width">
     <template #button-slot>
       <FlexContainer class="button-tags-container max-width">
         <ButtonCoinSlot content="Adicionar tag" :border="false" background-color="transparent">
@@ -126,7 +136,7 @@ const tags = useTags(props, emit)
         <ButtonSlot
           content="Confirmar alteração"
           :class="[tags.butttonStatusClass, 'confirm-button']"
-          @click="() => emit('emitSelected', tags.tagsSelected.value)"
+          @click="emitTagsAndCloseModal()"
         >
           <CheckIco />
         </ButtonSlot>
