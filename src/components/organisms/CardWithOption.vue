@@ -8,13 +8,11 @@ import ModalCard from '../atoms/ModalCard.vue'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 
 import CardView from '../molecules/CardView.vue'
-import TagSelector from '../molecules/TagSelector.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import SearchIco from '../atoms/icons/SearchIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import ShareIco from '../atoms/icons/ShareIco.vue'
-import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
 
 const props = defineProps<{ card: Icard; allTags: Itag[]; width: string }>()
@@ -96,22 +94,6 @@ const { mouseInSet, showTagSelector } = useMouse()
             <ShareIco />
           </ButtonSlot>
 
-          <FloatModalSlot>
-            <template #button-slot>
-              <ButtonSlot content="Tags">
-                <TagIco />
-              </ButtonSlot>
-            </template>
-
-            <template #container-slot>
-              <TagSelector
-                :all-tags="props.allTags"
-                :tags-selected="props.card.tags"
-                @emit-selected="emitTagsUpdated"
-              />
-            </template>
-          </FloatModalSlot>
-
           <ButtonSlot
             content="Deletar"
             @click="executeAndCloseModal(() => emit('delete', props.card))"
@@ -119,22 +101,6 @@ const { mouseInSet, showTagSelector } = useMouse()
             <TrashIco />
           </ButtonSlot>
         </ModalCard>
-      </template>
-    </FloatModalSlot>
-
-    <FloatModalSlot class="tag-editor" v-show="showTagSelector" ref="modal2">
-      <template #button-slot>
-        <ButtonCoinSlot content="Tags">
-          <TagIco />
-        </ButtonCoinSlot>
-      </template>
-
-      <template #container-slot>
-        <TagSelector
-          :all-tags="props.allTags"
-          :tags-selected="props.card.tags"
-          @emit-selected="emitTagsUpdated"
-        />
       </template>
     </FloatModalSlot>
   </div>
