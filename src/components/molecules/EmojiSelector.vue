@@ -26,11 +26,11 @@ const sendSelected = (e: string) => {
   <div>
     <FloatModalSlot ref="modal">
       <template #button-slot>
-        <ThemeButton class="emoji-button" v-if="props.seletedEmoji">
+        <ThemeButton class="emoji-button" v-if="props.seletedEmoji" background-color="front">
           {{ props.seletedEmoji }}
         </ThemeButton>
 
-        <ThemeButton class="emoji-button" v-else>
+        <ThemeButton class="emoji-button" v-else background-color="front">
           <EmojiPlusIco class="emoji-plus" />
         </ThemeButton>
       </template>
@@ -52,7 +52,7 @@ const sendSelected = (e: string) => {
 </template>
 
 <style scoped lang="scss">
-$buttonSize: 46px;
+$buttonSize: 42px;
 .emoji-button {
   font-size: calc($buttonSize / 1.8);
   width: $buttonSize;
