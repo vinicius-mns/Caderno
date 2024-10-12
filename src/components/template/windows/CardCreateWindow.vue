@@ -144,7 +144,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           <TagSelectorWithList
             class="tags-selector-in-card-editor"
             :all-tags="allTags"
-            :tags-checked="card.props.globalTags"
+            :tags-checked="unicCard.tags"
             @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
           />
 
