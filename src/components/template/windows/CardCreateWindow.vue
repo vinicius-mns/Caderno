@@ -119,7 +119,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
     @close="window.cardCreate.close"
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
-      <FlexContainer class="top container">
+      <FlexContainer class="base-width top container">
         <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
           <PencilIco />
         </ButtonCoinSlot>
@@ -133,29 +133,31 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
 
       <hr class="base-width" />
 
-      <RemoveItemHover
-        v-for="(unicCard, i) in card.props.cards"
-        :key="i"
-        :id="String(i)"
-        class="base-width card-editor"
-        @emit-delete="(index: string) => card.remove(Number(index))"
-      >
-        <TagSelectorWithList
-          class="tags-selector-in-card-editor"
-          :all-tags="allTags"
-          :tags-checked="card.props.globalTags"
-          @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
-        />
+      <FlexContainer flex-direction="column" class="base-width cards-area">
+        <RemoveItemHover
+          v-for="(unicCard, i) in card.props.cards"
+          :key="i"
+          :id="String(i)"
+          class="card-editor"
+          @emit-delete="(index: string) => card.remove(Number(index))"
+        >
+          <TagSelectorWithList
+            class="tags-selector-in-card-editor"
+            :all-tags="allTags"
+            :tags-checked="card.props.globalTags"
+            @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
+          />
 
-        <ThemeTextArea
-          :id="`create-card-${i}`"
-          :content="unicCard.content"
-          :style="cardStyle.atualStyle"
-          @emit-content="(content: string) => card.setContent(i, content)"
-        />
-      </RemoveItemHover>
+          <ThemeTextArea
+            :id="`create-card-${i}`"
+            :content="unicCard.content"
+            :style="cardStyle.atualStyle"
+            @emit-content="(content: string) => card.setContent(i, content)"
+          />
+        </RemoveItemHover>
+      </FlexContainer>
 
-      <FlexContainer class="bottom-container container">
+      <FlexContainer class="base-width bottom-container">
         <ButtonSlot
           content="Criar cards"
           class="button-resize send-card"
@@ -182,31 +184,33 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
   width: 500px;
   max-width: 96dvw;
   max-height: 80dvh;
-  overflow: auto;
+  overflow: hidden;
 
   & .base-width {
     width: calc(100% - 30px);
   }
 
-  & .tags-selector-in-card-editor {
-    position: absolute;
-    top: -41px;
-  }
+  & .cards-area {
+    overflow-y: auto;
 
-  & .card-editor {
-    margin-top: 41px;
+    & .tags-selector-in-card-editor {
+      position: absolute;
+      top: -41px;
+    }
+    & .card-editor {
+      width: 100%;
+      margin-top: 41px;
+      margin-bottom: 10px;
+    }
   }
 
   & .full-content {
     width: 100%;
     height: 100%;
   }
-  & .container {
-    height: 40px;
-    width: calc(100% - 30px);
-  }
 
   & .bottom-container {
+    height: 40px;
     margin: 15px;
 
     & .button-resize {
