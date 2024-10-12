@@ -7,15 +7,12 @@ import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
-import TagSelector from '@/components/molecules/TagSelector.vue'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
-import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
+import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
 
 const cardStyle = useStylesCard()
 
@@ -83,29 +80,11 @@ watchEffect(() => card.set(window.cardEdit.props))
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer flex-direction="column" align-items="center" class="base-width">
-        <FloatModalSlot class="max-width" ref="modal">
-          <template #button-slot>
-            <FlexContainer align-items="center">
-              <ButtonCoinSlot
-                content="Adicionar tag"
-                :border="false"
-                background-color="transparent"
-              >
-                <AddTagIco />
-              </ButtonCoinSlot>
-
-              <TagsSelectedView :tags-selected="card.cardRef.value.tags" />
-            </FlexContainer>
-          </template>
-
-          <template #container-slot>
-            <TagSelector
-              :all-tags="allTags"
-              :tags-selected="card.cardRef.value.tags"
-              @emit-selected="card.setTags"
-            />
-          </template>
-        </FloatModalSlot>
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.cardRef.value.tags"
+          @emit-selected="card.setTags"
+        />
 
         <ThemeTextArea
           :style="cardStyle.atualStyle"
