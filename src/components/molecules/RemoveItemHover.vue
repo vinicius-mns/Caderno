@@ -44,6 +44,8 @@ const emitDelete = () => emit('emitDelete', props.id)
 <style scoped lang="scss">
 .remove-item-hover-container {
   position: relative;
+  display: flex;
+
   & .delete-button {
     transition: all 0.3s;
     position: absolute;
