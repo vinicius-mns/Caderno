@@ -10,17 +10,15 @@ import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import PlusIco from '@/components/atoms/icons/PlusIco.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
 import FloatDescription from '@/components/atoms/FloatDescription.vue'
-import TagSelector from '@/components/molecules/TagSelector.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
-import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import RemoveItemHover from '@/components/molecules/RemoveItemHover.vue'
+import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
 
 const window = useWindows()
 
@@ -126,23 +124,11 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           <PencilIco />
         </ButtonCoinSlot>
 
-        <FloatModalSlot ref="modal">
-          <template #button-slot>
-            <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
-              <AddTagIco />
-            </ButtonCoinSlot>
-          </template>
-
-          <template #container-slot>
-            <TagSelector
-              :all-tags="allTags"
-              :tags-selected="card.props.globalTags"
-              @emit-selected="card.setGlobalTags"
-            />
-          </template>
-        </FloatModalSlot>
-
-        <TagsSelectedView :tags-selected="card.props.globalTags" />
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.props.globalTags"
+          @emit-selected="card.setGlobalTags"
+        />
       </FlexContainer>
 
       <hr class="base-width" />
@@ -151,41 +137,22 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
         v-for="(unicCard, i) in card.props.cards"
         :key="i"
         :id="String(i)"
-        class="base-width"
+        class="base-width card-editor"
         @emit-delete="(index: string) => card.remove(Number(index))"
       >
-        <FlexContainer class="card-to-create" flex-direction="column">
-          <FloatModalSlot ref="modalList">
-            <template #button-slot>
-              <FlexContainer>
-                <ButtonCoinSlot
-                  content="Adicionar tag"
-                  :border="false"
-                  background-color="transparent"
-                >
-                  <AddTagIco />
-                </ButtonCoinSlot>
+        <TagSelectorWithList
+          class="tags-selector-in-card-editor"
+          :all-tags="allTags"
+          :tags-checked="card.props.globalTags"
+          @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
+        />
 
-                <TagsSelectedView :tags-selected="card.props.cards[i].tags" />
-              </FlexContainer>
-            </template>
-
-            <template #container-slot>
-              <TagSelector
-                :all-tags="allTags"
-                :tags-selected="card.props.cards[i].tags"
-                @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
-              />
-            </template>
-          </FloatModalSlot>
-
-          <ThemeTextArea
-            :id="`create-card-${i}`"
-            :content="unicCard.content"
-            :style="cardStyle.atualStyle"
-            @emit-content="(content: string) => card.setContent(i, content)"
-          />
-        </FlexContainer>
+        <ThemeTextArea
+          :id="`create-card-${i}`"
+          :content="unicCard.content"
+          :style="cardStyle.atualStyle"
+          @emit-content="(content: string) => card.setContent(i, content)"
+        />
       </RemoveItemHover>
 
       <FlexContainer class="bottom container">
@@ -216,10 +183,13 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
     width: calc(100% - 30px);
   }
 
-  & .card-to-create {
-    width: 100%;
-    margin-top: 8px;
-    position: relative;
+  & .tags-selector-in-card-editor {
+    position: absolute;
+    top: -41px;
+  }
+
+  & .card-editor {
+    margin-top: 41px;
   }
 
   & .full-content {
