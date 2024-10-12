@@ -155,18 +155,23 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
         />
       </RemoveItemHover>
 
-      <FlexContainer class="bottom container">
-        <ThemeButton class="add-card" background-color="front" @click="card.push">
+      <FlexContainer class="bottom-container container">
+        <ButtonSlot
+          content="Criar cards"
+          class="button-resize send-card"
+          :visible="true"
+          @click="card.createAll"
+        >
+          <SendIco />
+        </ButtonSlot>
+
+        <ThemeButton class="button-resize add-card" background-color="front" @click="card.push">
           <FloatDescription content="Adicionar novo card" class="full-content">
             <FlexContainer align-items="center" justify-content="center" class="full-content">
               <PlusIco />
             </FlexContainer>
           </FloatDescription>
         </ThemeButton>
-
-        <ButtonSlot content="Salvar" class="send-card" :visible="true" @click="card.createAll">
-          <SendIco />
-        </ButtonSlot>
       </FlexContainer>
     </FlexContainer>
   </WindowsSlot>
@@ -201,17 +206,21 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
     width: calc(100% - 30px);
   }
 
-  & .bottom {
+  & .bottom-container {
     margin: 15px;
 
+    & .button-resize {
+      flex-shrink: 1;
+    }
+
     & .add-card {
-      width: 100%;
+      width: 80px;
       height: 100%;
-      margin-right: 10px;
+      margin-left: 10px;
     }
 
     & .send-card {
-      width: 120px;
+      width: 100%;
     }
   }
 }
