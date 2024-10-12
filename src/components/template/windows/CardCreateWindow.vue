@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
@@ -8,20 +8,17 @@ import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import PlusIco from '@/components/atoms/icons/PlusIco.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
 import FloatDescription from '@/components/atoms/FloatDescription.vue'
-import CoinButton from '@/components/molecules/CoinButton.vue'
-import TagSelector from '@/components/molecules/TagSelector.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
-import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
-import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
+import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import RemoveItemHover from '@/components/molecules/RemoveItemHover.vue'
+import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
 
 const window = useWindows()
 
@@ -31,47 +28,39 @@ const cards = useCards()
 
 const tags = useTags()
 
-const allTags = computed(() => tags.tags)
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
-const useTrashWidth = () => {
-  const openedValue = '30px'
+const executeAndCloseModal = (callBack: () => void) => {
+  callBack()
 
-  const closedValue = '0px'
-
-  const width = ref(closedValue)
-
-  const open = () => (width.value = openedValue)
-
-  const close = () => (width.value = closedValue)
-
-  return {
-    width,
-    open,
-    close
-  }
+  modal.value?.close()
 }
 
-const useCard = () => {
-  const defaultCard = reactive<Icard>({
+const allTags = computed(() => tags.tags)
+
+const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
+  const templateCard = {
     id: '0',
     content: '',
     date: new Date(),
     tags: []
-  })
+  }
 
-  const props = reactive<{ baseCard: Icard; cards: Icard[] }>({
-    baseCard: defaultCard,
+  const props = reactive<{ globalTags: Itag[]; cards: Icard[] }>({
+    globalTags: [],
     cards: []
   })
 
   const setGlobalTags = (tags: Itag[]) => {
-    props.baseCard = { ...props.baseCard, tags }
+    closeModalCallback(() => {
+      props.globalTags = tags
 
-    if (props.cards.length <= 1) props.cards = [props.baseCard]
+      if (props.cards.length <= 1) props.cards = [{ ...templateCard, tags }]
+    })
   }
 
   const push = () => {
-    props.cards.push(props.baseCard)
+    props.cards.push({ ...templateCard, tags: props.globalTags })
   }
 
   const remove = (index: number) => {
@@ -100,14 +89,13 @@ const useCard = () => {
       excludeTags: tags.excludeTags
     })
 
-    props.cards = [defaultCard]
+    props.cards = [{ ...templateCard, tags: props.globalTags }]
 
     window.cardCreate.close()
   }
 
   return {
     props,
-    defaultCard,
     setGlobalTags,
     push,
     setContent,
@@ -117,9 +105,7 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
-
-const trashWidth = computed(() => card.props.cards.map(() => useTrashWidth()))
+const card = useCard(executeAndCloseModal)
 
 const includeTags = computed(() => tags.includeTags)
 
@@ -133,91 +119,61 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
     @close="window.cardCreate.close"
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
-      <FlexContainer class="top container">
-        <CoinButton description="Criar tag" :border="false" background-color="transparent">
+      <FlexContainer class="base-width top container">
+        <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
           <PencilIco />
-        </CoinButton>
+        </ButtonCoinSlot>
 
-        <FloatModalSlot>
-          <template #button-slot>
-            <CoinButton description="Adicionar tag" :border="false" background-color="transparent">
-              <AddTagIco />
-            </CoinButton>
-          </template>
-
-          <template #container-slot>
-            <TagSelector
-              :all-tags="allTags"
-              :tags-selected="card.props.baseCard.tags"
-              @emit-selected="card.setGlobalTags"
-            />
-          </template>
-        </FloatModalSlot>
-
-        <TagsSelectedView :tags-selected="card.props.baseCard.tags" />
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.props.globalTags"
+          @emit-selected="card.setGlobalTags"
+        />
       </FlexContainer>
 
       <hr class="base-width" />
 
-      <FlexContainer
-        v-for="(unicCard, i) in card.props.cards"
-        :key="i"
-        class="base-width card-to-create"
-        flex-direction="column"
-      >
-        <FloatModalSlot>
-          <template #button-slot>
-            <FlexContainer>
-              <CoinButton
-                description="Adicionar tag"
-                :border="false"
-                background-color="transparent"
-              >
-                <AddTagIco />
-              </CoinButton>
+      <FlexContainer flex-direction="column" class="base-width cards-area">
+        <RemoveItemHover
+          v-for="(unicCard, i) in card.props.cards"
+          :key="i"
+          :id="String(i)"
+          class="card-editor"
+          @emit-delete="(index: string) => card.remove(Number(index))"
+        >
+          <TagSelectorWithList
+            class="tags-selector-in-card-editor"
+            :all-tags="allTags"
+            :tags-checked="unicCard.tags"
+            @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
+          />
 
-              <TagsSelectedView :tags-selected="card.props.cards[i].tags" />
-            </FlexContainer>
-          </template>
-
-          <template #container-slot>
-            <TagSelector
-              :all-tags="allTags"
-              :tags-selected="card.props.cards[i].tags"
-              @emit-selected="(tags: Itag[]) => card.setTags(i, tags)"
-            />
-          </template>
-        </FloatModalSlot>
-        <FlexContainer @mouseenter="trashWidth[i].open" @mouseleave="trashWidth[i].close">
           <ThemeTextArea
             :id="`create-card-${i}`"
             :content="unicCard.content"
             :style="cardStyle.atualStyle"
             @emit-content="(content: string) => card.setContent(i, content)"
           />
-
-          <ThemeButton
-            background-color="front"
-            class="delete-card-button"
-            @click="() => card.remove(i)"
-            :style="{ width: trashWidth[i].width.value }"
-          >
-            <TrashIco />
-          </ThemeButton>
-        </FlexContainer>
+        </RemoveItemHover>
       </FlexContainer>
-      <FlexContainer class="bottom container">
-        <ThemeButton class="add-card" background-color="front" @click="card.push">
+
+      <FlexContainer class="base-width bottom-container">
+        <ButtonSlot
+          content="Criar cards"
+          class="button-resize send-card"
+          :visible="true"
+          @click="card.createAll"
+        >
+          <SendIco />
+        </ButtonSlot>
+
+        <ThemeButton class="button-resize add-card" background-color="front" @click="card.push">
           <FloatDescription content="Adicionar novo card" class="full-content">
             <FlexContainer align-items="center" justify-content="center" class="full-content">
               <PlusIco />
             </FlexContainer>
           </FloatDescription>
         </ThemeButton>
-
-        <ButtonOption content="Salvar" class="send-card" :visible="true" @click="card.createAll">
-          <SendIco />
-        </ButtonOption>
       </FlexContainer>
     </FlexContainer>
   </WindowsSlot>
@@ -228,37 +184,47 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
   width: 500px;
   max-width: 96dvw;
   max-height: 80dvh;
-  overflow: auto;
+  overflow: hidden;
+
   & .base-width {
     width: calc(100% - 30px);
   }
-  & .card-to-create {
-    margin-top: 8px;
+
+  & .cards-area {
+    overflow-y: auto;
+
+    & .tags-selector-in-card-editor {
+      position: absolute;
+      top: -41px;
+    }
+    & .card-editor {
+      width: 100%;
+      margin-top: 41px;
+      margin-bottom: 10px;
+    }
   }
-  & .delete-card-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(206, 35, 35, 0.61);
-    width: 30px;
-  }
+
   & .full-content {
     width: 100%;
     height: 100%;
   }
-  & .container {
+
+  & .bottom-container {
     height: 40px;
-    width: calc(100% - 30px);
-  }
-  & .bottom {
     margin: 15px;
-    & .add-card {
-      width: 100%;
-      height: 100%;
-      margin-right: 10px;
+
+    & .button-resize {
+      flex-shrink: 1;
     }
+
+    & .add-card {
+      width: 80px;
+      height: 100%;
+      margin-left: 10px;
+    }
+
     & .send-card {
-      width: 120px;
+      width: 100%;
     }
   }
 }

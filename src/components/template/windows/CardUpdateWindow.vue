@@ -6,16 +6,13 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
-import TagSelector from '@/components/molecules/TagSelector.vue'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import CoinButton from '@/components/molecules/CoinButton.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
-import TagsSelectedView from '@/components/molecules/TagsSelectedView.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
 
 const cardStyle = useStylesCard()
 
@@ -27,7 +24,15 @@ const tags = useTags()
 
 const allTags = computed(() => tags.tags)
 
-const useCard = () => {
+const modal = ref<InstanceType<typeof FloatModalSlot>>()
+
+const executeAndCloseModal = (callBack: () => void) => {
+  callBack()
+
+  modal.value?.close()
+}
+
+const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
   const cardRef = ref<Icard>({} as Icard)
 
   const _closeWindows = () => window.cardEdit.close()
@@ -39,7 +44,7 @@ const useCard = () => {
   }
 
   const setTags = (tags: Itag[]) => {
-    set({ ...cardRef.value, tags })
+    closeModalCallback(() => set({ ...cardRef.value, tags }))
   }
 
   const saveUpdate = async () => {
@@ -62,7 +67,7 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
+const card = useCard(executeAndCloseModal)
 
 watchEffect(() => card.set(window.cardEdit.props))
 </script>
@@ -75,27 +80,12 @@ watchEffect(() => card.set(window.cardEdit.props))
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer flex-direction="column" align-items="center" class="base-width">
-        <FloatModalSlot class="max-width">
-          <template #button-slot>
-            <FlexContainer align-items="center">
-              <CoinButton
-                description="Adicionar tag"
-                :border="false"
-                background-color="transparent"
-              >
-                <AddTagIco />
-              </CoinButton>
-              <TagsSelectedView :tags-selected="card.cardRef.value.tags" />
-            </FlexContainer>
-          </template>
-          <template #container-slot>
-            <TagSelector
-              :all-tags="allTags"
-              :tags-selected="card.cardRef.value.tags"
-              @emit-selected="card.setTags"
-            />
-          </template>
-        </FloatModalSlot>
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.cardRef.value.tags"
+          @emit-selected="card.setTags"
+        />
+
         <ThemeTextArea
           :style="cardStyle.atualStyle"
           id="card-editor"
@@ -103,14 +93,14 @@ watchEffect(() => card.set(window.cardEdit.props))
           @emit-content="card.setContent"
         />
       </FlexContainer>
-      <ButtonOption
+
+      <ButtonSlot
         content="Confirmar alteração"
-        :visible="true"
         @click="card.saveUpdate"
         class="confirm-button base-width"
       >
         <PencilIco />
-      </ButtonOption>
+      </ButtonSlot>
     </FlexContainer>
   </WindowsSlot>
 </template>

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
 import { reactive } from 'vue'
-import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import EmojiSelector from '@/components/molecules/EmojiSelector.vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
@@ -12,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'emitTagUpdated', v: { emoji: string; name: string; atualName: string }): void
+  (e: 'sendtag', v: Itag): void
 }>()
 
 const tagReative = reactive({
@@ -21,56 +19,52 @@ const tagReative = reactive({
   atualName: props.tag[1]
 })
 
-const nameSet = (name: string) => (tagReative.name = name)
+const sendtag = () => {
+  emit('sendtag', [tagReative.emoji, tagReative.name])
+}
 
-const emojiSet = (emoji: string) => (tagReative.emoji = emoji)
+const nameSetAndSend = (name: string) => {
+  tagReative.name = name
 
-const sendContent = () => {
-  emit('emitTagUpdated', tagReative)
+  sendtag()
+}
+
+const emojiSetAnsSend = (emoji: string) => {
+  tagReative.emoji = emoji
+
+  sendtag()
 }
 </script>
 
 <template>
-  <div class="card-editor-container">
-    <div class="tag-area">
-      <EmojiSelector
-        :seleted-emoji="tagReative.emoji"
-        @change-emoji="emojiSet"
-        :emojis="props.emojis"
-      />
-      <ThemeImputText
-        @emit-content="nameSet"
-        :init-content="tagReative.name"
-        key-id="tag-editor"
-        placeholder="Nome da tag"
-        class="imput-text"
-      />
-    </div>
-    <ButtonOption content="Confirmar" @click="sendContent" class="imput">
-      <CheckIco />
-    </ButtonOption>
+  <div class="tag-editor-container">
+    <EmojiSelector
+      :seleted-emoji="tagReative.emoji"
+      @change-emoji="emojiSetAnsSend"
+      :emojis="props.emojis"
+      class="emoji"
+    />
+
+    <ThemeImputText
+      @emit-content="nameSetAndSend"
+      :init-content="tagReative.name"
+      key-id="tag-editor"
+      placeholder="Nome da tag"
+      class="imput-text"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
-.card-editor-container {
-  width: 340px;
-  max-width: 95dvw;
+.tag-editor-container {
+  width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 15px;
-  box-sizing: border-box;
-  & .tag-area {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    & .imput-text {
-      width: calc(100% - 55px);
-      height: 42px;
-    }
+  justify-content: space-between;
+
+  & .imput-text {
+    width: calc(100% - 55px);
+    height: 42px;
   }
 }
 </style>

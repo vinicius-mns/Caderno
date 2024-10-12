@@ -22,6 +22,7 @@ const emitWidth = (v: number) => emit('emitWidth', v)
       <ThemeP content="Tamanho dos cards" />
       <ThemeP :content="`${props.width}px`" class="range-value" />
     </div>
+
     <RangeImput
       :title="{ visible: false, content: 'Quantidade de colunas' }"
       :limit="{ min: 200, max: 860 }"

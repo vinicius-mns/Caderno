@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
-import ButtonOption from '@/components/molecules/ButtonOption.vue'
-import EraserIco from '@/components/atoms/icons/EraserIco.vue'
-import CardCrossIco from '@/components/atoms/icons/CardCrossIco.vue'
-import TrashIco from '@/components/atoms/icons/TrashIco.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import TagView from '../molecules/TagView.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
-import type { Itag } from '@/stores/tags/Interfaces'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import PencilIco from '../atoms/icons/PencilIco.vue'
+import EraserIco from '../atoms/icons/EraserIco.vue'
+import CardCrossIco from '../atoms/icons/CardCrossIco.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
 
 const props = defineProps<{ tag: Itag }>()
 
@@ -41,21 +41,26 @@ const emitDeleteCardsWithTag = () => emit('deleteCardsWithtag', props.tag)
         </ThemeButton>
       </FlexContainer>
     </template>
+
     <template #container-slot>
       <ModalCard class="options-container" @click="modalClose" background-color="front">
         <TagView :tag="props.tag" class="tag-preview" />
-        <ButtonOption content="Editar tag" @click="emitUpdate">
+
+        <ButtonSlot content="Editar Tag" @click="emitUpdate">
           <PencilIco />
-        </ButtonOption>
-        <ButtonOption content="Remover tag da cards">
+        </ButtonSlot>
+
+        <ButtonSlot content="Remover tag de cards">
           <EraserIco />
-        </ButtonOption>
-        <ButtonOption content="Deletar cards com tag" @click="emitDeleteCardsWithTag">
+        </ButtonSlot>
+
+        <ButtonSlot content="Remover cards com tag" @click="emitDeleteCardsWithTag">
           <CardCrossIco />
-        </ButtonOption>
-        <ButtonOption content="Deletar tag" @click="emitDelete">
+        </ButtonSlot>
+
+        <ButtonSlot content="Deletar tag" @click="emitDelete">
           <TrashIco />
-        </ButtonOption>
+        </ButtonSlot>
       </ModalCard>
     </template>
   </FloatModalSlot>

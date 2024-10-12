@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import TagEditor from '@/components/organisms/TagEditor.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import { useEmoji } from '@/stores/emojis'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
+import FlexContainer from '@/components/atoms/FlexContainer.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import CheckIco from '@/components/atoms/icons/CheckIco.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 
 const window = useWindows()
 
@@ -17,26 +21,40 @@ const emojis = useEmoji()
 
 const allEmojis = computed(() => emojis.getAll())
 
-const tagUpdate = async (param: { emoji: string; name: string; atualName: string }) => {
-  try {
-    const { emoji, name, atualName } = param
+const useTag = () => {
+  const tagRef = ref<Itag>(window.tagEditor.props)
 
-    await tags.updateTag({ emoji, name, atualName })
+  const setTag = (tag: Itag) => (tagRef.value = tag)
 
-    await cards.updateAllTags({ tag: [emoji, name], name: atualName })
+  const updateTag = async () => {
+    try {
+      const atualName = window.tagEditor.props[1]
 
-    await cards.atualizeReactiveCards({
-      includeTags: tags.includeTags,
-      excludeTags: tags.excludeTags
-    })
+      await tags.updateTag({ emoji: tagRef.value[0], name: tagRef.value[1], atualName })
 
-    window.tagEditor.close()
-  } catch (e) {
-    e instanceof Error
-      ? window.errorMessage.open(e.message)
-      : window.errorMessage.open('erro inesperado')
+      await cards.updateAllTags({ tag: tagRef.value, name: atualName })
+
+      await cards.atualizeReactiveCards({
+        includeTags: tags.includeTags,
+        excludeTags: tags.excludeTags
+      })
+
+      window.tagEditor.close()
+    } catch (e) {
+      e instanceof Error
+        ? window.errorMessage.open(e.message)
+        : window.errorMessage.open('erro inesperado')
+    }
+  }
+
+  return {
+    tagRef,
+    setTag,
+    updateTag
   }
 }
+
+const tag = useTag()
 </script>
 
 <template>
@@ -45,8 +63,22 @@ const tagUpdate = async (param: { emoji: string; name: string; atualName: string
     :title="window.tagEditor.title"
     @close="window.tagEditor.close"
   >
-    <TagEditor :tag="window.tagEditor.props" :emojis="allEmojis" @emit-tag-updated="tagUpdate" />
+    <FlexContainer flex-direction="column" class="tag-update">
+      <TagEditor :tag="window.tagEditor.props" :emojis="allEmojis" @sendtag="tag.setTag" />
+
+      <ButtonSlot content="Confirmar alteração" class="check-button" @click="tag.updateTag()">
+        <CheckIco />
+      </ButtonSlot>
+    </FlexContainer>
   </WindowsSlot>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.tag-update {
+  padding: 15px;
+
+  & .check-button {
+    margin-top: 10px;
+  }
+}
+</style>

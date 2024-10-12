@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import CardView from '../molecules/CardView.vue'
 import type { Icard } from '@/stores/cards/Interfaces'
-import FloatModalSlot from '../atoms/FloatModalSlot.vue'
-import CoinButton from '../molecules/CoinButton.vue'
-import PencilIco from '../atoms/icons/PencilIco.vue'
-import ModalCard from '../atoms/ModalCard.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
-import TrashIco from '../atoms/icons/TrashIco.vue'
-import { ref, watch } from 'vue'
-import SearchIco from '../atoms/icons/SearchIco.vue'
-import ShareIco from '../atoms/icons/ShareIco.vue'
-import TagIco from '../atoms/icons/TagIco.vue'
-import TagSelector from '../molecules/TagSelector.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 
-const props = defineProps<{ card: Icard; allTags: Itag[] }>()
+import { ref, watch } from 'vue'
+
+import ModalCard from '../atoms/ModalCard.vue'
+import FloatModalSlot from '../atoms/FloatModalSlot.vue'
+
+import CardView from '../molecules/CardView.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import SearchIco from '../atoms/icons/SearchIco.vue'
+import TagIco from '../atoms/icons/TagIco.vue'
+import PencilIco from '../atoms/icons/PencilIco.vue'
+import ShareIco from '../atoms/icons/ShareIco.vue'
+import TrashIco from '../atoms/icons/TrashIco.vue'
+
+const props = defineProps<{ card: Icard; allTags: Itag[]; width: string }>()
 
 const emit = defineEmits<{
   (e: 'update', v: Icard): void
@@ -26,144 +27,80 @@ const emit = defineEmits<{
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
-const modalClose = () => modal.value?.close()
+const modal2 = ref<InstanceType<typeof FloatModalSlot>>()
 
-const modalCloseAfter = (f: () => void) => {
-  f()
-  modalClose()
+const executeAndCloseModal = (callBack: () => void) => {
+  callBack()
+
+  modal.value?.close()
+
+  modal2.value?.close()
 }
 
-const useFastTagEditor = () => {
-  const tagsRef = ref<Itag[]>(props.card.tags)
-
-  const _isModify = () => {
-    if (tagsRef.value.length !== props.card.tags.length) return true
-
-    const tagsAtualSort = [...props.card.tags].sort()
-    const tagsRefSort = [...tagsRef.value].sort()
-
-    for (let i = 0; i < tagsAtualSort.length; i += 1) {
-      const tagsAtualSortName = tagsAtualSort[i][1]
-
-      const tagsRefSortName = tagsRefSort[i][1]
-
-      if (tagsAtualSortName !== tagsRefSortName) return true
-    }
-
-    return false
-  }
-
-  const tagsRefSet = (tags: Itag[]) => (tagsRef.value = tags)
-
-  const emitTagsUpdated = () => {
-    if (_isModify()) {
-      emit('tagUpdated', { ...props.card, tags: tagsRef.value })
-    }
-  }
-
-  return {
-    tagsRef,
-    tagsRefSet,
-    emitTagsUpdated
-  }
+const emitTagsUpdated = (tags: Itag[]) => {
+  executeAndCloseModal(() => emit('tagUpdated', { ...props.card, tags }))
 }
 
 const useMouse = () => {
   const mouseIn = ref(false)
 
-  const viewTagSelector = ref(false)
+  const showTagSelector = ref(false)
 
   const mouseInSet = (v: boolean) => (mouseIn.value = v)
 
   const updateStatus = () => {
-    viewTagSelector.value = mouseIn.value
+    showTagSelector.value = mouseIn.value
   }
 
   watch(mouseIn, updateStatus, { deep: true })
 
-  return {
-    viewTagSelector,
-    mouseInSet
-  }
+  return { showTagSelector, mouseInSet }
 }
 
-const fastTagEditor = useFastTagEditor()
-
-const mouse = useMouse()
-
-const resetTags = () => fastTagEditor.tagsRefSet(props.card.tags)
+const { mouseInSet, showTagSelector } = useMouse()
 </script>
 
 <template>
   <div
     class="card-with-options-container"
-    @mouseenter="() => mouse.mouseInSet(true)"
-    @mouseleave="() => mouse.mouseInSet(false)"
-    @click="() => resetTags()"
+    @mouseenter="() => mouseInSet(true)"
+    @mouseleave="() => mouseInSet(false)"
   >
     <FloatModalSlot ref="modal">
       <template #button-slot>
-        <CardView :card="props.card" />
+        <CardView :card="props.card" class="card" />
       </template>
+
       <template #container-slot>
         <ModalCard class="modal-card" background-color="front">
-          <ButtonOption
+          <ButtonSlot
             content="Visualizar"
-            @click="modalCloseAfter(() => emit('view', props.card))"
+            @click="executeAndCloseModal(() => emit('view', props.card))"
           >
             <SearchIco />
-          </ButtonOption>
-          <ButtonOption content="Editar" @click="modalCloseAfter(() => emit('update', props.card))">
+          </ButtonSlot>
+
+          <ButtonSlot
+            content="Editar"
+            @click="executeAndCloseModal(() => emit('update', props.card))"
+          >
             <PencilIco />
-          </ButtonOption>
-          <ButtonOption
+          </ButtonSlot>
+
+          <ButtonSlot
             content="Compartilhar"
-            @click="modalCloseAfter(() => emit('share', props.card))"
+            @click="executeAndCloseModal(() => emit('share', props.card))"
           >
             <ShareIco />
-          </ButtonOption>
-          <FloatModalSlot
-            v-show="mouse.viewTagSelector.value"
-            @close="modalCloseAfter(() => fastTagEditor.emitTagsUpdated())"
-          >
-            <template #button-slot>
-              <ButtonOption content="Tags" indicator="arrow-right">
-                <TagIco />
-              </ButtonOption>
-            </template>
-            <template #container-slot>
-              <TagSelector
-                :all-tags="props.allTags"
-                :tags-selected="props.card.tags"
-                @emit-selected="fastTagEditor.tagsRefSet"
-              />
-            </template>
-          </FloatModalSlot>
-          <ButtonOption
-            content="Deletar card"
-            @click="modalCloseAfter(() => emit('delete', props.card))"
+          </ButtonSlot>
+
+          <ButtonSlot
+            content="Deletar"
+            @click="executeAndCloseModal(() => emit('delete', props.card))"
           >
             <TrashIco />
-          </ButtonOption>
+          </ButtonSlot>
         </ModalCard>
-      </template>
-    </FloatModalSlot>
-    <FloatModalSlot
-      class="tag-editor"
-      v-show="mouse.viewTagSelector.value"
-      @close="() => fastTagEditor.emitTagsUpdated()"
-    >
-      <template #button-slot>
-        <CoinButton description="Tags" :border="false">
-          <TagIco />
-        </CoinButton>
-      </template>
-      <template #container-slot>
-        <TagSelector
-          :all-tags="props.allTags"
-          :tags-selected="fastTagEditor.tagsRef.value"
-          @emit-selected="fastTagEditor.tagsRefSet"
-        />
       </template>
     </FloatModalSlot>
   </div>
@@ -171,10 +108,16 @@ const resetTags = () => fastTagEditor.tagsRefSet(props.card.tags)
 
 <style scoped lang="scss">
 .card-with-options-container {
+  transition: all 0.3s;
   position: relative;
+  width: v-bind('props.width');
+  max-width: 95dvw;
+  margin: 5px;
+
   & .modal-card {
     width: 200px;
   }
+
   & .tag-editor {
     position: absolute;
     top: 0;

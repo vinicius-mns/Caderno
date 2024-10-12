@@ -14,12 +14,10 @@ import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import TagsFilterCards from '../organisms/TagsFilterCards.vue'
-import CoinButton from '../molecules/CoinButton.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CardCreateIco from '../atoms/icons/CardCreateIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
-import ButtonOption from '../molecules/ButtonOption.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
@@ -130,8 +128,8 @@ const cardUpdate = async (card: Icard) => {
         v-for="(card, i) in cardsReverse"
         :key="i"
         :card="card"
-        class="card"
         :all-tags="tags.tags"
+        :width="width"
         @update="openCardUpdate"
         @delete="window.cardDelete.open"
         @tag-updated="cardUpdate"
@@ -149,11 +147,6 @@ const cardUpdate = async (card: Icard) => {
   min-height: 100dvh;
   & .cards-main {
     padding-top: 20px;
-    & .card {
-      width: v-bind('width');
-      max-width: 95dvw;
-      margin: 5px;
-    }
   }
 }
 </style>
