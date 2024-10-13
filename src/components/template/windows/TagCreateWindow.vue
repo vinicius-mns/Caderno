@@ -137,6 +137,7 @@ const tagsHandle = useTagsHandle()
 
   & .buttons-area {
     padding: 10px;
+    padding-bottom: 16px;
 
     & .button-tag {
       flex-shrink: 1;
