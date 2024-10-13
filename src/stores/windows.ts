@@ -29,7 +29,7 @@ export const useWindows = defineStore('windows', () => {
 
   const cardDelete = newWindow({ title: 'Deletar card', props: initCard })
 
-  const tagCreate = newWindow({ title: 'Criar tag', props: initTag })
+  const tagCreate = newWindow({ title: 'Criar tag', props: null })
 
   const tagEditor = newWindow({ title: 'Editar tag', props: initTag })
 
