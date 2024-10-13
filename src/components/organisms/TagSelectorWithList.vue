@@ -25,10 +25,8 @@ const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const closeModal = () => modal.value?.close()
 
-const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) => {
-  const alltags: Itag[] = p.allTags
-
-  const tagsSelected = ref<Itag[]>(p.tagsChecked)
+const useTags = (e: typeof emit) => {
+  const tagsSelected = ref<Itag[]>(props.tagsChecked)
 
   const butttonStatusClass = computed(() => {
     const status = {
@@ -36,9 +34,9 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
       locked: 'locked'
     }
 
-    if (tagsSelected.value.length !== p.tagsChecked.length) return status.unlocked
+    if (tagsSelected.value.length !== props.tagsChecked.length) return status.unlocked
 
-    const tagsAtualSort = [...p.tagsChecked].sort()
+    const tagsAtualSort = [...props.tagsChecked].sort()
 
     const tagsRefSort = [...tagsSelected.value].sort()
 
@@ -60,7 +58,7 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
   const isSelectedTag = (tag: Itag) => tagsSelected.value.map((t) => t[1]).includes(tag[1])
 
   const addOrRemoveTag = (name: string) => {
-    const findTag = alltags.find((tag) => tag[1] === name)
+    const findTag = props.allTags.find((tag) => tag[1] === name)
 
     const atualTags = tagsSelected.value
 
@@ -77,7 +75,6 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
   }
 
   return {
-    alltags,
     tagsSelected,
     butttonStatusClass,
     isSelectedTag,
@@ -85,7 +82,7 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
   }
 }
 
-const tags = useTags(props, emit)
+const tags = useTags(emit)
 
 const emitTagsAndCloseModal = () => {
   emit('emitSelected', tags.tagsSelected.value)
@@ -121,7 +118,7 @@ const emitTagsAndCloseModal = () => {
       <ModalCard class="modal-card-tags">
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
-            v-for="(tag, i) in tags.alltags"
+            v-for="(tag, i) in props.allTags"
             :key="i"
             :id="tag[1]"
             :is-checked="tags.isSelectedTag(tag)"
