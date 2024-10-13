@@ -120,7 +120,12 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer class="base-width top container">
-        <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
+        <ButtonCoinSlot
+          content="Criar tag"
+          :border="false"
+          background-color="transparent"
+          @click="window.tagCreate.open(null)"
+        >
           <PencilIco />
         </ButtonCoinSlot>
 
