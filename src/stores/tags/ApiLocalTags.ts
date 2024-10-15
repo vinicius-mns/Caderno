@@ -107,6 +107,30 @@ export class TagsApiLocal implements ItagsApi {
     })
   }
 
+  public createManyTags = (param: { emoji: string; name: string }[]) => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const tags: Itag[] = param.map(({ emoji, name }) => {
+            this._errorValidateTag([emoji, name])
+
+            return [emoji, name]
+          })
+
+          const storage = this._storage.read()
+
+          const newTags = [...storage.tags, ...tags]
+
+          this._storage.setAndReturn({ ...storage, tags: newTags })
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
   public readTag = (name: string) => {
     return new Promise<Itag>((resolve, reject) => {
       setTimeout(() => {
