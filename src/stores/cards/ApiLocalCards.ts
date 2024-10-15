@@ -31,20 +31,21 @@ export class CardsApiLocal implements ICardsApi {
       const { content, tags } = param
 
       setTimeout(() => {
-        const newCard: Icard = {
-          content,
-          tags,
-          date: new Date(),
-          id: this._idGenerete()
-        }
+        try {
+          const newCard: Icard = {
+            content,
+            tags,
+            date: new Date(),
+            id: this._idGenerete()
+          }
 
-        const invalidateCard = this._validateCard(newCard)
+          this._validateCard(newCard)
 
-        if (invalidateCard) {
-          reject(new Error(invalidateCard))
-        } else {
           this._insetCardOnDb(newCard)
+
           resolve(true)
+        } catch (e) {
+          reject(e)
         }
       }, 0)
     })
@@ -125,17 +126,19 @@ export class CardsApiLocal implements ICardsApi {
   public update = (card: Icard) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(async () => {
-        const invalidateCard = this._validateCard(card)
+        try {
+          this._validateCard(card)
 
-        if (invalidateCard) reject(new Error(invalidateCard))
+          const deleteCard = await this.delete(card.id)
 
-        const deleteCard = await this.delete(card.id)
+          if (!deleteCard) reject(new Error('not found'))
 
-        if (!deleteCard) reject(new Error('not found'))
+          this._insetCardOnDb(card)
 
-        this._insetCardOnDb(card)
-
-        resolve(true)
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
       }, 0)
     })
   }
