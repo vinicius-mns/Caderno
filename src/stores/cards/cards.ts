@@ -23,12 +23,17 @@ export const useCards = defineStore('cards storage', () => {
       cards.value = allCards
     } catch (e) {
       console.error(e)
+
       cards.value = [_errorCard]
     }
   }
 
   const create = async (param: { content: string; tags: Itag[] }): Promise<void> => {
     await apiCards.create(param)
+  }
+
+  const createMany = async (param: { content: string; tags: Itag[] }[]) => {
+    await apiCards.createMany(param)
   }
 
   const read = async (filter: {
@@ -100,6 +105,7 @@ export const useCards = defineStore('cards storage', () => {
     cards,
     init,
     create,
+    createMany,
     read,
     atualizeReactiveCards,
     getCard,
