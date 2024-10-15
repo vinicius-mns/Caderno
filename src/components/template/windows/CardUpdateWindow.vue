@@ -48,14 +48,20 @@ const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
   }
 
   const saveUpdate = async () => {
-    await cards.update(cardRef.value)
+    try {
+      await cards.update(cardRef.value)
 
-    await cards.atualizeReactiveCards({
-      includeTags: tags.includeTags,
-      excludeTags: tags.excludeTags
-    })
+      await cards.atualizeReactiveCards({
+        includeTags: tags.includeTags,
+        excludeTags: tags.excludeTags
+      })
 
-    _closeWindows()
+      _closeWindows()
+    } catch (e) {
+      e instanceof Error
+        ? window.errorMessage.open(e.message)
+        : window.errorMessage.open('erro inesperado')
+    }
   }
 
   return {
