@@ -41,6 +41,12 @@ export const useTags = defineStore('tags', () => {
     if (created) init()
   }
 
+  const createManyTags = async (param: { emoji: string; name: string }[]) => {
+    const created = await tagsApi.createManyTags(param)
+
+    if (created) init()
+  }
+
   const readTag = async (name: string) => {
     try {
       const tag = await tagsApi.readTag(name)
@@ -143,6 +149,7 @@ export const useTags = defineStore('tags', () => {
     excludeTags,
     getNames,
     createTag,
+    createManyTags,
     readAllTags,
     readTag,
     updateTag,
