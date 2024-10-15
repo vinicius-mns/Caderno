@@ -14,9 +14,11 @@ export class CardsApiLocal implements ICardsApi {
   ) {}
 
   private _validateCard = (card: Icard) => {
-    if (!card.content) return 'card content não pode estar vazio'
-    if (typeof card.content !== 'string') return 'card content precisa ser uma texto'
-    if (card.tags.length < 1) return 'selecione ao menos 1 tag'
+    if (!card.content) throw new Error('card content não pode estar vazio')
+
+    if (typeof card.content !== 'string') throw new Error('card content precisa ser uma texto')
+
+    if (card.tags.length < 1) throw new Error('selecione ao menos 1 tag')
   }
 
   private _insetCardOnDb = (card: Icard) => {
