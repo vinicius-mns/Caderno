@@ -54,6 +54,33 @@ export class CardsApiLocal implements ICardsApi {
     })
   }
 
+  public createMany = (param: { content: string; tags: Itag[] }[]) => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const newCards = param.map(({ content, tags }) => {
+            const newCard: Icard = {
+              content,
+              tags,
+              date: new Date(),
+              id: this._idGenerete()
+            }
+
+            this._validateCard(newCard)
+
+            return newCard
+          })
+
+          this._insetCardOnDb(newCards)
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
   private _filterCardsByTags = (param: { cards: Icard[]; tagsName: string[] }) => {
     const { cards, tagsName } = param
 
