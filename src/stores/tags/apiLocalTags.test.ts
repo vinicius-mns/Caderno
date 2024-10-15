@@ -48,6 +48,43 @@ describe('ApiLocalCards', () => {
     })
   })
 
+  describe('Create many tags', () => {
+    test('Cria com sucesso', async () => {
+      const create = await tagsApi.createManyTags([
+        { emoji: '💡', name: 'lampada' },
+        { emoji: '🐦', name: 'passarinho' }
+      ])
+
+      expect(create).toBe(true)
+    })
+
+    test('Falha com sucesso ao nao passar emoji', async () => {
+      try {
+        await tagsApi.createManyTags([
+          { emoji: '', name: 'lampada' },
+          { emoji: '🐦', name: 'passarinho' }
+        ])
+      } catch (e) {
+        expect(e).instanceOf(Error)
+
+        e instanceof Error && expect(e.message).toBe('Emoji não pode ser vazio')
+      }
+    })
+
+    test('Falha com sucesso ao nao passar content', async () => {
+      try {
+        await tagsApi.createManyTags([
+          { emoji: '💡', name: 'lampada' },
+          { emoji: '🐦', name: '' }
+        ])
+      } catch (e) {
+        expect(e).instanceOf(Error)
+
+        e instanceof Error && expect(e.message).toBe('Tag precisa ter ao menos 2 characteres')
+      }
+    })
+  })
+
   describe('read', () => {
     test('Le todas as tags com sucesso', async () => {
       await tagsApi.createTag({ emoji: '💡', name: 'lampada' })
