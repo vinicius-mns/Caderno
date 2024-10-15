@@ -21,9 +21,12 @@ export class CardsApiLocal implements ICardsApi {
     if (card.tags.length < 1) throw new Error('selecione ao menos 1 tag')
   }
 
-  private _insetCardOnDb = (card: Icard) => {
+  private _insetCardOnDb = (card: Icard | Icard[]) => {
     const storage = this._storage.read()
-    this._storage.setAndReturn([...storage, card])
+
+    Array.isArray(card)
+      ? this._storage.setAndReturn([...storage, ...card])
+      : this._storage.setAndReturn([...storage, card])
   }
 
   public create = (param: { content: string; tags: Itag[] }) => {
