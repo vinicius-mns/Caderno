@@ -50,9 +50,9 @@ const useTagsHandle = () => {
 
   const createTags = async () => {
     try {
-      const promises = tagsList.value.map((t) => tags.createTag({ emoji: t[0], name: t[1] }))
+      const tagsObject = tagsList.value.map((t) => ({ emoji: t[0], name: t[1] }))
 
-      await Promise.all(promises)
+      await tags.createManyTags(tagsObject)
 
       window.tagCreate.close()
 
