@@ -16,11 +16,11 @@ import TagUpdateWindow from './TagUpdateWindow.vue'
     <CardDeleteWindow />
     <CardUpdateWindow />
     <ConfigWindow />
-    <ErrorMessageWindow />
     <TagCreateWindow />
     <TagDeleteCardWindow />
     <TagDeleteWindow />
     <TagUpdateWindow />
+    <ErrorMessageWindow />
   </div>
 </template>
 
