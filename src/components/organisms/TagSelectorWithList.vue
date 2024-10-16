@@ -12,10 +12,16 @@ import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 
-const props = defineProps<{
-  allTags: Itag[]
-  tagsChecked: Itag[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    allTags: Itag[]
+    tagsChecked: Itag[]
+    showList: boolean
+  }>(),
+  {
+    showList: true
+  }
+)
 
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
@@ -25,7 +31,7 @@ const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const closeModal = () => modal.value?.close()
 
-const useTags = (e: typeof emit) => {
+const useTags = () => {
   const tagsSelected = ref<Itag[]>(props.tagsChecked)
 
   const butttonStatusClass = computed(() => {
@@ -70,8 +76,6 @@ const useTags = (e: typeof emit) => {
       if (isSelectedTag(findTag)) removeTag(findTag)
       else addTag(findTag)
     }
-
-    e('emitSelected', tagsSelected.value)
   }
 
   return {
@@ -82,12 +86,14 @@ const useTags = (e: typeof emit) => {
   }
 }
 
-const tags = useTags(emit)
+const tags = useTags()
 
 const emitTagsAndCloseModal = () => {
-  emit('emitSelected', tags.tagsSelected.value)
+  if (tags.butttonStatusClass.value === 'unlocked') {
+    emit('emitSelected', tags.tagsSelected.value)
 
-  closeModal()
+    closeModal()
+  }
 }
 </script>
 
@@ -95,11 +101,11 @@ const emitTagsAndCloseModal = () => {
   <FloatModalSlot ref="modal" class="max-width">
     <template #button-slot>
       <FlexContainer class="button-tags-container max-width">
-        <ButtonCoinSlot content="Adicionar tag" :border="false" background-color="transparent">
+        <ButtonCoinSlot content="Selecionar tags" :border="false" background-color="transparent">
           <AddTagIco />
         </ButtonCoinSlot>
 
-        <FlexContainer class="tags-selected-container max-width">
+        <FlexContainer class="tags-selected-container max-width" v-if="props.showList">
           <ButtonCoinSlot
             v-for="(tag, i) in tags.tagsSelected.value"
             :key="i"
@@ -132,7 +138,7 @@ const emitTagsAndCloseModal = () => {
 
         <ButtonSlot
           content="Confirmar alteração"
-          :class="[tags.butttonStatusClass, 'confirm-button']"
+          :class="[tags.butttonStatusClass.value, 'confirm-button']"
           @click="emitTagsAndCloseModal()"
         >
           <CheckIco />
@@ -171,9 +177,14 @@ const emitTagsAndCloseModal = () => {
     margin-top: 10px;
   }
 
-  & .block {
+  & .locked {
+    background-color: rgba(255, 0, 0, 0.5);
     cursor: not-allowed;
     opacity: 30%;
+  }
+
+  & .unlocked {
+    background-color: rgba(0, 128, 0, 0.5);
   }
 }
 </style>
