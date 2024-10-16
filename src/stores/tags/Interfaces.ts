@@ -21,6 +21,7 @@ export interface IFilterMethods {
 
 export interface ItagsApi {
   createTag: (param: { emoji: string; name: string }) => Promise<boolean>
+  createManyTags: (param: { emoji: string; name: string }[]) => Promise<boolean>
   readTag: (name: string) => Promise<Itag>
   readAllTags: () => Promise<Itag[]>
   updateTag: (param: { emoji: string; name: string; atualName: string }) => Promise<boolean>

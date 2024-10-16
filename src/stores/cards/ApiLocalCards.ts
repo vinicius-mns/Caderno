@@ -14,14 +14,19 @@ export class CardsApiLocal implements ICardsApi {
   ) {}
 
   private _validateCard = (card: Icard) => {
-    if (!card.content) return 'card content não pode estar vazio'
-    if (typeof card.content !== 'string') return 'card content precisa ser uma texto'
-    if (card.tags.length < 1) return 'selecione ao menos 1 tag'
+    if (!card.content) throw new Error('card content não pode estar vazio')
+
+    if (typeof card.content !== 'string') throw new Error('card content precisa ser uma texto')
+
+    if (card.tags.length < 1) throw new Error('selecione ao menos 1 tag')
   }
 
-  private _insetCardOnDb = (card: Icard) => {
+  private _insetCardOnDb = (card: Icard | Icard[]) => {
     const storage = this._storage.read()
-    this._storage.setAndReturn([...storage, card])
+
+    Array.isArray(card)
+      ? this._storage.setAndReturn([...storage, ...card])
+      : this._storage.setAndReturn([...storage, card])
   }
 
   public create = (param: { content: string; tags: Itag[] }) => {
@@ -29,20 +34,48 @@ export class CardsApiLocal implements ICardsApi {
       const { content, tags } = param
 
       setTimeout(() => {
-        const newCard: Icard = {
-          content,
-          tags,
-          date: new Date(),
-          id: this._idGenerete()
-        }
+        try {
+          const newCard: Icard = {
+            content,
+            tags,
+            date: new Date(),
+            id: this._idGenerete()
+          }
 
-        const invalidateCard = this._validateCard(newCard)
+          this._validateCard(newCard)
 
-        if (invalidateCard) {
-          reject(new Error(invalidateCard))
-        } else {
           this._insetCardOnDb(newCard)
+
           resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
+  public createMany = (param: { content: string; tags: Itag[] }[]) => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const newCards = param.map(({ content, tags }) => {
+            const newCard: Icard = {
+              content,
+              tags,
+              date: new Date(),
+              id: this._idGenerete()
+            }
+
+            this._validateCard(newCard)
+
+            return newCard
+          })
+
+          this._insetCardOnDb(newCards)
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
         }
       }, 0)
     })
@@ -123,17 +156,19 @@ export class CardsApiLocal implements ICardsApi {
   public update = (card: Icard) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(async () => {
-        const invalidateCard = this._validateCard(card)
+        try {
+          this._validateCard(card)
 
-        if (invalidateCard) reject(new Error(invalidateCard))
+          const deleteCard = await this.delete(card.id)
 
-        const deleteCard = await this.delete(card.id)
+          if (!deleteCard) reject(new Error('not found'))
 
-        if (!deleteCard) reject(new Error('not found'))
+          this._insetCardOnDb(card)
 
-        this._insetCardOnDb(card)
-
-        resolve(true)
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
       }, 0)
     })
   }

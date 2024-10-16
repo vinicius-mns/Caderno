@@ -23,17 +23,17 @@ export const useCards = defineStore('cards storage', () => {
       cards.value = allCards
     } catch (e) {
       console.error(e)
+
       cards.value = [_errorCard]
     }
   }
 
   const create = async (param: { content: string; tags: Itag[] }): Promise<void> => {
-    try {
-      await apiCards.create(param)
-    } catch (e) {
-      if (e instanceof Error) console.error(e)
-      else console.log('erro inesperado ao criar card')
-    }
+    await apiCards.create(param)
+  }
+
+  const createMany = async (param: { content: string; tags: Itag[] }[]) => {
+    await apiCards.createMany(param)
   }
 
   const read = async (filter: {
@@ -85,12 +85,7 @@ export const useCards = defineStore('cards storage', () => {
   }
 
   const update = async (card: Icard) => {
-    try {
-      await apiCards.update(card)
-    } catch (e) {
-      if (e instanceof Error) console.error(e)
-      else console.log('erro inesperado ao atualizar card')
-    }
+    await apiCards.update(card)
   }
 
   const deleteCard = async (id: string) => {
@@ -110,6 +105,7 @@ export const useCards = defineStore('cards storage', () => {
     cards,
     init,
     create,
+    createMany,
     read,
     atualizeReactiveCards,
     getCard,

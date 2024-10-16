@@ -24,9 +24,9 @@ export class TagsApiLocal implements ItagsApi {
 
     const content = tag[1]
 
-    if (emoji.length < 1) return 'Emoji não pode ser vazio'
+    if (emoji.length < 1) throw new Error('Emoji não pode ser vazio')
 
-    if (content.length < 2) return 'Tag precisa ter ao menos 2 characteres'
+    if (content.length < 2) throw new Error('Tag precisa ter ao menos 2 characteres')
   }
 
   private _tagDelete = (name: string) => {
@@ -84,15 +84,13 @@ export class TagsApiLocal implements ItagsApi {
   }
 
   public createTag = (param: { emoji: string; name: string }) => {
-    const { emoji, name } = param
-
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(() => {
-        const invalidateTag = this._errorValidateTag([emoji, name])
+        try {
+          const { emoji, name } = param
 
-        if (invalidateTag) {
-          reject(new Error(invalidateTag))
-        } else {
+          this._errorValidateTag([emoji, name])
+
           const storage = this._storage.read()
 
           const tag: Itag = [emoji, name]
@@ -102,6 +100,32 @@ export class TagsApiLocal implements ItagsApi {
           this._storage.setAndReturn({ ...storage, tags: newTags })
 
           resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
+  public createManyTags = (param: { emoji: string; name: string }[]) => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const tags: Itag[] = param.map(({ emoji, name }) => {
+            this._errorValidateTag([emoji, name])
+
+            return [emoji, name]
+          })
+
+          const storage = this._storage.read()
+
+          const newTags = [...storage.tags, ...tags]
+
+          this._storage.setAndReturn({ ...storage, tags: newTags })
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
         }
       }, 0)
     })

@@ -80,18 +80,22 @@ const useCard = (closeModalCallback: typeof executeAndCloseModal) => {
   }
 
   const createAll = async () => {
-    const promises = props.cards.map((c) => cards.create(c))
+    try {
+      await cards.createMany(props.cards)
 
-    await Promise.all(promises)
+      await cards.atualizeReactiveCards({
+        includeTags: tags.includeTags,
+        excludeTags: tags.excludeTags
+      })
 
-    await cards.atualizeReactiveCards({
-      includeTags: tags.includeTags,
-      excludeTags: tags.excludeTags
-    })
+      props.cards = [{ ...templateCard, tags: props.globalTags }]
 
-    props.cards = [{ ...templateCard, tags: props.globalTags }]
-
-    window.cardCreate.close()
+      window.cardCreate.close()
+    } catch (e) {
+      e instanceof Error
+        ? window.errorMessage.open(e.message)
+        : window.errorMessage.open('erro inesperado')
+    }
   }
 
   return {
@@ -120,7 +124,12 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer class="base-width top container">
-        <ButtonCoinSlot content="Criar tag" :border="false" background-color="transparent">
+        <ButtonCoinSlot
+          content="Criar tag"
+          :border="false"
+          background-color="transparent"
+          @click="window.tagCreate.open(null)"
+        >
           <PencilIco />
         </ButtonCoinSlot>
 
@@ -162,7 +171,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
           content="Criar cards"
           class="button-resize send-card"
           :visible="true"
-          @click="card.createAll"
+          @click="card.createAll()"
         >
           <SendIco />
         </ButtonSlot>

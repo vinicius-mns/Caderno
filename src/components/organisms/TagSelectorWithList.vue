@@ -12,10 +12,16 @@ import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 
-const props = defineProps<{
-  allTags: Itag[]
-  tagsChecked: Itag[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    allTags: Itag[]
+    tagsChecked: Itag[]
+    showList: boolean
+  }>(),
+  {
+    showList: true
+  }
+)
 
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
@@ -25,10 +31,8 @@ const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const closeModal = () => modal.value?.close()
 
-const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) => {
-  const alltags: Itag[] = p.allTags
-
-  const tagsSelected = ref<Itag[]>(p.tagsChecked)
+const useTags = () => {
+  const tagsSelected = ref<Itag[]>(props.tagsChecked)
 
   const butttonStatusClass = computed(() => {
     const status = {
@@ -36,9 +40,9 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
       locked: 'locked'
     }
 
-    if (tagsSelected.value.length !== p.tagsChecked.length) return status.unlocked
+    if (tagsSelected.value.length !== props.tagsChecked.length) return status.unlocked
 
-    const tagsAtualSort = [...p.tagsChecked].sort()
+    const tagsAtualSort = [...props.tagsChecked].sort()
 
     const tagsRefSort = [...tagsSelected.value].sort()
 
@@ -60,7 +64,7 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
   const isSelectedTag = (tag: Itag) => tagsSelected.value.map((t) => t[1]).includes(tag[1])
 
   const addOrRemoveTag = (name: string) => {
-    const findTag = alltags.find((tag) => tag[1] === name)
+    const findTag = props.allTags.find((tag) => tag[1] === name)
 
     const atualTags = tagsSelected.value
 
@@ -72,12 +76,9 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
       if (isSelectedTag(findTag)) removeTag(findTag)
       else addTag(findTag)
     }
-
-    e('emitSelected', tagsSelected.value)
   }
 
   return {
-    alltags,
     tagsSelected,
     butttonStatusClass,
     isSelectedTag,
@@ -85,12 +86,14 @@ const useTags = (p: { allTags: Itag[]; tagsChecked: Itag[] }, e: typeof emit) =>
   }
 }
 
-const tags = useTags(props, emit)
+const tags = useTags()
 
 const emitTagsAndCloseModal = () => {
-  emit('emitSelected', tags.tagsSelected.value)
+  if (tags.butttonStatusClass.value === 'unlocked') {
+    emit('emitSelected', tags.tagsSelected.value)
 
-  closeModal()
+    closeModal()
+  }
 }
 </script>
 
@@ -98,11 +101,11 @@ const emitTagsAndCloseModal = () => {
   <FloatModalSlot ref="modal" class="max-width">
     <template #button-slot>
       <FlexContainer class="button-tags-container max-width">
-        <ButtonCoinSlot content="Adicionar tag" :border="false" background-color="transparent">
+        <ButtonCoinSlot content="Selecionar tags" :border="false" background-color="transparent">
           <AddTagIco />
         </ButtonCoinSlot>
 
-        <FlexContainer class="tags-selected-container max-width">
+        <FlexContainer class="tags-selected-container max-width" v-if="props.showList">
           <ButtonCoinSlot
             v-for="(tag, i) in tags.tagsSelected.value"
             :key="i"
@@ -121,7 +124,7 @@ const emitTagsAndCloseModal = () => {
       <ModalCard class="modal-card-tags">
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
-            v-for="(tag, i) in tags.alltags"
+            v-for="(tag, i) in props.allTags"
             :key="i"
             :id="tag[1]"
             :is-checked="tags.isSelectedTag(tag)"
@@ -135,7 +138,7 @@ const emitTagsAndCloseModal = () => {
 
         <ButtonSlot
           content="Confirmar alteração"
-          :class="[tags.butttonStatusClass, 'confirm-button']"
+          :class="[tags.butttonStatusClass.value, 'confirm-button']"
           @click="emitTagsAndCloseModal()"
         >
           <CheckIco />
@@ -174,9 +177,14 @@ const emitTagsAndCloseModal = () => {
     margin-top: 10px;
   }
 
-  & .block {
+  & .locked {
+    background-color: rgba(255, 0, 0, 0.5);
     cursor: not-allowed;
     opacity: 30%;
+  }
+
+  & .unlocked {
+    background-color: rgba(0, 128, 0, 0.5);
   }
 }
 </style>

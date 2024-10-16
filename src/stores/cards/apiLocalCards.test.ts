@@ -61,6 +61,7 @@ describe('ApiLocalCards', () => {
       expect(deleteAll).toBe(true)
     })
   })
+
   describe('create', () => {
     test('cria card com sucesso', async () => {
       const createCard = await apiCards.create({
@@ -75,9 +76,9 @@ describe('ApiLocalCards', () => {
       try {
         await apiCards.create({ content: 'content', tags: [] })
       } catch (e) {
-        if (e instanceof Error) {
-          expect(e.message).toBe('selecione ao menos 1 tag')
-        }
+        expect(e).toBeInstanceOf(Error)
+
+        e instanceof Error && expect(e.message).toBe('selecione ao menos 1 tag')
       }
     })
 
@@ -85,9 +86,42 @@ describe('ApiLocalCards', () => {
       try {
         await apiCards.create({ content: '', tags: [['😁', 'tagId']] })
       } catch (e) {
-        if (e instanceof Error) {
-          expect(e.message).toBe('card content não pode estar vazio')
-        }
+        expect(e).toBeInstanceOf(Error)
+
+        e instanceof Error && expect(e.message).toBe('card content não pode estar vazio')
+      }
+    })
+  })
+
+  describe('Create Many', () => {
+    test('Cria varios cards com suesso', async () => {
+      try {
+        await apiCards.createMany([
+          { content: cardObject1.content, tags: cardObject1.tags },
+          { content: cardObject2.content, tags: cardObject2.tags }
+        ])
+
+        const allcards = await apiCards.read({ includeTags: [], excludeTags: [] })
+
+        expect(allcards.length).toBe(2)
+        expect(allcards[1].content).toBe(cardObject2.content)
+      } catch (e) {
+        expect(e).toBe('nao era para cair no bloco catch')
+      }
+    })
+
+    test('Falha todos com sucesso, caso 1 esteja incorreto', async () => {
+      try {
+        await apiCards.createMany([
+          { content: cardObject1.content, tags: cardObject1.tags },
+          { content: '', tags: cardObject2.tags }
+        ])
+
+        await apiCards.read({ includeTags: [], excludeTags: [] })
+      } catch (e) {
+        expect(e).toBeInstanceOf(Error)
+
+        e instanceof Error && expect(e.message).toBe('card content não pode estar vazio')
       }
     })
   })
