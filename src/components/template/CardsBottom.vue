@@ -44,7 +44,7 @@ const width = computed(() => `${config.config.value.cardWidth}px`)
 const openCardUpdate = (card: Icard) => window.cardEdit.open(card)
 
 const openTagCreate = () => {
-  window.tagCreate.open(['', ''])
+  window.tagCreate.open(null)
 }
 
 const openCardCreate = () => {
@@ -159,7 +159,7 @@ const cleanAllTags = () => {
                 <ButtonSlot
                   content="Criar tag"
                   class="create-tag-button"
-                  @click="window.tagCreate.open(['', ''])"
+                  @click="window.tagCreate.open(null)"
                 >
                   <PencilIco />
                 </ButtonSlot>
