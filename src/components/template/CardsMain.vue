@@ -22,7 +22,10 @@ import PencilIco from '../atoms/icons/PencilIco.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
-import CardWithOption from '../organisms/CardWithOption.vue'
+import CardSlot from '../organisms/CardSlot.vue'
+import TagSelectorWithList from '../organisms/TagSelectorWithList.vue'
+import CardOptions from '../organisms/CardOptions.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
 
 const style = useStylesPage()
 
@@ -124,16 +127,29 @@ const cardUpdate = async (card: Icard) => {
       justify-content="center"
       class="cards-main"
     >
-      <CardWithOption
+      <CardSlot
         v-for="(card, i) in cardsReverse"
         :key="i"
         :card="card"
         :all-tags="tags.tags"
         :width="width"
-        @update="openCardUpdate"
-        @delete="window.cardDelete.open"
-        @tag-updated="cardUpdate"
-      />
+      >
+        <FlexContainer>
+          <TagSelectorWithList
+            :all-tags="allTags"
+            :tags-checked="card.tags"
+            :show-list="false"
+            @emit-selected="(tags: Itag[]) => cardUpdate({ ...card, tags })"
+          />
+          <CardOptions
+            :all-tags="allTags"
+            :card="card"
+            @update="openCardUpdate"
+            @delete="window.cardDelete.open"
+            @tag-updated="cardUpdate"
+          />
+        </FlexContainer>
+      </CardSlot>
     </FlexContainer>
   </div>
 </template>
