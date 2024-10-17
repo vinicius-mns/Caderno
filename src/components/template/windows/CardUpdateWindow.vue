@@ -114,6 +114,7 @@ watchEffect(() => card.set(window.cardEdit.props))
 <style scoped lang="scss">
 .main-container {
   width: 500px;
+  max-width: 95dvw;
   max-height: 80dvh;
   overflow: auto;
   & .max-width {

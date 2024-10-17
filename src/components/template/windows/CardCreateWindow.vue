@@ -191,7 +191,7 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
 <style scoped lang="scss">
 .main-container {
   width: 500px;
-  max-width: 96dvw;
+  max-width: 95dvw;
   max-height: 80dvh;
   overflow: hidden;
 
