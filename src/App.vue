@@ -24,24 +24,29 @@ h2,
 h3 {
   font-weight: 100;
 }
+
 a,
 strong {
   padding: 3px;
   border-radius: 4px;
 }
+
 table {
   // background-color: v-bind('atualStyle.color.text');
   width: 100%;
   border-collapse: collapse;
 }
+
 th,
 td {
   text-align: left;
   padding: 8px;
 }
+
 hr {
   border: solid 1px v-bind('stylesPage.atualColor.border');
 }
+
 svg {
   fill: v-bind('stylesPage.atualColor.text');
   height: 18px;
