@@ -12,11 +12,13 @@ const props = withDefaults(
     borderColor?: string
     backgroundColor?: string
     border?: boolean
+    circle?: boolean
   }>(),
   {
     borderColor: '',
     backgroundColor: '',
-    border: false
+    border: false,
+    circle: false
   }
 )
 
@@ -24,7 +26,9 @@ const bgColor = ref('')
 
 const bgBorderColor = ref('')
 
-const borderClasse = props.border && 'border'
+const borderClass = props.border && 'border'
+
+const circleClass = props.circle && 'circle'
 
 watchEffect(() => {
   props.backgroundColor === ''
@@ -39,7 +43,7 @@ watchEffect(() => {
 
 <template>
   <FloatDescription :content="props.content">
-    <ThemeButton :class="[borderClasse, 'coin-button-container']">
+    <ThemeButton :class="[borderClass, circleClass, 'coin-button-container']">
       <slot></slot>
     </ThemeButton>
   </FloatDescription>
@@ -60,5 +64,9 @@ watchEffect(() => {
 
 .border {
   border: solid 1px v-bind('bgBorderColor');
+}
+
+.circle {
+  border-radius: 50%;
 }
 </style>
