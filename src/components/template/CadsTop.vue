@@ -108,7 +108,7 @@ const cleanAllTags = () => {
   <FlexContainer class="cards-header" align-items="end" flex-direction="row">
     <FloatModalSlot>
       <template #button-slot>
-        <ButtonCoinSlot content="Filtrar cards">
+        <ButtonCoinSlot content="Filtrar cards" class="filter-cards-button">
           <FilterIco />
         </ButtonCoinSlot>
       </template>
@@ -142,12 +142,12 @@ const cleanAllTags = () => {
 
 <style scoped lang="scss">
 .cards-header {
-  position: fixed;
-  top: 0;
-  height: 60px;
-  width: 100dvw;
-  padding-left: 50px;
-  background-color: v-bind('style.atualColor.front');
+  width: 100%;
+  height: 100%;
+
+  & .filter-cards-button {
+    margin-left: 50px;
+  }
 
   & .modal-card {
     display: flex;

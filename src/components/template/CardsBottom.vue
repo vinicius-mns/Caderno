@@ -122,83 +122,75 @@ const cleanAllTags = () => {
 </script>
 
 <template>
-  <FlexContainer class="main-container" align-items="center" justify-content="center">
-    <ModalCard class="card-container">
-      <FlexContainer flex-direction="row" align-items="center">
-        <ButtonSlot content="Criar tag" class="button-x create-tag" @click="openTagCreate">
-          <TagIco />
-        </ButtonSlot>
+  <ModalCard class="card-container">
+    <FlexContainer flex-direction="row" align-items="center">
+      <ButtonSlot content="Criar tag" class="button-x create-tag" @click="openTagCreate">
+        <TagIco />
+      </ButtonSlot>
 
-        <ButtonSlot content="Criar cards" class="button-x create-card" @click="openCardCreate">
-          <PencilIco />
-        </ButtonSlot>
+      <ButtonSlot content="Criar cards" class="button-x create-card" @click="openCardCreate">
+        <PencilIco />
+      </ButtonSlot>
 
-        <hr />
+      <hr />
 
-        <FloatModalSlot>
-          <template #button-slot>
-            <ButtonCoinSlot content="Tags" :border="false" class="button-x">
-              <TagIco />
-            </ButtonCoinSlot>
-          </template>
+      <FloatModalSlot>
+        <template #button-slot>
+          <ButtonCoinSlot content="Tags" :border="false" class="button-x">
+            <TagIco />
+          </ButtonCoinSlot>
+        </template>
 
-          <template #container-slot>
-            <ModalCard class="tags-card">
-              <FlexContainer flex-direction="column" class="tags-flex-container">
-                <FlexContainer flex-wrap="wrap" class="tags-area">
-                  <TagWithOptions
-                    v-for="(tag, i) in allTags"
-                    :key="i"
-                    :tag="tag"
-                    @update-tag="window.tagEditor.open"
-                    @delete-tag="window.tagDelete.open"
-                    @delete-cards-withtag="window.tagDeleteCard.open"
-                  />
-                </FlexContainer>
-
-                <ButtonSlot
-                  content="Criar tag"
-                  class="create-tag-button"
-                  @click="window.tagCreate.open(null)"
-                >
-                  <PencilIco />
-                </ButtonSlot>
+        <template #container-slot>
+          <ModalCard class="tags-card">
+            <FlexContainer flex-direction="column" class="tags-flex-container">
+              <FlexContainer flex-wrap="wrap" class="tags-area">
+                <TagWithOptions
+                  v-for="(tag, i) in allTags"
+                  :key="i"
+                  :tag="tag"
+                  @update-tag="window.tagEditor.open"
+                  @delete-tag="window.tagDelete.open"
+                  @delete-cards-withtag="window.tagDeleteCard.open"
+                />
               </FlexContainer>
-            </ModalCard>
-          </template>
-        </FloatModalSlot>
 
-        <ButtonCoinSlot
-          content="Configurações"
-          :border="false"
-          class="button-x"
-          @click="window.config.open"
-        >
-          <GearIco />
-        </ButtonCoinSlot>
-      </FlexContainer>
-    </ModalCard>
-  </FlexContainer>
+              <ButtonSlot
+                content="Criar tag"
+                class="create-tag-button"
+                @click="window.tagCreate.open(null)"
+              >
+                <PencilIco />
+              </ButtonSlot>
+            </FlexContainer>
+          </ModalCard>
+        </template>
+      </FloatModalSlot>
+
+      <ButtonCoinSlot
+        content="Configurações"
+        :border="false"
+        class="button-x"
+        @click="window.config.open"
+      >
+        <GearIco />
+      </ButtonCoinSlot>
+    </FlexContainer>
+  </ModalCard>
 </template>
 
 <style scoped lang="scss">
-.main-container {
-  position: fixed;
-  bottom: 0;
-  height: 80px;
-  width: 100dvw;
-}
 .card-container {
-  bottom: 20px;
   width: 440px;
   max-width: 95dvw;
-  left: 50%;
   padding: 5px;
   border: none;
+
   & hr {
     height: 35px;
     margin: 5px 3px;
   }
+
   & .tags-card {
     display: flex;
     flex-direction: column;

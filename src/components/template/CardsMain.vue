@@ -156,11 +156,7 @@ const cardUpdate = async (card: Icard) => {
 
 <style scoped lang="scss">
 .cards-main-container {
-  background-color: v-bind('style.atualColor.front');
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 100px;
-  min-height: 100dvh;
   & .cards-main {
     padding-top: 20px;
   }
