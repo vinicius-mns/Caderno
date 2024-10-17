@@ -158,7 +158,12 @@ const cleanAllTags = () => {
   }
 
   & .cards-filter {
-    max-width: calc(100dvw - 400px);
+    max-width: calc(100dvw - 100px);
+    overflow: hidden;
+
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
   }
 
   & .create-card-container {
