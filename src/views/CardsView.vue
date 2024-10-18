@@ -25,13 +25,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <FlexContainer class="cards-page-container" flex-direction="column">
-    <div class="top">
-      <CardsTop />
-    </div>
-
+  <FlexContainer class="cards-page-container" flex-direction="column-reverse">
     <div class="main">
       <CardsMain />
+    </div>
+
+    <div class="top">
+      <CardsTop />
     </div>
 
     <FlexContainer align-items="center" justify-content="center" class="bottom">
@@ -44,7 +44,6 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .cards-page-container {
-  display: flex;
   height: 100dvh;
 
   & .main {
@@ -58,6 +57,7 @@ onMounted(async () => {
 
   & .top {
     background-color: v-bind('style.atualColor.front');
+    background-color: red;
     height: 60px;
     width: 100%;
     flex-shrink: 0;
