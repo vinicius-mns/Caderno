@@ -29,6 +29,14 @@ export class TagsApiLocal implements ItagsApi {
     if (content.length < 2) throw new Error('Tag precisa ter ao menos 2 characteres')
   }
 
+  private _errorExistTag = (name: string) => {
+    const allTagsNames = this._storage.read().tags.map((t) => t[1])
+
+    if (allTagsNames.includes(name)) {
+      throw new Error(`Ja existe uma tag com o nome: ${name}`)
+    }
+  }
+
   private _tagDelete = (name: string) => {
     const allTags = this._storage.read().tags
 
@@ -91,6 +99,8 @@ export class TagsApiLocal implements ItagsApi {
 
           this._errorValidateTag([emoji, name])
 
+          this._errorExistTag(name)
+
           const storage = this._storage.read()
 
           const tag: Itag = [emoji, name]
@@ -113,6 +123,8 @@ export class TagsApiLocal implements ItagsApi {
         try {
           const tags: Itag[] = param.map(({ emoji, name }) => {
             this._errorValidateTag([emoji, name])
+
+            this._errorExistTag(name)
 
             return [emoji, name]
           })
@@ -167,11 +179,13 @@ export class TagsApiLocal implements ItagsApi {
         try {
           const { emoji, name, atualName } = param
 
+          this._errorExistTag(name)
+
           this._tagUpdate({ tag: [emoji, name], atualName })
 
           resolve(true)
         } catch (e) {
-          reject(new Error(`Erro ao atualizar tag: ${e}`))
+          reject(e)
         }
       }, 0)
     })
