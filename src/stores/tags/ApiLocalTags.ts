@@ -179,6 +179,8 @@ export class TagsApiLocal implements ItagsApi {
         try {
           const { emoji, name, atualName } = param
 
+          this._errorValidateTag([emoji, name])
+
           this._errorExistTag(name)
 
           this._tagUpdate({ tag: [emoji, name], atualName })
