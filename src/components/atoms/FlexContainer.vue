@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    flexDirection?: 'row' | 'column' | 'row-reverse'
+    flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
     flexWrap?: 'wrap' | 'nowrap'
     justifyContent?: 'flex-start' | 'space-evenly' | 'space-between' | 'center' | 'end'
     alignItems?: 'stretch' | 'start' | 'end' | 'center'
