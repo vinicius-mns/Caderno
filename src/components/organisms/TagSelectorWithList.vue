@@ -34,6 +34,8 @@ const closeModal = () => modal.value?.close()
 const useTags = () => {
   const tagsSelected = ref<Itag[]>(props.tagsChecked)
 
+  const visibleTags = ref<Itag[]>(props.tagsChecked)
+
   const butttonStatusClass = computed(() => {
     const status = {
       unlocked: 'unlocked',
@@ -57,9 +59,9 @@ const useTags = () => {
     return status.locked
   })
 
-  const _tagsSelectedUpdate = (tags: Itag[]) => {
-    tagsSelected.value = tags
-  }
+  const setVisibleTags = (tags: Itag[]) => (visibleTags.value = tags)
+
+  const _tagsSelectedUpdate = (tags: Itag[]) => (tagsSelected.value = tags)
 
   const isSelectedTag = (tag: Itag) => tagsSelected.value.map((t) => t[1]).includes(tag[1])
 
@@ -80,7 +82,9 @@ const useTags = () => {
 
   return {
     tagsSelected,
+    visibleTags,
     butttonStatusClass,
+    setVisibleTags,
     isSelectedTag,
     addOrRemoveTag
   }
@@ -90,6 +94,8 @@ const tags = useTags()
 
 const emitTagsAndCloseModal = () => {
   if (tags.butttonStatusClass.value === 'unlocked') {
+    tags.setVisibleTags(tags.tagsSelected.value)
+
     emit('emitSelected', tags.tagsSelected.value)
 
     closeModal()
@@ -107,7 +113,7 @@ const emitTagsAndCloseModal = () => {
 
         <FlexContainer class="tags-selected-container max-width" v-if="props.showList">
           <ButtonCoinSlot
-            v-for="(tag, i) in tags.tagsSelected.value"
+            v-for="(tag, i) in tags.visibleTags.value"
             :key="i"
             :content="tag[1]"
             :border="false"

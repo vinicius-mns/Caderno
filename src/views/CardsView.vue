@@ -57,7 +57,6 @@ onMounted(async () => {
 
   & .top {
     background-color: v-bind('style.atualColor.front');
-    background-color: red;
     height: 60px;
     width: 100%;
     flex-shrink: 0;
