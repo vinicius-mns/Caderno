@@ -28,6 +28,7 @@ import CardOptions from '../organisms/CardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import CarUpdate from '../organisms/CarUpdate.vue'
 import CardDelete from '../organisms/CardDelete.vue'
+import TutorialButtons from '../organisms/TutorialButtons.vue'
 
 const style = useStylesPage()
 
@@ -221,7 +222,10 @@ const cardDeleteSend = async (card: Icard) => {
 
 <template>
   <div class="cards-main-container">
+    <TutorialButtons v-if="cardsReverse.length <= 0" />
+
     <FlexContainer
+      v-else
       flex-wrap="wrap"
       :align-items="'start'"
       justify-content="center"
