@@ -76,17 +76,12 @@ watchEffect(() => card.setCard(props.cardP))
         content="Confirmar alteração"
         @click="emitCard()"
         class="confirm-button"
-        :background-color="pageStyle.atualColor.hover"
+        :reverse-color="true"
       >
         <PencilIco />
       </ButtonSlot>
 
-      <ButtonCoinSlot
-        content="Cancelar"
-        class="cancel-button"
-        background-color="rgba(255, 0, 0, 0.5)"
-        @click="emitCancel()"
-      >
+      <ButtonCoinSlot content="Cancelar" class="cancel-button" @click="emitCancel()">
         <CrossIco />
       </ButtonCoinSlot>
     </FlexContainer>
@@ -95,20 +90,19 @@ watchEffect(() => card.setCard(props.cardP))
 
 <style scoped lang="scss">
 .main-container {
-  // background-color: v-bind('pageStyle.atualColor.border');
   border: solid 1px v-bind('pageStyle.atualColor.border');
   box-sizing: border-box;
   max-height: 80dvh;
   overflow: auto;
   border-radius: 8px;
+  padding: 5px;
 
   & .base-width {
-    width: calc(100% - 30px);
+    width: 100%;
   }
 
   & .buttons-container {
     margin-top: 8px;
-    margin-bottom: 10px;
 
     & .confirm-button {
       flex-shrink: 1;

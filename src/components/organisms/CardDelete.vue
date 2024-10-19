@@ -40,11 +40,7 @@ const emitCancel = () => emit('emitCancel', props.card)
         <TrashIco />
       </ButtonSlot>
 
-      <ButtonCoinSlot
-        content="Cancelar"
-        :background-color="stylePage.atualColor.hover"
-        @click="emitCancel"
-      >
+      <ButtonCoinSlot content="Cancelar" @click="emitCancel">
         <CrossIco />
       </ButtonCoinSlot>
     </FlexContainer>
@@ -59,7 +55,7 @@ const emitCancel = () => emit('emitCancel', props.card)
   max-height: 80dvh;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 5px;
   box-sizing: border-box;
   & .text {
     margin-bottom: 10px;
