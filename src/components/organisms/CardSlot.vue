@@ -6,7 +6,7 @@ import { ref } from 'vue'
 
 import CardView from '../molecules/CardView.vue'
 
-const props = defineProps<{ card: Icard; allTags: Itag[]; width: string }>()
+const props = defineProps<{ card: Icard; allTags: Itag[] }>()
 
 const useShowButton = () => {
   const show = ref(false)
@@ -35,9 +35,6 @@ const show = useShowButton()
 .card-with-options-container {
   transition: all 0.3s;
   position: relative;
-  width: v-bind('props.width');
-  max-width: 95dvw;
-  margin: 5px;
 
   & .slot-options {
     position: absolute;

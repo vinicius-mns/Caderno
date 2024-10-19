@@ -1,39 +1,60 @@
 <script setup lang="ts">
 import type { Icard } from '@/stores/cards/Interfaces'
-import ThemeP from '@/components/atoms/ThemeP.vue'
 import CardView from '@/components/molecules/CardView.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import CrossIco from '../atoms/icons/CrossIco.vue'
+
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   card: Icard
 }>()
 
 const emit = defineEmits<{
-  (e: 'emitDeleteId', v: string): void
+  (e: 'emitCard', v: Icard): void
+  (e: 'emitCancel', v: Icard): void
 }>()
 
-const cardDelete = () => emit('emitDeleteId', props.card.id)
+const emitCard = () => emit('emitCard', props.card)
+
+const emitCancel = () => emit('emitCancel', props.card)
 </script>
 
 <template>
   <div class="container">
-    <ThemeP class="text" content="Deseja deletar esse card?" />
-
     <div class="card-section">
       <CardView :card="props.card" class="card" />
     </div>
 
-    <ButtonSlot content="Deletar card" class="delete-button" @click="cardDelete">
-      <TrashIco />
-    </ButtonSlot>
+    <FlexContainer align-items="center" class="buttons-container">
+      <ButtonSlot
+        content="Confirmar exclusão"
+        class="delete-button"
+        @click="emitCard"
+        background-color="rgba(255, 0, 0, 0.5)"
+      >
+        <TrashIco />
+      </ButtonSlot>
+
+      <ButtonCoinSlot
+        content="Cancelar"
+        :background-color="stylePage.atualColor.hover"
+        @click="emitCancel"
+      >
+        <CrossIco />
+      </ButtonCoinSlot>
+    </FlexContainer>
   </div>
 </template>
 
 <style scoped lang="scss">
 .container {
-  width: 500px;
-  max-width: 95dvw;
+  border-radius: 8px;
+  border: solid 1px v-bind('stylePage.atualColor.border');
   height: 100%;
   max-height: 80dvh;
   display: flex;
@@ -50,8 +71,13 @@ const cardDelete = () => emit('emitDeleteId', props.card.id)
       margin: 0;
     }
   }
-  & .delete-button {
+
+  & .buttons-container {
     margin-top: 10px;
+  }
+  & .delete-button {
+    margin-right: 10px;
+    flex-shrink: 1;
   }
 }
 </style>

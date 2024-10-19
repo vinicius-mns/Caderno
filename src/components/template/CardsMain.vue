@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
 import CardView from '../molecules/CardView.vue'
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import TagsFiltredsList from '../organisms/TagsFiltredsList.vue'
@@ -26,6 +26,8 @@ import CardSlot from '../organisms/CardSlot.vue'
 import TagSelectorWithList from '../organisms/TagSelectorWithList.vue'
 import CardOptions from '../organisms/CardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import CarUpdate from '../organisms/CarUpdate.vue'
+import CardDelete from '../organisms/CardDelete.vue'
 
 const style = useStylesPage()
 
@@ -117,6 +119,104 @@ const cardUpdate = async (card: Icard) => {
   await cards.update(card)
   await cardsRenderUpdate()
 }
+
+type ICardTo = 'toEdit' | 'toDelete'
+
+const useCardTarget = () => {
+  const cards = reactive<{ toEdit: Icard[]; toDelete: Icard[] }>({
+    toEdit: [],
+    toDelete: []
+  })
+
+  const addCardTo = (card: Icard, to: ICardTo) => {
+    const newCards = [...cards[to], card]
+
+    cards[to] = newCards
+  }
+
+  const removeCardTo = (card: Icard, to: ICardTo) => {
+    const newCards = cards[to].filter((c) => c.id !== card.id)
+
+    cards[to] = newCards
+  }
+
+  const isCardTo = (card: Icard, to: ICardTo) => {
+    const cardId = card.id
+
+    const cardsToIds = cards[to].map((c) => c.id)
+
+    return cardsToIds.includes(cardId)
+  }
+
+  // const addCardsToEdit = (card: Icard) => {
+  //   const newCardsToEdit = [...cardsToEdit.value, card]
+
+  //   cardsToEdit.value = newCardsToEdit
+  // }
+
+  // const removeCardtoEdit = (card: Icard) => {
+  //   const newCardsToEdit = cardsToEdit.value.filter((c) => c.id !== card.id)
+
+  //   cardsToEdit.value = newCardsToEdit
+  // }
+
+  // const isCardToEdit = (card: Icard) => {
+  //   const cardId = card.id
+
+  //   const cardsToEditIds = cardsToEdit.value.map((c) => c.id)
+
+  //   return cardsToEditIds.includes(cardId)
+  // }
+
+  return {
+    addCardTo,
+    removeCardTo,
+    isCardTo
+  }
+}
+
+const cardsTarget = useCardTarget()
+
+const cardsUpdateReactive = async () => {
+  try {
+    await cards.atualizeReactiveCards({
+      includeTags: tags.includeTags,
+      excludeTags: tags.excludeTags
+    })
+  } catch (e) {
+    e instanceof Error
+      ? window.errorMessage.open(e.message)
+      : window.errorMessage.open('erro inesperado')
+  }
+}
+
+const cardUpdateSend = async (card: Icard) => {
+  try {
+    await cards.update(card)
+
+    await cardsUpdateReactive()
+
+    cardsTarget.removeCardTo(card, 'toEdit')
+  } catch (e) {
+    e instanceof Error
+      ? window.errorMessage.open(e.message)
+      : window.errorMessage.open('erro inesperado')
+  }
+}
+
+const cardDeleteSend = async (card: Icard) => {
+  try {
+    await cards.deleteCard(card.id)
+
+    await cardsUpdateReactive()
+
+    cardsTarget.removeCardTo(card, 'toDelete')
+  } catch (e) {
+    e instanceof Error
+      ? window.errorMessage.open(e.message)
+      : window.errorMessage.open('erro inesperado')
+  }
+}
 </script>
 
 <template>
@@ -127,36 +227,59 @@ const cardUpdate = async (card: Icard) => {
       justify-content="center"
       class="cards-main"
     >
-      <CardSlot
-        v-for="(card, i) in cardsReverse"
-        :key="i"
-        :card="card"
-        :all-tags="tags.tags"
-        :width="width"
-      >
-        <FlexContainer>
-          <TagSelectorWithList
-            :all-tags="allTags"
-            :tags-checked="card.tags"
-            :show-list="false"
-            @emit-selected="(tags: Itag[]) => cardUpdate({ ...card, tags })"
-          />
-          <CardOptions
-            :all-tags="allTags"
-            :card="card"
-            @update="openCardUpdate"
-            @delete="window.cardDelete.open"
-            @tag-updated="cardUpdate"
-          />
-        </FlexContainer>
-      </CardSlot>
+      <div v-for="(card, i) in cardsReverse" :key="i">
+        <CarUpdate
+          v-if="cardsTarget.isCardTo(card, 'toEdit')"
+          class="card-w"
+          :card-p="card"
+          @emit-card="cardUpdateSend"
+          @emit-cancel="(card: Icard) => cardsTarget.removeCardTo(card, 'toEdit')"
+        />
+
+        <CardDelete
+          v-else-if="cardsTarget.isCardTo(card, 'toDelete')"
+          :card="card"
+          class="card-w"
+          @emit-card="cardDeleteSend"
+          @emit-cancel="(card: Icard) => cardsTarget.removeCardTo(card, 'toDelete')"
+        />
+
+        <CardSlot :card="card" :all-tags="tags.tags" class="card-w" v-else>
+          <FlexContainer>
+            <TagSelectorWithList
+              :all-tags="allTags"
+              :tags-checked="card.tags"
+              :show-list="false"
+              @emit-selected="(tags: Itag[]) => cardUpdate({ ...card, tags })"
+            />
+
+            <CardOptions
+              :all-tags="allTags"
+              :card="card"
+              @update="(card: Icard) => cardsTarget.addCardTo(card, 'toEdit')"
+              @delete="(card: Icard) => cardsTarget.addCardTo(card, 'toDelete')"
+              @tag-updated="cardUpdate"
+            />
+          </FlexContainer>
+        </CardSlot>
+      </div>
     </FlexContainer>
   </div>
 </template>
 
 <style scoped lang="scss">
+.card-editor {
+  background-color: red;
+  height: 300px;
+  width: 300px;
+}
 .cards-main-container {
   width: 100%;
+
+  & .card-w {
+    width: v-bind(width);
+    margin: 5px;
+  }
   & .cards-main {
     padding-top: 20px;
   }
