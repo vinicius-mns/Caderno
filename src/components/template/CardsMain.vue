@@ -282,6 +282,7 @@ const cardDeleteSend = async (card: Icard) => {
 
   & .card-w {
     width: v-bind(width);
+    max-width: 95dvw;
     margin: 5px;
   }
   & .cards-main {
