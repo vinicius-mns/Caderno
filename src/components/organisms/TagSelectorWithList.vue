@@ -16,7 +16,7 @@ const props = withDefaults(
   defineProps<{
     allTags: Itag[]
     tagsChecked: Itag[]
-    showList: boolean
+    showList?: boolean
   }>(),
   {
     showList: true
