@@ -13,12 +13,14 @@ const props = withDefaults(
     borderColor?: string
     backgroundColor?: string
     border?: boolean
+    reverseColor?: boolean
     fontSize?: string
   }>(),
   {
     borderColor: '',
     backgroundColor: '',
     border: false,
+    reverseColor: false,
     fontSize: '14px'
   }
 )
@@ -28,6 +30,8 @@ const bgColor = ref('')
 const bgBorderColor = ref('')
 
 const borderClasse = props.border && 'border'
+
+const reverseColorClass = props.reverseColor && 'reverse-color'
 
 watchEffect(() => {
   props.backgroundColor === ''
@@ -41,7 +45,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <ThemeButton :class="['option-button-container', borderClasse]">
+  <ThemeButton :class="['option-button-container', reverseColorClass, borderClasse]">
     <FlexContainer align-items="center" justify-center="center" class="teste">
       <FlexContainer class="ico" align-items="center" justify-content="center">
         <slot></slot>
@@ -81,6 +85,14 @@ watchEffect(() => {
       text-wrap: nowrap;
       font-size: v-bind('props.fontSize');
     }
+  }
+}
+
+.reverse-color {
+  background-color: v-bind('style.atualColor.hover');
+
+  &:hover {
+    background-color: v-bind('style.atualColor.back');
   }
 }
 
