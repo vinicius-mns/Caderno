@@ -112,16 +112,5 @@ watchEffect(() => card.setCard(props.cardP))
       flex-shrink: 1;
     }
   }
-
-  animation: init 0.5s forwards;
-  opacity: 0%;
-  margin-top: 100px;
-}
-
-@keyframes init {
-  to {
-    opacity: 100%;
-    margin-top: 0;
-  }
 }
 </style>
