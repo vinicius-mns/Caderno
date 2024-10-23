@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
 import CardView from '../molecules/CardView.vue'
-import { computed, reactive, ref } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import TagsFiltredsList from '../organisms/TagsFiltredsList.vue'
@@ -29,6 +29,7 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import CarUpdate from '../organisms/CarUpdate.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import TutorialButtons from '../organisms/TutorialButtons.vue'
+import { v4 as uuid } from 'uuid'
 
 const style = useStylesPage()
 
@@ -121,16 +122,35 @@ const cardUpdate = async (card: Icard) => {
   await cardsRenderUpdate()
 }
 
-type ICardTo = 'toEdit' | 'toDelete'
+type ICardTo = 'toEdit' | 'toDelete' | 'toCreate'
 
 const useCardTarget = () => {
-  const cards = reactive<{ toEdit: Icard[]; toDelete: Icard[] }>({
+  const cardEmpty = (): Icard => {
+    return {
+      id: uuid(),
+      content: '',
+      date: new Date(),
+      tags: tags.includeTags
+    }
+  }
+
+  const cards = reactive<{ toEdit: Icard[]; toDelete: Icard[]; toCreate: Icard[] }>({
+    toCreate: [],
     toEdit: [],
     toDelete: []
   })
 
-  const addCardTo = (card: Icard, to: ICardTo) => {
-    const newCards = [...cards[to], card]
+  const addCardTo = (card: Icard | null, to: ICardTo) => {
+    const newCards = [...cards[to], card ? card : cardEmpty()]
+
+    cards[to] = newCards
+  }
+
+  const setCardTo = (card: Icard, to: ICardTo) => {
+    const newCards = cards[to].map((c) => {
+      if (c.id === card.id) return card
+      else return c
+    })
 
     cards[to] = newCards
   }
@@ -138,7 +158,9 @@ const useCardTarget = () => {
   const removeCardTo = (card: Icard, to: ICardTo) => {
     const newCards = cards[to].filter((c) => c.id !== card.id)
 
-    cards[to] = newCards
+    cards[to] = []
+
+    nextTick(() => (cards[to] = newCards))
   }
 
   const isCardTo = (card: Icard, to: ICardTo) => {
@@ -149,28 +171,10 @@ const useCardTarget = () => {
     return cardsToIds.includes(cardId)
   }
 
-  // const addCardsToEdit = (card: Icard) => {
-  //   const newCardsToEdit = [...cardsToEdit.value, card]
-
-  //   cardsToEdit.value = newCardsToEdit
-  // }
-
-  // const removeCardtoEdit = (card: Icard) => {
-  //   const newCardsToEdit = cardsToEdit.value.filter((c) => c.id !== card.id)
-
-  //   cardsToEdit.value = newCardsToEdit
-  // }
-
-  // const isCardToEdit = (card: Icard) => {
-  //   const cardId = card.id
-
-  //   const cardsToEditIds = cardsToEdit.value.map((c) => c.id)
-
-  //   return cardsToEditIds.includes(cardId)
-  // }
-
   return {
+    cards,
     addCardTo,
+    setCardTo,
     removeCardTo,
     isCardTo
   }
@@ -184,6 +188,20 @@ const cardsUpdateReactive = async () => {
       includeTags: tags.includeTags,
       excludeTags: tags.excludeTags
     })
+  } catch (e) {
+    e instanceof Error
+      ? window.errorMessage.open(e.message)
+      : window.errorMessage.open('erro inesperado')
+  }
+}
+
+const cardCreateSend = async (card: Icard) => {
+  try {
+    await cards.create(card)
+
+    await cardsUpdateReactive()
+
+    cardsTarget.removeCardTo(card, 'toCreate')
   } catch (e) {
     e instanceof Error
       ? window.errorMessage.open(e.message)
@@ -212,6 +230,8 @@ const cardDeleteSend = async (card: Icard) => {
     await cardsUpdateReactive()
 
     cardsTarget.removeCardTo(card, 'toDelete')
+
+    cardsTarget.removeCardTo(card, 'toEdit')
   } catch (e) {
     e instanceof Error
       ? window.errorMessage.open(e.message)
@@ -222,21 +242,38 @@ const cardDeleteSend = async (card: Icard) => {
 
 <template>
   <div class="cards-main-container">
-    <TutorialButtons v-if="cardsReverse.length <= 0" />
-
     <FlexContainer
-      v-else
       flex-wrap="wrap"
       :align-items="'start'"
       justify-content="center"
       class="cards-main"
     >
+      <ThemeButton
+        class="card-w card-create-button"
+        @click="cardsTarget.addCardTo(null, 'toCreate')"
+      >
+        <PlusIco />
+      </ThemeButton>
+
+      <CarUpdate
+        v-for="(card, i) in cardsTarget.cards.toCreate"
+        :key="i"
+        class="card-w"
+        :card-p="card"
+        :id-text-imput="`card-create-${i}`"
+        @emit-card="(card: Icard) => cardsTarget.setCardTo(card, 'toCreate')"
+        @send-card="cardCreateSend"
+        @emit-cancel="(card: Icard) => cardsTarget.removeCardTo(card, 'toCreate')"
+      />
+
       <div v-for="(card, i) in cardsReverse" :key="i">
         <CarUpdate
           v-if="cardsTarget.isCardTo(card, 'toEdit')"
           class="card-w"
-          :card-p="card"
-          @emit-card="cardUpdateSend"
+          :card-p="cardsTarget.cards.toEdit.find((c) => c.id === card.id)!"
+          :id-text-imput="`card-update-${i}`"
+          @send-card="cardUpdateSend"
+          @emit-card="(card: Icard) => cardsTarget.setCardTo(card, 'toEdit')"
           @emit-cancel="(card: Icard) => cardsTarget.removeCardTo(card, 'toEdit')"
         />
 
@@ -279,6 +316,14 @@ const cardDeleteSend = async (card: Icard) => {
 }
 .cards-main-container {
   width: 100%;
+
+  & .card-create-button {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 50%;
+  }
 
   & .card-w {
     width: v-bind(width);
