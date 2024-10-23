@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
@@ -19,19 +19,24 @@ const pageStyle = useStylesPage()
 
 const tags = useTags()
 
-const props = defineProps<{ cardP: Icard }>()
+const props = defineProps<{ cardP: Icard; idTextImput: string }>()
 
 const emit = defineEmits<{
   (e: 'emitCard', v: Icard): void
   (e: 'emitCancel', v: Icard): void
+  (e: 'sendCard', v: Icard): void
 }>()
 
 const allTags = computed(() => tags.tags)
 
-const useCard = () => {
-  const cardRef = ref<Icard>({} as Icard)
+const useCard = (e: typeof emit) => {
+  const cardRef = ref<Icard>(props.cardP)
 
-  const setCard = (card: Icard) => (cardRef.value = card)
+  const setCard = (card: Icard) => {
+    cardRef.value = card
+
+    e('emitCard', card)
+  }
 
   const setCardContent = (content: string) => setCard({ ...cardRef.value, content })
 
@@ -45,13 +50,11 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
+const card = useCard(emit)
 
-const emitCard = () => emit('emitCard', card.cardRef.value)
+const sendCard = () => emit('sendCard', card.cardRef.value)
 
 const emitCancel = () => emit('emitCancel', card.cardRef.value)
-
-watchEffect(() => card.setCard(props.cardP))
 </script>
 
 <template>
@@ -65,7 +68,7 @@ watchEffect(() => card.setCard(props.cardP))
 
       <ThemeTextArea
         :style="cardStyle.atualStyle"
-        id="card-editor"
+        :id="props.idTextImput"
         :content="card.cardRef.value.content"
         @emit-content="card.setCardContent"
       />
@@ -74,7 +77,7 @@ watchEffect(() => card.setCard(props.cardP))
     <FlexContainer align-items="center" class="buttons-container base-width">
       <ButtonSlot
         content="Confirmar alteração"
-        @click="emitCard()"
+        @click="sendCard()"
         class="confirm-button"
         :reverse-color="true"
       >
