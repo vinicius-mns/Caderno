@@ -19,7 +19,6 @@ const emit = defineEmits<{
   (e: 'delete', v: Icard): void
   (e: 'view', v: Icard): void
   (e: 'share', v: Icard): void
-  (e: 'tagUpdated', v: Icard): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
