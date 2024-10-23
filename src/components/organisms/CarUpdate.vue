@@ -9,13 +9,10 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import CrossIco from '../atoms/icons/CrossIco.vue'
 
 const cardStyle = useStylesCard()
-
-const pageStyle = useStylesPage()
 
 const tags = useTags()
 
@@ -60,13 +57,16 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
 <template>
   <FlexContainer class="main-container" flex-direction="column" align-items="center">
     <FlexContainer flex-direction="column" align-items="center" class="base-width">
-      <TagSelectorWithList
-        :all-tags="allTags"
-        :tags-checked="card.cardRef.value.tags"
-        @emit-selected="card.setCardTags"
-      />
+      <FlexContainer class="top-container">
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.cardRef.value.tags"
+          @emit-selected="card.setCardTags"
+        />
+      </FlexContainer>
 
       <ThemeTextArea
+        class="textarea"
         :style="cardStyle.atualStyle"
         :id="props.idTextImput"
         :content="card.cardRef.value.content"
@@ -80,6 +80,7 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
         @click="sendCard()"
         class="confirm-button"
         :reverse-color="true"
+        :border="true"
       >
         <PencilIco />
       </ButtonSlot>
@@ -93,15 +94,22 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
 
 <style scoped lang="scss">
 .main-container {
-  border: solid 1px v-bind('pageStyle.atualColor.border');
-  box-sizing: border-box;
   max-height: 80dvh;
   overflow: auto;
-  border-radius: 8px;
-  padding: 5px;
+  position: relative;
 
   & .base-width {
     width: 100%;
+  }
+
+  & .top-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  & .textarea {
+    padding-top: 50px;
   }
 
   & .buttons-container {
@@ -111,6 +119,7 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
       flex-shrink: 1;
       margin-right: 8px;
     }
+
     & .cancel-button {
       flex-shrink: 1;
     }
