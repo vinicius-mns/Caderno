@@ -107,7 +107,7 @@ const emitTagsAndCloseModal = () => {
   <FloatModalSlot ref="modal" class="max-width">
     <template #button-slot>
       <FlexContainer class="button-tags-container max-width">
-        <ButtonCoinSlot content="Selecionar tags" :border="false" background-color="transparent">
+        <ButtonCoinSlot content="Selecionar tags" :border="false" :circle="true">
           <AddTagIco />
         </ButtonCoinSlot>
 

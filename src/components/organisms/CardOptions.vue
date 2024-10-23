@@ -19,7 +19,6 @@ const emit = defineEmits<{
   (e: 'delete', v: Icard): void
   (e: 'view', v: Icard): void
   (e: 'share', v: Icard): void
-  (e: 'tagUpdated', v: Icard): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
@@ -34,7 +33,7 @@ const executeAndCloseModal = (callBack: () => void) => {
 <template>
   <FloatModalSlot ref="modal">
     <template #button-slot>
-      <ButtonCoinSlot content="Mais" class="button-float" background-color="transparent">
+      <ButtonCoinSlot content="Mais" class="button-float" :circle="true">
         <PlusIco />
       </ButtonCoinSlot>
     </template>

@@ -27,9 +27,12 @@ const sendContent = () => {
 
 const autoHeight = () => {
   const myTextArea = textArea.value
+
   if (myTextArea) {
     const textHeight = myTextArea.scrollHeight
+
     const height = myTextArea.offsetHeight
+
     if (textHeight >= 500) {
       myTextArea.style.height = '500px'
     } else if (textHeight >= height) {
@@ -43,14 +46,11 @@ const clicked = () => {
   autoHeight()
 }
 
-// watchEffect(() => {
-//   emit('emitContent', contentReactive.value)
-// })
-
 defineExpose({ clear })
 
 onMounted(() => {
   autoHeight()
+
   textArea.value?.focus()
 })
 </script>

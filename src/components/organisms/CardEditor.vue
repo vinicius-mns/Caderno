@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
@@ -9,29 +9,31 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import CrossIco from '../atoms/icons/CrossIco.vue'
 
 const cardStyle = useStylesCard()
 
-const pageStyle = useStylesPage()
-
 const tags = useTags()
 
-const props = defineProps<{ cardP: Icard }>()
+const props = defineProps<{ cardP: Icard; idTextImput: string }>()
 
 const emit = defineEmits<{
   (e: 'emitCard', v: Icard): void
   (e: 'emitCancel', v: Icard): void
+  (e: 'sendCard', v: Icard): void
 }>()
 
 const allTags = computed(() => tags.tags)
 
-const useCard = () => {
-  const cardRef = ref<Icard>({} as Icard)
+const useCard = (e: typeof emit) => {
+  const cardRef = ref<Icard>(props.cardP)
 
-  const setCard = (card: Icard) => (cardRef.value = card)
+  const setCard = (card: Icard) => {
+    cardRef.value = card
+
+    e('emitCard', card)
+  }
 
   const setCardContent = (content: string) => setCard({ ...cardRef.value, content })
 
@@ -45,27 +47,28 @@ const useCard = () => {
   }
 }
 
-const card = useCard()
+const card = useCard(emit)
 
-const emitCard = () => emit('emitCard', card.cardRef.value)
+const sendCard = () => emit('sendCard', card.cardRef.value)
 
 const emitCancel = () => emit('emitCancel', card.cardRef.value)
-
-watchEffect(() => card.setCard(props.cardP))
 </script>
 
 <template>
   <FlexContainer class="main-container" flex-direction="column" align-items="center">
     <FlexContainer flex-direction="column" align-items="center" class="base-width">
-      <TagSelectorWithList
-        :all-tags="allTags"
-        :tags-checked="card.cardRef.value.tags"
-        @emit-selected="card.setCardTags"
-      />
+      <FlexContainer class="top-container">
+        <TagSelectorWithList
+          :all-tags="allTags"
+          :tags-checked="card.cardRef.value.tags"
+          @emit-selected="card.setCardTags"
+        />
+      </FlexContainer>
 
       <ThemeTextArea
+        class="textarea"
         :style="cardStyle.atualStyle"
-        id="card-editor"
+        :id="props.idTextImput"
         :content="card.cardRef.value.content"
         @emit-content="card.setCardContent"
       />
@@ -74,9 +77,10 @@ watchEffect(() => card.setCard(props.cardP))
     <FlexContainer align-items="center" class="buttons-container base-width">
       <ButtonSlot
         content="Confirmar alteração"
-        @click="emitCard()"
+        @click="sendCard()"
         class="confirm-button"
         :reverse-color="true"
+        :border="true"
       >
         <PencilIco />
       </ButtonSlot>
@@ -90,15 +94,22 @@ watchEffect(() => card.setCard(props.cardP))
 
 <style scoped lang="scss">
 .main-container {
-  border: solid 1px v-bind('pageStyle.atualColor.border');
-  box-sizing: border-box;
   max-height: 80dvh;
   overflow: auto;
-  border-radius: 8px;
-  padding: 5px;
+  position: relative;
 
   & .base-width {
     width: 100%;
+  }
+
+  & .top-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  & .textarea {
+    padding-top: 50px;
   }
 
   & .buttons-container {
@@ -108,20 +119,10 @@ watchEffect(() => card.setCard(props.cardP))
       flex-shrink: 1;
       margin-right: 8px;
     }
+
     & .cancel-button {
       flex-shrink: 1;
     }
-  }
-
-  animation: init 0.5s forwards;
-  opacity: 0%;
-  margin-top: 100px;
-}
-
-@keyframes init {
-  to {
-    opacity: 100%;
-    margin-top: 0;
   }
 }
 </style>
