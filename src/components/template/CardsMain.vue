@@ -12,7 +12,7 @@ import CardSlot from '../organisms/CardSlot.vue'
 import TagSelectorWithList from '../organisms/TagSelectorWithList.vue'
 import CardOptions from '../organisms/CardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
-import CarUpdate from '../organisms/CarUpdate.vue'
+import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { v4 as uuid } from 'uuid'
 
@@ -128,7 +128,7 @@ const cardDeleteSend = async (card: Icard) => {
         <PlusIco />
       </ThemeButton>
 
-      <CarUpdate
+      <CardEditor
         v-for="(card, i) in cardsTo.create"
         :key="i"
         class="card-w"
@@ -140,7 +140,7 @@ const cardDeleteSend = async (card: Icard) => {
       />
 
       <div v-for="(card, i) in cardsReverse" :key="i">
-        <CarUpdate
+        <CardEditor
           v-if="isCardTo(card, 'edit')"
           class="card-w"
           :card-p="cardsTo.edit.find((c) => c.id === card.id)!"
