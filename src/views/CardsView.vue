@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import CardsTop from '@/components/template/CadsTop.vue'
-import CardsBottom from '@/components/template/CardsBottom.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'
@@ -34,11 +33,7 @@ onMounted(async () => {
       <CardsTop />
     </div>
 
-    <FlexContainer align-items="center" justify-content="center" class="bottom">
-      <CardsBottom />
-    </FlexContainer>
-
-    <WindowsAll />
+    <WindowsAll class="all-windows" />
   </FlexContainer>
 </template>
 
@@ -60,6 +55,10 @@ onMounted(async () => {
     height: 60px;
     width: 100%;
     flex-shrink: 0;
+  }
+
+  & .all-windows {
+    z-index: 999;
   }
 
   & .bottom {

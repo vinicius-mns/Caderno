@@ -23,6 +23,9 @@ import ThemeButton from '../atoms/ThemeButton.vue'
 import AddTagIco from '../atoms/icons/AddTagIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import GearIco from '../atoms/icons/GearIco.vue'
+import TagWithOptions from '../organisms/TagWithOptions.vue'
 
 const style = useStylesPage()
 
@@ -105,48 +108,106 @@ const cleanAllTags = () => {
 </script>
 
 <template>
-  <FlexContainer class="cards-header" align-items="end" flex-direction="row">
-    <FloatModalSlot>
-      <template #button-slot>
-        <ButtonCoinSlot content="Filtrar cards" class="filter-cards-button">
-          <FilterIco />
-        </ButtonCoinSlot>
-      </template>
+  <FlexContainer class="cards-header" align-items="center" justify-content="space-between">
+    <FlexContainer align-items="center" class="filter-container">
+      <FloatModalSlot>
+        <template #button-slot>
+          <ButtonCoinSlot content="Filtrar cards">
+            <FilterIco />
+          </ButtonCoinSlot>
+        </template>
 
-      <template #container-slot>
-        <ModalCard class="modal-card">
-          <TagsFilterCards
-            :allTags="allTags"
-            :include-tags="includeTags"
-            :exclude-tags="excludeTags"
-            @include-tag-add="addIncludeTags"
-            @include-tag-remove="removeIncludeTags"
-            @exclude-tag-add="addExcludeTags"
-            @exclude-tag-remove="removeExcludeTags"
-            @clean-all="cleanAllTags"
-          />
-        </ModalCard>
-      </template>
-    </FloatModalSlot>
+        <template #container-slot>
+          <ModalCard class="modal-card">
+            <TagsFilterCards
+              :allTags="allTags"
+              :include-tags="includeTags"
+              :exclude-tags="excludeTags"
+              @include-tag-add="addIncludeTags"
+              @include-tag-remove="removeIncludeTags"
+              @exclude-tag-add="addExcludeTags"
+              @exclude-tag-remove="removeExcludeTags"
+              @clean-all="cleanAllTags"
+            />
+          </ModalCard>
+        </template>
+      </FloatModalSlot>
 
-    <FlexContainer class="cards-filter">
-      <TagsFiltredsList
-        :include-tags="includeTags"
-        :exclude-tags="excludeTags"
-        @include-tag-remove="removeIncludeTag"
-        @exclude-tag-remove="removeExcludeTags"
-      />
+      <FlexContainer class="cards-filter">
+        <TagsFiltredsList
+          :include-tags="includeTags"
+          :exclude-tags="excludeTags"
+          @include-tag-remove="removeIncludeTag"
+          @exclude-tag-remove="removeExcludeTags"
+        />
+      </FlexContainer>
+    </FlexContainer>
+
+    <FlexContainer align-items="center" class="buttons-container">
+      <ButtonSlot
+        content="Criar tag"
+        class="create-tag-button button-x"
+        :border="true"
+        @click="window.tagCreate.open(null)"
+      >
+        <PencilIco />
+      </ButtonSlot>
+
+      <hr />
+
+      <FloatModalSlot>
+        <template #button-slot>
+          <ButtonCoinSlot content="Tags" :border="true" class="button-x">
+            <TagIco />
+          </ButtonCoinSlot>
+        </template>
+
+        <template #container-slot>
+          <ModalCard class="tags-card">
+            <FlexContainer flex-direction="column" class="tags-flex-container">
+              <FlexContainer flex-wrap="wrap" class="tags-area">
+                <TagWithOptions
+                  v-for="(tag, i) in allTags"
+                  :key="i"
+                  :tag="tag"
+                  @update-tag="window.tagEditor.open"
+                  @delete-tag="window.tagDelete.open"
+                  @delete-cards-withtag="window.tagDeleteCard.open"
+                />
+              </FlexContainer>
+
+              <ButtonSlot
+                content="Criar tag"
+                class="create-tag-button"
+                @click="window.tagCreate.open(null)"
+              >
+                <PencilIco />
+              </ButtonSlot>
+            </FlexContainer>
+          </ModalCard>
+        </template>
+      </FloatModalSlot>
+
+      <ButtonCoinSlot
+        content="Tags"
+        class="button-x"
+        :border="true"
+        @click="window.config.open(null)"
+      >
+        <GearIco />
+      </ButtonCoinSlot>
     </FlexContainer>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .cards-header {
-  width: 100%;
+  width: calc(100% - 150px);
+  justify-self: center;
   height: 100%;
 
-  & .filter-cards-button {
-    margin-left: 50px;
+  @media screen and (max-width: 767px) {
+    width: calc(100% - 10px);
   }
 
   & .modal-card {
@@ -157,20 +218,53 @@ const cleanAllTags = () => {
     max-height: 60dvh;
   }
 
-  & .cards-filter {
-    max-width: calc(100dvw - 100px);
-    overflow: hidden;
+  & .filter-container {
+    & .cards-filter {
+      max-width: calc(100dvw - 460px);
+      overflow: hidden;
 
-    @media screen and (max-width: 767px) {
-      display: none;
+      @media screen and (max-width: 767px) {
+        display: none;
+      }
     }
   }
 
-  & .create-card-container {
-    overflow: hidden;
-    & hr {
-      width: 100%;
+  & .buttons-container {
+    & .create-tag-button {
+      width: 130px;
+      width: auto;
+      padding-right: 10px;
     }
+
+    & .button-x {
+      margin: 5px 3px;
+    }
+
+    & .tags-card {
+      display: flex;
+      flex-direction: column;
+      width: 340px;
+      max-height: 55dvh;
+
+      & .tags-flex-container {
+        height: 100%;
+        overflow: hidden;
+        & .tags-area {
+          height: 100%;
+          width: 100%;
+          overflow: auto;
+          flex-shrink: 1;
+        }
+        & .create-tag-button {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+
+  & hr {
+    height: 35px;
+    margin: 5px 3px;
   }
 }
 </style>

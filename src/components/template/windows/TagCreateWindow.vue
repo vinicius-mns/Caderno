@@ -74,6 +74,17 @@ const useTagsHandle = () => {
 }
 
 const tagsHandle = useTagsHandle()
+
+const textButton = computed(() => {
+  switch (tagsHandle.tagsList.value.length) {
+    case 0:
+      return 'Nenhuma tag'
+    case 1:
+      return 'Criar tag'
+    default:
+      return 'Criar tags'
+  }
+})
 </script>
 
 <template>
@@ -100,7 +111,7 @@ const tagsHandle = useTagsHandle()
       </FlexContainer>
 
       <FlexContainer flex-direction="row" class="buttons-area">
-        <ButtonSlot content="Criar tags" class="button-tag" @click="tagsHandle.createTags()">
+        <ButtonSlot :content="textButton" class="button-tag" @click="tagsHandle.createTags()">
           <SendIco />
         </ButtonSlot>
 
