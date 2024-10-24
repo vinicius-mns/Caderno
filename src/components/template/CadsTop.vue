@@ -189,7 +189,7 @@ const cleanAllTags = () => {
       </FloatModalSlot>
 
       <ButtonCoinSlot
-        content="Tags"
+        content="configurações"
         class="button-x"
         :border="true"
         @click="window.config.open(null)"
