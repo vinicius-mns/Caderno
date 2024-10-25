@@ -41,6 +41,8 @@ export const useWindows = defineStore('windows', () => {
 
   const errorMessage = newWindow({ props: '', title: 'Error' })
 
+  const errorCardNoTag = newWindow({ title: 'Nenhuma tag criada', props: null })
+
   return {
     cardCreate,
     cardEdit,
@@ -50,6 +52,7 @@ export const useWindows = defineStore('windows', () => {
     tagDeleteCard,
     tagDelete,
     config,
-    errorMessage
+    errorMessage,
+    errorCardNoTag
   }
 })

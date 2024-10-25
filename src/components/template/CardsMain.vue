@@ -51,6 +51,8 @@ const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
 const addCardTo = (card: Icard | null, to: ICardTo) => {
   const newCards = [...cardsTo[to], card ? card : cardEmpty()]
   cardsTo[to] = newCards
+
+  if (tags.tags.length <= 0) window.errorCardNoTag.open(null)
 }
 
 const setCardTo = (card: Icard, to: ICardTo) => {

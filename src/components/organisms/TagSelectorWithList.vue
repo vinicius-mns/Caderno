@@ -11,6 +11,10 @@ import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
+import PencilIco from '../atoms/icons/PencilIco.vue'
+import { useWindows } from '@/stores/windows'
+
+const windows = useWindows()
 
 const props = withDefaults(
   defineProps<{
@@ -101,6 +105,11 @@ const emitTagsAndCloseModal = () => {
     closeModal()
   }
 }
+
+const openCreateTagAndCloseModal = () => {
+  windows.tagCreate.open(null)
+  closeModal()
+}
 </script>
 
 <template>
@@ -127,7 +136,7 @@ const emitTagsAndCloseModal = () => {
     </template>
 
     <template #container-slot>
-      <ModalCard class="modal-card-tags">
+      <ModalCard class="modal-card-tags" v-if="allTags.length > 0">
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
             v-for="(tag, i) in props.allTags"
@@ -149,6 +158,16 @@ const emitTagsAndCloseModal = () => {
         >
           <CheckIco />
         </ButtonSlot>
+      </ModalCard>
+
+      <ModalCard v-else>
+        <FlexContainer flex-direction="column" align-items="center" class="no-tag-container">
+          <ThemeP content="Nenhuma tag criada 😢" size="20px" class="no-tag-tittle" />
+
+          <ButtonSlot content="Criar tag" @click="openCreateTagAndCloseModal()">
+            <PencilIco />
+          </ButtonSlot>
+        </FlexContainer>
       </ModalCard>
     </template>
   </FloatModalSlot>
@@ -191,6 +210,12 @@ const emitTagsAndCloseModal = () => {
 
   & .unlocked {
     background-color: rgba(0, 128, 0, 0.5);
+  }
+}
+
+.no-tag-container {
+  & .no-tag-tittle {
+    margin: 10px;
   }
 }
 </style>

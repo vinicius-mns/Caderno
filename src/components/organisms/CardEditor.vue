@@ -103,13 +103,7 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
   }
 
   & .top-container {
-    position: absolute;
-    top: 0;
     width: 100%;
-  }
-
-  & .textarea {
-    padding-top: 50px;
   }
 
   & .buttons-container {
