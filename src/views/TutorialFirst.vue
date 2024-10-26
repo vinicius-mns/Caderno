@@ -11,7 +11,7 @@ import CardView from '@/components/molecules/CardView.vue'
 import TagsFilterCards from '@/components/organisms/TagsFilterCards.vue'
 import type { Icard } from '@/stores/cards/Interfaces'
 import type { Itag } from '@/stores/tags/Interfaces'
-import { ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 const path = ref(8)
 
@@ -40,8 +40,50 @@ const tags: Itag[] = [
   ['📕', 'Projeto'],
   ['⏱️', 'Urgente'],
   ['✅', 'Feito'],
-  ['🗑️', 'Leixeira']
+  ['🗑️', 'Leixeira'],
+  ['🎨', 'Design'],
+  ['📝', 'Documentação'],
+  ['💻', 'Desenvolvimento'],
+  ['🔍', 'Teste'],
+  ['📈', 'Marketing'],
+  ['📊', 'Apresentação'],
+  ['👥', 'Reunião'],
+  ['📅', 'Planejamento']
 ]
+
+const filter = reactive<{ include: Itag[]; exclude: Itag[] }>({
+  include: [],
+  exclude: []
+})
+
+const hangleFilter = (type: 'include' | 'exclude') => {
+  const add = (name: string) => {
+    const tag = tags.find((t) => t[1] === name)
+
+    if (tag) {
+      const oppositeType = type === 'include' ? 'exclude' : 'include'
+
+      filter[oppositeType] = filter[oppositeType].filter((t) => t[1] !== name)
+
+      filter[type] = [...filter[type], tag]
+    }
+  }
+
+  const remove = (name: string) => {
+    filter[type] = filter[type].filter((t) => t[1] !== name)
+  }
+
+  const clear = () => {
+    filter.include = []
+    filter.exclude = []
+  }
+
+  return {
+    add,
+    remove,
+    clear
+  }
+}
 
 const cardsToFilter = () => {
   const cards: Icard[] = [
@@ -67,13 +109,19 @@ const cardsToFilter = () => {
       id: '3',
       content: 'Enviar relatório do projeto',
       date: new Date(),
-      tags: [['✅', 'Feito']]
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito']
+      ]
     },
     {
       id: '4',
       content: 'Limpar a mesa',
       date: new Date(),
-      tags: [['🗑️', 'Leixeira']]
+      tags: [
+        ['📕', 'Projeto'],
+        ['🗑️', 'Leixeira']
+      ]
     },
     {
       id: '5',
@@ -97,19 +145,29 @@ const cardsToFilter = () => {
       id: '7',
       content: 'Comprar materiais para o projeto',
       date: new Date(),
-      tags: [['📕', 'Projeto']]
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito']
+      ]
     },
     {
       id: '8',
       content: 'Organizar arquivos do projeto',
       date: new Date(),
-      tags: [['✅', 'Feito']]
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito'],
+        ['⏱️', 'Urgente']
+      ]
     },
     {
       id: '9',
       content: 'Descartar documentos antigos',
       date: new Date(),
-      tags: [['🗑️', 'Leixeira']]
+      tags: [
+        ['📕', 'Projeto'],
+        ['🗑️', 'Leixeira']
+      ]
     },
     {
       id: '10',
@@ -119,11 +177,115 @@ const cardsToFilter = () => {
         ['📕', 'Projeto'],
         ['⏱️', 'Urgente']
       ]
+    },
+    {
+      id: '11',
+      content: 'Finalizar o design da interface do aplicativo',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['⏱️', 'Urgente'],
+        ['🎨', 'Design']
+      ]
+    },
+    {
+      id: '12',
+      content: 'Revisar o documento de requisitos do projeto',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito'],
+        ['📝', 'Documentação']
+      ]
+    },
+    {
+      id: '13',
+      content: 'Implementar a funcionalidade de login no sistema',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['⏱️', 'Urgente'],
+        ['💻', 'Desenvolvimento']
+      ]
+    },
+    {
+      id: '14',
+      content: 'Testar a integração com a API externa',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito'],
+        ['🔍', 'Teste']
+      ]
+    },
+    {
+      id: '15',
+      content: 'Preparar o material de marketing para o lançamento',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['⏱️', 'Urgente'],
+        ['📈', 'Marketing']
+      ]
+    },
+    {
+      id: '16',
+      content: 'Criar a apresentação para o cliente sobre o progresso',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito'],
+        ['📊', 'Apresentação']
+      ]
+    },
+    {
+      id: '17',
+      content: 'Organizar a reunião de feedback com a equipe',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['⏱️', 'Urgente'],
+        ['👥', 'Reunião']
+      ]
+    },
+    {
+      id: '18',
+      content: 'Atualizar o cronograma do projeto com as novas datas',
+      date: new Date(),
+      tags: [
+        ['📕', 'Projeto'],
+        ['✅', 'Feito'],
+        ['📅', 'Planejamento']
+      ]
     }
   ]
 
   return cards
 }
+
+const cardsFiltred = ref(cardsToFilter())
+
+watch(
+  filter,
+  () => {
+    const cardsIncludeTags = cardsToFilter().filter((card: Icard) => {
+      const cardTagNames = card.tags.map((t) => t[1])
+
+      return filter.include.every((tag) => cardTagNames.includes(tag[1]))
+    })
+
+    const cardExludeTags = cardsIncludeTags.filter((card) => {
+      const cardTagNames = card.tags.map((tag) => tag[1])
+
+      return !filter.exclude.some((tag) => cardTagNames.includes(tag[1]))
+    })
+
+    console.log('cja,ado')
+
+    cardsFiltred.value = cardExludeTags
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -190,13 +352,22 @@ const cardsToFilter = () => {
           justify-content="center"
         >
           <ModalCard class="modal-card">
-            <TagsFilterCards :all-tags="tags" :include-tags="[]" :exclude-tags="[]" />
+            <TagsFilterCards
+              :all-tags="tags"
+              :include-tags="filter.include"
+              :exclude-tags="filter.exclude"
+              @include-tag-add="hangleFilter('include').add"
+              @include-tag-remove="hangleFilter('include').remove"
+              @exclude-tag-add="hangleFilter('exclude').add"
+              @exclude-tag-remove="hangleFilter('exclude').remove"
+              @clean-all="hangleFilter('include').clear()"
+            />
           </ModalCard>
         </FlexContainer>
 
         <FlexContainer class="cards-container" flex-wrap="wrap" justify-content="center">
           <CardView
-            v-for="(card, i) in cardsToFilter()"
+            v-for="(card, i) in cardsFiltred"
             :key="i"
             class="animation card"
             :card="card"
@@ -258,10 +429,10 @@ const cardsToFilter = () => {
 
     & .p-2 {
       width: 80%;
+      height: 100%;
 
       & .tags-container {
         width: 30%;
-        flex-shrink: 0;
 
         & .modal-card {
           width: 360px;
@@ -272,6 +443,7 @@ const cardsToFilter = () => {
 
       & .cards-container {
         width: 100%;
+        height: min-content;
 
         & .card {
           width: 300px;
