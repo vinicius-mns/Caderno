@@ -6,6 +6,7 @@ import ThemeP from '@/components/atoms/ThemeP.vue'
 import FloatDescription from '@/components/atoms/FloatDescription.vue'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import type { Icard } from '@/stores/cards/Interfaces'
+import ThemeMarkown from '../atoms/ThemeMarkown.vue'
 
 const styleCard = useStylesCard()
 
@@ -56,8 +57,9 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
         </FloatDescription>
       </div>
     </header>
-    <div class="card-text">
-      <div v-html="marked(props.card.content)"></div>
+    <div class="markdown-container">
+      <ThemeMarkown :content="props.card.content" />
+      <!-- <div v-html="marked(props.card.content)"></div> -->
     </div>
   </div>
 </template>
@@ -102,7 +104,7 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
       }
     }
   }
-  & .card-text {
+  & .markdown-container {
     text-align: justify;
     width: 95%;
     padding: 0 10px 0 10px;
