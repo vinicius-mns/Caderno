@@ -27,8 +27,9 @@ h3 {
 
 a,
 strong {
-  padding: 3px;
+  padding: 1px 3px;
   border-radius: 4px;
+  background-color: rgba(137, 137, 218, 0.5);
 }
 
 table {
