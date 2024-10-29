@@ -2,26 +2,37 @@
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
-import ThemeH1 from '@/components/atoms/ThemeH1.vue'
+import ThemeMarkown from '@/components/atoms/ThemeMarkown.vue'
 import BackIco from '@/components/atoms/icons/BackIco.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import CardView from '@/components/molecules/CardView.vue'
+import TagView from '@/components/molecules/TagView.vue'
 import TagsFilterCards from '@/components/organisms/TagsFilterCards.vue'
+import TagsFiltredsList from '@/components/organisms/TagsFiltredsList.vue'
+import router from '@/router'
 import type { Icard } from '@/stores/cards/Interfaces'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import type { Itag } from '@/stores/tags/Interfaces'
+import { useTutorial } from '@/stores/tutorial/tutorial'
 import { reactive, ref, watch } from 'vue'
 
-const path = ref(8)
+const stylesPage = useStylesPage()
+
+const { diaryFilter, projectFilter } = useTutorial()
+
+const path = ref(0)
 
 const nextPath = () => {
-  if (path.value <= 10) path.value = path.value + 1
+  if (path.value < 14) path.value = path.value + 1
 }
 
 const backPath = () => {
   if (path.value >= 1) path.value = path.value - 1
 }
+
+const pathIn = (start: number, end: number) => path.value >= start && path.value <= end
 
 const manyCards = () => {
   const cards: Icard[] = Array.from({ length: 100 }, (_, i) => {
@@ -36,351 +47,229 @@ const manyCards = () => {
   return cards
 }
 
-const tags: Itag[] = [
-  ['📕', 'Projeto'],
-  ['⏱️', 'Urgente'],
-  ['✅', 'Feito'],
-  ['🗑️', 'Leixeira'],
-  ['🎨', 'Design'],
-  ['📝', 'Documentação'],
-  ['💻', 'Desenvolvimento'],
-  ['🔍', 'Teste'],
-  ['📈', 'Marketing'],
-  ['📊', 'Apresentação'],
-  ['👥', 'Reunião'],
-  ['📅', 'Planejamento']
-]
+const textClickOnFilter = `
+**Clique no filtro** para selecionar as tags que deseja filtrar
 
-const filter = reactive<{ include: Itag[]; exclude: Itag[] }>({
-  include: [],
-  exclude: []
-})
+**Com Tag**: Mostra os cards com que **possuem a tag**
 
-const hangleFilter = (type: 'include' | 'exclude') => {
-  const add = (name: string) => {
-    const tag = tags.find((t) => t[1] === name)
+**Sem tag**: Mostras os cards que **não possuem a tag**
+`
 
-    if (tag) {
-      const oppositeType = type === 'include' ? 'exclude' : 'include'
+const textExempleFilter = `
+## Exemplo de filtro:
 
-      filter[oppositeType] = filter[oppositeType].filter((t) => t[1] !== name)
+**Com tag** marque: [Projeto], [Urgente]
 
-      filter[type] = [...filter[type], tag]
-    }
-  }
+**Sem tag** marque [Feito],
 
-  const remove = (name: string) => {
-    filter[type] = filter[type].filter((t) => t[1] !== name)
-  }
+Com isso voce verá todos os **projetos Ugentes** que **não forem feitos**.
 
-  const clear = () => {
-    filter.include = []
-    filter.exclude = []
-  }
+Isso Te ajudar a visualizar apenas os projetos importantes que voce deve e focar
+`
 
-  return {
-    add,
-    remove,
-    clear
-  }
-}
-
-const cardsToFilter = () => {
-  const cards: Icard[] = [
-    {
-      id: '',
-      content: 'Fazer uma tarefa do trabalho da faculdade',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente']
-      ]
-    },
-    {
-      id: '2',
-      content: 'Estudar para a prova de matemática',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente']
-      ]
-    },
-    {
-      id: '3',
-      content: 'Enviar relatório do projeto',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito']
-      ]
-    },
-    {
-      id: '4',
-      content: 'Limpar a mesa',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['🗑️', 'Leixeira']
-      ]
-    },
-    {
-      id: '5',
-      content: 'Revisar o código do projeto',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito']
-      ]
-    },
-    {
-      id: '6',
-      content: 'Preparar apresentação para a reunião',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente']
-      ]
-    },
-    {
-      id: '7',
-      content: 'Comprar materiais para o projeto',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito']
-      ]
-    },
-    {
-      id: '8',
-      content: 'Organizar arquivos do projeto',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito'],
-        ['⏱️', 'Urgente']
-      ]
-    },
-    {
-      id: '9',
-      content: 'Descartar documentos antigos',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['🗑️', 'Leixeira']
-      ]
-    },
-    {
-      id: '10',
-      content: 'Planejar a próxima semana',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente']
-      ]
-    },
-    {
-      id: '11',
-      content: 'Finalizar o design da interface do aplicativo',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente'],
-        ['🎨', 'Design']
-      ]
-    },
-    {
-      id: '12',
-      content: 'Revisar o documento de requisitos do projeto',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito'],
-        ['📝', 'Documentação']
-      ]
-    },
-    {
-      id: '13',
-      content: 'Implementar a funcionalidade de login no sistema',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente'],
-        ['💻', 'Desenvolvimento']
-      ]
-    },
-    {
-      id: '14',
-      content: 'Testar a integração com a API externa',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito'],
-        ['🔍', 'Teste']
-      ]
-    },
-    {
-      id: '15',
-      content: 'Preparar o material de marketing para o lançamento',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente'],
-        ['📈', 'Marketing']
-      ]
-    },
-    {
-      id: '16',
-      content: 'Criar a apresentação para o cliente sobre o progresso',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito'],
-        ['📊', 'Apresentação']
-      ]
-    },
-    {
-      id: '17',
-      content: 'Organizar a reunião de feedback com a equipe',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['⏱️', 'Urgente'],
-        ['👥', 'Reunião']
-      ]
-    },
-    {
-      id: '18',
-      content: 'Atualizar o cronograma do projeto com as novas datas',
-      date: new Date(),
-      tags: [
-        ['📕', 'Projeto'],
-        ['✅', 'Feito'],
-        ['📅', 'Planejamento']
-      ]
-    }
-  ]
-
-  return cards
-}
-
-const cardsFiltred = ref(cardsToFilter())
-
-watch(
-  filter,
-  () => {
-    const cardsIncludeTags = cardsToFilter().filter((card: Icard) => {
-      const cardTagNames = card.tags.map((t) => t[1])
-
-      return filter.include.every((tag) => cardTagNames.includes(tag[1]))
-    })
-
-    const cardExludeTags = cardsIncludeTags.filter((card) => {
-      const cardTagNames = card.tags.map((tag) => tag[1])
-
-      return !filter.exclude.some((tag) => cardTagNames.includes(tag[1]))
-    })
-
-    console.log('cja,ado')
-
-    cardsFiltred.value = cardExludeTags
-  },
-  { deep: true }
-)
+const pushCards = () => router.push('/cards')
 </script>
 
 <template>
   <div class="page-container">
     <FlexContainer flex-direction="column" align-items="center" class="tutorial-container">
-      <ThemeH1 :content="String(path)" />
+      <!-- <ThemeMarkown :content="`## ${String(path)}`" /> -->
 
-      <FlexContainer v-if="path === 1 || path === 2" class="animation p-1" justify-content="center">
+      <FlexContainer v-if="pathIn(1, 1)" class="animation p-1" justify-content="center">
         <FlexContainer class="text" justify-content="center">
-          <ThemeH1 content="Isso é um post it" />
+          <ThemeMarkown content="# Isso é um post it" />
         </FlexContainer>
 
         <FlexContainer class="card-container">
           <CardView
             class="animation card"
-            v-if="path === 2"
             :card="{ id: '', content: 'Oi eu sou um postIt :)', date: new Date(), tags: [] }"
           />
         </FlexContainer>
       </FlexContainer>
 
-      <FlexContainer v-if="path === 3 || path === 4" class="animation p-1">
+      <FlexContainer v-if="pathIn(2, 3)" class="animation p-1">
         <FlexContainer class="text" justify-content="center">
-          <ThemeH1 content="Isso sao varios postit" />
+          <ThemeMarkown content="# Isso sao varios postit" />
         </FlexContainer>
 
         <FlexContainer
           class="card-container"
           flex-wrap="wrap"
           justify-content="center"
-          v-if="path === 4"
+          v-if="pathIn(3, 3)"
         >
           <CardView v-for="(card, i) in manyCards()" :key="i" class="animation card" :card="card" />
         </FlexContainer>
       </FlexContainer>
 
       <FlexContainer
-        v-if="path === 5 || path === 6 || path === 7"
+        v-if="pathIn(4, 6)"
         flex-direction="column"
         align-items="center"
         justify-content="center"
         class="p-1"
       >
-        <ThemeH1 content="Postit sao otimos para anotar ideias" class="animation title-b" />
+        <ThemeMarkown content="# Postit sao otimos para anotar ideias" class="animation title-b" />
 
-        <ThemeH1
+        <ThemeMarkown
           class="animation title-b"
-          content="Porem quando ha muito deles, fica dificil encontra-los"
-          v-if="path === 6 || path === 7"
+          content="# Porem quando ha muito deles, fica dificil encontra-los"
+          v-if="pathIn(5, 6)"
         />
 
-        <ThemeH1
-          content="E se pudesse-mos colocar *tags* nos postit?"
-          v-if="path === 7"
+        <ThemeMarkown
+          content="# E se pudesse-mos colocar **tags** nos postit?"
+          v-if="pathIn(6, 6)"
           class="animation title-b"
         />
       </FlexContainer>
 
-      <FlexContainer v-if="path === 8" class="p-2">
+      <FlexContainer v-if="pathIn(7, 11)" class="template-tag-and-cards">
+        <header v-if="pathIn(9, 11)">
+          <ThemeMarkown content="Filtro ativo" class="p" />
+
+          <TagsFiltredsList
+            :include-tags="projectFilter.filter.include"
+            :exclude-tags="projectFilter.filter.exclude"
+            @include-tag-remove="projectFilter.handleFilter('include').remove"
+            @exclude-tag-remove="projectFilter.handleFilter('exclude').remove"
+          />
+        </header>
+
+        <div class="tags-container">
+          <FlexContainer
+            flex-direction="column"
+            align-items="center"
+            v-if="pathIn(7, 8)"
+            class="animation"
+          >
+            <ThemeMarkown content="# Tags" />
+
+            <FlexContainer flex-direction="column" align-items="center">
+              <TagView v-for="(tag, i) in projectFilter.tags" :key="i" :tag="tag" />
+            </FlexContainer>
+          </FlexContainer>
+
+          <FlexContainer
+            v-if="pathIn(9, 11)"
+            align-items="center"
+            flex-direction="column"
+            class="animation"
+          >
+            <ThemeMarkown content="## Fitrar cards pelas tags" />
+
+            <ModalCard class="modal-card">
+              <TagsFilterCards
+                :all-tags="projectFilter.tags"
+                :include-tags="projectFilter.filter.include"
+                :exclude-tags="projectFilter.filter.exclude"
+                @include-tag-add="projectFilter.handleFilter('include').add"
+                @include-tag-remove="projectFilter.handleFilter('include').remove"
+                @exclude-tag-add="projectFilter.handleFilter('exclude').add"
+                @exclude-tag-remove="projectFilter.handleFilter('exclude').remove"
+                @clean-all="projectFilter.handleFilter('include').clear()"
+              />
+            </ModalCard>
+
+            <ThemeMarkown :content="textClickOnFilter" v-if="pathIn(10, 10)" class="animation" />
+
+            <ThemeMarkown :content="textExempleFilter" v-if="pathIn(11, 11)" class="animation" />
+          </FlexContainer>
+        </div>
+
         <FlexContainer
-          class="tags-container"
           flex-direction="column"
           align-items="center"
-          justify-content="center"
+          class="cards-container"
+          v-if="pathIn(8, 11)"
         >
-          <ModalCard class="modal-card">
-            <TagsFilterCards
-              :all-tags="tags"
-              :include-tags="filter.include"
-              :exclude-tags="filter.exclude"
-              @include-tag-add="hangleFilter('include').add"
-              @include-tag-remove="hangleFilter('include').remove"
-              @exclude-tag-add="hangleFilter('exclude').add"
-              @exclude-tag-remove="hangleFilter('exclude').remove"
-              @clean-all="hangleFilter('include').clear()"
-            />
-          </ModalCard>
-        </FlexContainer>
+          <ThemeMarkown content="# Cards" />
 
-        <FlexContainer class="cards-container" flex-wrap="wrap" justify-content="center">
-          <CardView
-            v-for="(card, i) in cardsFiltred"
-            :key="i"
-            class="animation card"
-            :card="card"
+          <FlexContainer flex-wrap="wrap" justify-content="center">
+            <CardView
+              v-for="(card, i) in projectFilter.cards"
+              :key="i"
+              class="animation card"
+              :card="card"
+            />
+          </FlexContainer>
+        </FlexContainer>
+      </FlexContainer>
+
+      <FlexContainer v-if="pathIn(12, 13)" class="animation" flex-direction="column">
+        <ThemeMarkown content="## Goseria de ver outros exemplos ou comecar voce mesmo?" />
+
+        <FlexContainer v-if="pathIn(13, 13)" class="animation" flex-direction="column">
+          <ButtonSlot
+            content="Ver exemplos"
+            :border="true"
+            class="button-color margir-top"
+            @click="nextPath()"
+            >📝</ButtonSlot
+          >
+
+          <ButtonSlot
+            content="Quero fazer eu mesmo"
+            :border="true"
+            class="button-color margin-top"
+            @click="pushCards()"
+            >😎</ButtonSlot
+          >
+        </FlexContainer>
+      </FlexContainer>
+
+      <FlexContainer v-if="pathIn(14, 14)" class="template-tag-and-cards">
+        <header>
+          <ThemeMarkown content="Filtro ativo" class="p" />
+
+          <TagsFiltredsList
+            :include-tags="diaryFilter.filter.include"
+            :exclude-tags="diaryFilter.filter.exclude"
+            @include-tag-remove="diaryFilter.handleFilter('include').remove"
+            @exclude-tag-remove="diaryFilter.handleFilter('exclude').remove"
           />
+        </header>
+
+        <div class="tags-container">
+          <FlexContainer align-items="center" flex-direction="column" class="animation">
+            <ThemeMarkown content="## Fitrar cards pelas tags" />
+
+            <ModalCard class="modal-card">
+              <TagsFilterCards
+                :all-tags="diaryFilter.tags"
+                :include-tags="diaryFilter.filter.include"
+                :exclude-tags="diaryFilter.filter.exclude"
+                @include-tag-add="diaryFilter.handleFilter('include').add"
+                @include-tag-remove="diaryFilter.handleFilter('include').remove"
+                @exclude-tag-add="diaryFilter.handleFilter('exclude').add"
+                @exclude-tag-remove="diaryFilter.handleFilter('exclude').remove"
+                @clean-all="diaryFilter.handleFilter('include').clear()"
+              />
+            </ModalCard>
+          </FlexContainer>
+        </div>
+
+        <FlexContainer flex-direction="column" align-items="center" class="cards-container">
+          <ThemeMarkown content="# Cards" />
+
+          <FlexContainer flex-wrap="wrap" justify-content="center">
+            <CardView
+              v-for="(card, i) in diaryFilter.cards"
+              :key="i"
+              class="animation card"
+              :card="card"
+            />
+          </FlexContainer>
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>
 
-    <FlexContainer class="bottom">
-      <ButtonCoinSlot content="Voltar" @click="backPath">
+    <FlexContainer class="bottom" v-if="pathIn(0, 12) || pathIn(14, 15)">
+      <ButtonCoinSlot content="Voltar" @click="backPath()">
         <BackIco />
       </ButtonCoinSlot>
-      <ButtonSlot content="Prosseguir" @click="nextPath">
+      <ButtonSlot content="Prosseguir" @click="nextPath" class="button-color">
         <SendIco />
       </ButtonSlot>
     </FlexContainer>
@@ -389,9 +278,11 @@ watch(
 
 <style scoped lang="scss">
 .page-container {
-  background-color: rgb(0, 0, 0);
+  background-color: v-bind('stylesPage.atualColor.front');
   height: 100dvh;
   width: 100%;
+
+  color: v-bind('stylesPage.atualColor.text');
 
   & .tutorial-container {
     height: 100%;
@@ -427,12 +318,29 @@ watch(
       }
     }
 
-    & .p-2 {
+    & .template-tag-and-cards {
       width: 80%;
       height: 100%;
+      margin-top: 60px;
+
+      & header {
+        display: flex;
+        align-items: center;
+        position: fixed;
+        top: 30px;
+        left: 0;
+        height: 40px;
+        width: 80%;
+        margin-left: 10%;
+
+        & .p {
+          flex-shrink: 0;
+        }
+      }
 
       & .tags-container {
         width: 30%;
+        flex-shrink: 0;
 
         & .modal-card {
           width: 360px;
@@ -443,16 +351,22 @@ watch(
 
       & .cards-container {
         width: 100%;
-        height: min-content;
 
         & .card {
           width: 300px;
-          margin: 10px;
-          // margin: 10px;
-          // flex-grow: 0;
+          margin-right: 10px;
+          margin-bottom: 10px;
         }
       }
     }
+
+    & .margin-top {
+      margin-top: 8px;
+    }
+  }
+  & .button-color {
+    background-color: v-bind('stylesPage.atualColor.hover');
+    width: fit-content;
   }
 
   & .bottom {
