@@ -47,7 +47,7 @@ const emitCleanAll = () => emit('cleanAll')
 
 <template>
   <FlexContainer flex-direction="column" class="cards-filter-container">
-    <FlexContainer justify-content="space-between" class="tags-selector-options">
+    <FlexContainer justify-content="space-between" class="top-container">
       <RadioBase
         v-for="(option, i) in tagsTypeRoutes"
         radio-name="filter-tags"
@@ -64,7 +64,7 @@ const emitCleanAll = () => emit('cleanAll')
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Com tag'"
       flex-wrap="wrap"
-      class="tags-selectable-container"
+      class="bottom-container"
     >
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
@@ -82,7 +82,7 @@ const emitCleanAll = () => emit('cleanAll')
     <FlexContainer
       v-if="tagsTypeAtualRoute === 'Sem tag'"
       flex-wrap="wrap"
-      class="tags-selectable-container"
+      class="bottom-container"
     >
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
@@ -106,15 +106,16 @@ const emitCleanAll = () => emit('cleanAll')
 <style scoped lang="scss">
 .cards-filter-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
 
-  & .tags-selector-options {
+  & .top-container {
     width: 100%;
-    height: 100%;
   }
 
-  & .tags-selectable-container {
-    width: 100%;
+  & .bottom-container {
     height: 100%;
     overflow-y: auto;
 

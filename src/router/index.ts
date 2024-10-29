@@ -3,6 +3,7 @@ import HomePage from '@/views/HomePage.vue'
 import CardsView from '@/views/CardsView.vue'
 import About from '@/views/AboutPage.vue'
 import DataStorage from '@/views/DataStorage.vue'
+import TutorialFirst from '@/views/TutorialFirst.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/data',
       name: 'data',
       component: DataStorage
+    },
+    {
+      path: '/tutorial',
+      name: 'data',
+      component: TutorialFirst
     }
   ]
 })
