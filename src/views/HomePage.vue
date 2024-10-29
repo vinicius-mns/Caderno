@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
+import router from '@/router'
+import { useCards } from '@/stores/cards/cards'
+
+const cards = useCards()
+
+const firstRoute = () => {
+  if (cards.cards.length <= 0) router.push('/tutorial')
+  else router.push('/cards')
+}
 </script>
 
 <template>
@@ -9,8 +18,8 @@ import ThemeButton from '@/components/atoms/ThemeButton.vue'
         <div class="logo"><h2>logo aqui</h2></div>
       </div>
       <nav>
-        <RouterLink to="/cards" class="link">
-          <ThemeButton class="cards">Iniciar</ThemeButton>
+        <RouterLink to="" class="link">
+          <ThemeButton class="cards" @click="firstRoute()">Iniciar</ThemeButton>
         </RouterLink>
         <RouterLink to="/about" class="link">
           <ThemeButton class="about">Oque é o site?</ThemeButton>
