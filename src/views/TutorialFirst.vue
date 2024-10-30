@@ -22,7 +22,7 @@ const stylesPage = useStylesPage()
 
 const { diaryFilter, projectFilter } = useTutorial()
 
-const path = ref(10)
+const path = ref(0)
 
 const nextPath = () => {
   if (path.value < 14) path.value = path.value + 1
