@@ -198,7 +198,7 @@ const pushCards = () => router.push('/cards')
       </FlexContainer>
 
       <FlexContainer v-if="pathIn(12, 13)" class="animation" flex-direction="column">
-        <ThemeMarkown content="## Goseria de ver outros exemplos ou comecar voce mesmo?" />
+        <ThemeMarkown content="## Gostaria de ver outros exemplos ou comecar voce mesmo?" />
 
         <FlexContainer v-if="pathIn(13, 13)" class="animation" flex-direction="column">
           <ButtonSlot
