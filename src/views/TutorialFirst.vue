@@ -93,7 +93,7 @@ const pushCards = () => router.push('/cards')
 <template>
   <div class="page-container">
     <FlexContainer flex-direction="column" align-items="center" class="tutorial-container">
-      <ThemeMarkown :content="`## ${String(path)}`" />
+      <!-- <ThemeMarkown :content="`## ${String(path)}`" /> -->
       <CardView
         v-if="pathIn(0, 0)"
         :card="newCard({ content: textIntro })"
@@ -154,7 +154,7 @@ const pushCards = () => router.push('/cards')
         />
       </FlexContainer>
 
-      <FlexContainer v-if="pathIn(7, 11)" class="template-tag-and-cards">
+      <FlexContainer v-if="pathIn(7, 11)" class="template-tag-and-cards" flex-direction="column">
         <header v-if="pathIn(9, 11)">
           <ThemeMarkown content="Filtro ativo" class="p" />
 
@@ -166,64 +166,66 @@ const pushCards = () => router.push('/cards')
           />
         </header>
 
-        <div class="tags-container">
-          <FlexContainer
-            flex-direction="column"
-            align-items="center"
-            v-if="pathIn(7, 8)"
-            class="animation"
-          >
-            <ThemeMarkown content="# Tags" />
+        <FlexContainer class="card-tags">
+          <div class="tags-container">
+            <FlexContainer
+              flex-direction="column"
+              align-items="center"
+              v-if="pathIn(7, 8)"
+              class="animation"
+            >
+              <ThemeMarkown content="# Tags" />
 
-            <FlexContainer flex-direction="column" align-items="center">
-              <TagView v-for="(tag, i) in projectFilter.tags" :key="i" :tag="tag" />
+              <FlexContainer flex-direction="column" align-items="center">
+                <TagView v-for="(tag, i) in projectFilter.tags" :key="i" :tag="tag" />
+              </FlexContainer>
             </FlexContainer>
-          </FlexContainer>
+
+            <FlexContainer
+              v-if="pathIn(9, 11)"
+              align-items="center"
+              flex-direction="column"
+              class="animation"
+            >
+              <ThemeMarkown content="## Fitrar cards pelas tags" />
+
+              <ModalCard class="modal-card">
+                <TagsFilterCards
+                  :all-tags="projectFilter.tags"
+                  :include-tags="projectFilter.filter.include"
+                  :exclude-tags="projectFilter.filter.exclude"
+                  @include-tag-add="projectFilter.handleFilter('include').add"
+                  @include-tag-remove="projectFilter.handleFilter('include').remove"
+                  @exclude-tag-add="projectFilter.handleFilter('exclude').add"
+                  @exclude-tag-remove="projectFilter.handleFilter('exclude').remove"
+                  @clean-all="projectFilter.handleFilter('include').clear()"
+                />
+              </ModalCard>
+
+              <ThemeMarkown :content="textClickOnFilter" v-if="pathIn(10, 10)" class="animation" />
+
+              <ThemeMarkown :content="textExempleFilter" v-if="pathIn(11, 11)" class="animation" />
+
+              <img :src="clickOnFilter" alt="tutorial click no filtro" v-if="pathIn(10, 11)" />
+            </FlexContainer>
+          </div>
 
           <FlexContainer
-            v-if="pathIn(9, 11)"
-            align-items="center"
             flex-direction="column"
-            class="animation"
+            align-items="center"
+            class="cards-container"
+            v-if="pathIn(8, 11)"
           >
-            <ThemeMarkown content="## Fitrar cards pelas tags" />
+            <ThemeMarkown content="## Cards" />
 
-            <ModalCard class="modal-card">
-              <TagsFilterCards
-                :all-tags="projectFilter.tags"
-                :include-tags="projectFilter.filter.include"
-                :exclude-tags="projectFilter.filter.exclude"
-                @include-tag-add="projectFilter.handleFilter('include').add"
-                @include-tag-remove="projectFilter.handleFilter('include').remove"
-                @exclude-tag-add="projectFilter.handleFilter('exclude').add"
-                @exclude-tag-remove="projectFilter.handleFilter('exclude').remove"
-                @clean-all="projectFilter.handleFilter('include').clear()"
+            <FlexContainer flex-wrap="wrap" justify-content="center">
+              <CardView
+                v-for="(card, i) in projectFilter.cards"
+                :key="i"
+                class="animation card"
+                :card="card"
               />
-            </ModalCard>
-
-            <ThemeMarkown :content="textClickOnFilter" v-if="pathIn(10, 10)" class="animation" />
-
-            <ThemeMarkown :content="textExempleFilter" v-if="pathIn(11, 11)" class="animation" />
-
-            <img :src="clickOnFilter" alt="tutorial click no filtro" v-if="pathIn(10, 11)" />
-          </FlexContainer>
-        </div>
-
-        <FlexContainer
-          flex-direction="column"
-          align-items="center"
-          class="cards-container"
-          v-if="pathIn(8, 11)"
-        >
-          <ThemeMarkown content="# Cards" />
-
-          <FlexContainer flex-wrap="wrap" justify-content="center">
-            <CardView
-              v-for="(card, i) in projectFilter.cards"
-              :key="i"
-              class="animation card"
-              :card="card"
-            />
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
@@ -250,7 +252,7 @@ const pushCards = () => router.push('/cards')
         </FlexContainer>
       </FlexContainer>
 
-      <FlexContainer v-if="pathIn(14, 14)" class="template-tag-and-cards">
+      <FlexContainer v-if="pathIn(14, 14)" class="template-tag-and-cards" flex-direction="column">
         <header>
           <ThemeMarkown content="Filtro ativo" class="p" />
 
@@ -262,35 +264,37 @@ const pushCards = () => router.push('/cards')
           />
         </header>
 
-        <div class="tags-container">
-          <FlexContainer align-items="center" flex-direction="column" class="animation">
-            <ThemeMarkown content="## Fitrar cards pelas tags" />
+        <FlexContainer class="card-tags">
+          <div class="tags-container">
+            <FlexContainer align-items="center" flex-direction="column" class="animation">
+              <ThemeMarkown content="## Fitrar cards pelas tags" />
 
-            <ModalCard class="modal-card">
-              <TagsFilterCards
-                :all-tags="diaryFilter.tags"
-                :include-tags="diaryFilter.filter.include"
-                :exclude-tags="diaryFilter.filter.exclude"
-                @include-tag-add="diaryFilter.handleFilter('include').add"
-                @include-tag-remove="diaryFilter.handleFilter('include').remove"
-                @exclude-tag-add="diaryFilter.handleFilter('exclude').add"
-                @exclude-tag-remove="diaryFilter.handleFilter('exclude').remove"
-                @clean-all="diaryFilter.handleFilter('include').clear()"
+              <ModalCard class="modal-card">
+                <TagsFilterCards
+                  :all-tags="diaryFilter.tags"
+                  :include-tags="diaryFilter.filter.include"
+                  :exclude-tags="diaryFilter.filter.exclude"
+                  @include-tag-add="diaryFilter.handleFilter('include').add"
+                  @include-tag-remove="diaryFilter.handleFilter('include').remove"
+                  @exclude-tag-add="diaryFilter.handleFilter('exclude').add"
+                  @exclude-tag-remove="diaryFilter.handleFilter('exclude').remove"
+                  @clean-all="diaryFilter.handleFilter('include').clear()"
+                />
+              </ModalCard>
+            </FlexContainer>
+          </div>
+
+          <FlexContainer flex-direction="column" align-items="center" class="cards-container">
+            <ThemeMarkown content="## Cards" />
+
+            <FlexContainer flex-wrap="wrap" justify-content="center">
+              <CardView
+                v-for="(card, i) in diaryFilter.cards"
+                :key="i"
+                class="animation card"
+                :card="card"
               />
-            </ModalCard>
-          </FlexContainer>
-        </div>
-
-        <FlexContainer flex-direction="column" align-items="center" class="cards-container">
-          <ThemeMarkown content="# Cards" />
-
-          <FlexContainer flex-wrap="wrap" justify-content="center">
-            <CardView
-              v-for="(card, i) in diaryFilter.cards"
-              :key="i"
-              class="animation card"
-              :card="card"
-            />
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
@@ -300,8 +304,16 @@ const pushCards = () => router.push('/cards')
       <ButtonCoinSlot content="Voltar" @click="backPath()">
         <BackIco />
       </ButtonCoinSlot>
-      <ButtonSlot content="Prosseguir" @click="nextPath" class="button-color">
+      <ButtonSlot content="Prosseguir" @click="nextPath" class="button-color" v-if="pathIn(0, 12)">
         <SendIco />
+      </ButtonSlot>
+      <ButtonSlot
+        content="Fazer eu mesmo"
+        @click="pushCards()"
+        class="button-color"
+        v-if="pathIn(14, 14)"
+      >
+        😎
       </ButtonSlot>
     </FlexContainer>
   </div>
@@ -341,7 +353,7 @@ const pushCards = () => router.push('/cards')
       }
 
       & .title-b {
-        padding: 30px;
+        padding: 10px;
       }
 
       & .card-container {
@@ -359,41 +371,45 @@ const pushCards = () => router.push('/cards')
     & .template-tag-and-cards {
       width: 80%;
       height: 100%;
-      margin-top: 60px;
 
       & header {
         display: flex;
         align-items: center;
-        position: fixed;
-        top: 30px;
-        left: 0;
-        height: 40px;
+        height: 70px;
         width: 80%;
-        margin-left: 10%;
 
         & .p {
           flex-shrink: 0;
         }
       }
 
-      & .tags-container {
-        width: 30%;
-        flex-shrink: 0;
-
-        & .modal-card {
-          width: 360px;
-          max-width: 95dvw;
-          max-height: 60dvh;
-        }
-      }
-
-      & .cards-container {
+      & .card-tags {
         width: 100%;
+        overflow: hidden;
 
-        & .card {
-          width: 300px;
-          margin-right: 10px;
-          margin-bottom: 10px;
+        & .tags-container {
+          width: 380px;
+          height: 100%;
+          flex-shrink: 0;
+          overflow-y: auto;
+
+          & .modal-card {
+            width: 360px;
+            max-width: 95dvw;
+            max-height: 60dvh;
+          }
+        }
+
+        & .cards-container {
+          width: 100%;
+          height: 100%;
+          overflow-y: auto;
+
+          & .card {
+            width: 300px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+          }
         }
       }
     }
