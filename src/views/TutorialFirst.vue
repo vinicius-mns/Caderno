@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import ThemeMarkown from '@/components/atoms/ThemeMarkown.vue'
 import BackIco from '@/components/atoms/icons/BackIco.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
@@ -16,13 +15,14 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useTutorial } from '@/stores/tutorial/tutorial'
-import { reactive, ref, watch } from 'vue'
+import { ref } from 'vue'
+import clickOnFilter from '@/components/atoms/videos/click-on-filter.gif'
 
 const stylesPage = useStylesPage()
 
 const { diaryFilter, projectFilter } = useTutorial()
 
-const path = ref(0)
+const path = ref(10)
 
 const nextPath = () => {
   if (path.value < 14) path.value = path.value + 1
@@ -34,25 +34,33 @@ const backPath = () => {
 
 const pathIn = (start: number, end: number) => path.value >= start && path.value <= end
 
+const newCard = (card: { id?: string; content?: string; date?: Date | string; tags?: Itag[] }) => {
+  return {
+    id: card.id ? card.id : '0',
+    content: card.content ? card.content : 'null',
+    date: card.date ? card.date : new Date(),
+    tags: card.tags ? card.tags : []
+  }
+}
+
 const manyCards = () => {
   const cards: Icard[] = Array.from({ length: 100 }, (_, i) => {
-    return {
-      id: String(i),
-      content: `Oi eu sou um postIt :) numero ${i}`,
-      date: new Date(),
-      tags: []
-    }
+    return newCard({ id: String(i), content: `### Oi! Eu sou um Post-it! 😊 ${i}` })
   })
 
   return cards
 }
 
 const textClickOnFilter = `
+
+&nbsp;
+
+
 **Clique no filtro** para selecionar as tags que deseja filtrar
 
-**Com Tag**: Mostra os cards com que **possuem a tag**
+**Com tag**: Mostra os cards que **possuem a tag**
 
-**Sem tag**: Mostras os cards que **não possuem a tag**
+**Sem tag**: Mostra os cards que **não possuem a tag**
 `
 
 const textExempleFilter = `
@@ -60,18 +68,21 @@ const textExempleFilter = `
 
 **Com tag** marque: [Projeto], [Urgente]
 
-**Sem tag** marque [Feito],
+**Sem tag** marque: [Feito]
 
-Com isso voce verá todos os **projetos Ugentes** que **não forem feitos**.
+Com isso, você verá todos os **projetos urgentes** que **não foram feitos**
 
-Isso Te ajudar a visualizar apenas os projetos importantes que voce deve e focar
+Isso te ajudará a visualizar apenas os projetos importantes nos quais você deve focar
 `
 
 const textIntro = `
-# Tutorial! 🎉 Vou te mostrar como o site funciona!
+# Tutorial! 🎉 
 
-👉 Clique no botão inferior esquerdo a baixo para **prosseguir**!  
-🔙 Ou, se você quiser voltar, é só clicar na setinha ao lado!
+### 👉 Clique no botão inferior esquerdo a baixo para **prosseguir**!  
+
+### 🔙 Ou, se você quiser voltar, é só clicar na setinha ao lado!
+
+---
 
 Divirta-se navegando! 😄✨
 `
@@ -82,28 +93,30 @@ const pushCards = () => router.push('/cards')
 <template>
   <div class="page-container">
     <FlexContainer flex-direction="column" align-items="center" class="tutorial-container">
-      <!-- <ThemeMarkown :content="`## ${String(path)}`" /> -->
-
-      <FlexContainer v-if="pathIn(0, 0)">
-        <ThemeMarkown :content="textIntro" />
-      </FlexContainer>
+      <ThemeMarkown :content="`## ${String(path)}`" />
+      <CardView
+        v-if="pathIn(0, 0)"
+        :card="newCard({ content: textIntro })"
+        class="card-init animation"
+        text-align="start"
+      />
 
       <FlexContainer v-if="pathIn(1, 1)" class="animation p-1" justify-content="center">
         <FlexContainer class="text" justify-content="center">
-          <ThemeMarkown content="# Isso é um post it" />
+          <ThemeMarkown content="# Isso é um Post-it" />
         </FlexContainer>
 
         <FlexContainer class="card-container">
           <CardView
             class="animation card"
-            :card="{ id: '', content: 'Oi eu sou um postIt :)', date: new Date(), tags: [] }"
+            :card="newCard({ content: '## Oi, eu sou um Post-it 😄' })"
           />
         </FlexContainer>
       </FlexContainer>
 
       <FlexContainer v-if="pathIn(2, 3)" class="animation p-1">
         <FlexContainer class="text" justify-content="center">
-          <ThemeMarkown content="# Isso sao varios postit" />
+          <ThemeMarkown content="# Isto são vários Post-its" />
         </FlexContainer>
 
         <FlexContainer
@@ -123,16 +136,19 @@ const pushCards = () => router.push('/cards')
         justify-content="center"
         class="p-1"
       >
-        <ThemeMarkown content="# Postit sao otimos para anotar ideias" class="animation title-b" />
+        <ThemeMarkown
+          content="# Post-its são ótimos para anotar ideias"
+          class="animation title-b"
+        />
 
         <ThemeMarkown
           class="animation title-b"
-          content="# Porem quando ha muito deles, fica dificil encontra-los"
+          content="# Porém, quando há muitos deles, fica difícil encontrá-los"
           v-if="pathIn(5, 6)"
         />
 
         <ThemeMarkown
-          content="# E se pudesse-mos colocar **tags** nos postit?"
+          content="# E se pudéssemos colocar **tags** nos Post-its?"
           v-if="pathIn(6, 6)"
           class="animation title-b"
         />
@@ -188,6 +204,8 @@ const pushCards = () => router.push('/cards')
             <ThemeMarkown :content="textClickOnFilter" v-if="pathIn(10, 10)" class="animation" />
 
             <ThemeMarkown :content="textExempleFilter" v-if="pathIn(11, 11)" class="animation" />
+
+            <img :src="clickOnFilter" alt="tutorial click no filtro" v-if="pathIn(10, 11)" />
           </FlexContainer>
         </div>
 
@@ -211,7 +229,7 @@ const pushCards = () => router.push('/cards')
       </FlexContainer>
 
       <FlexContainer v-if="pathIn(12, 13)" class="animation" flex-direction="column">
-        <ThemeMarkown content="## Gostaria de ver outros exemplos ou comecar voce mesmo?" />
+        <ThemeMarkown content="## Gostaria de ver outros exemplos ou começar você mesmo?" />
 
         <FlexContainer v-if="pathIn(13, 13)" class="animation" flex-direction="column">
           <ButtonSlot
@@ -223,7 +241,7 @@ const pushCards = () => router.push('/cards')
           >
 
           <ButtonSlot
-            content="Quero fazer eu mesmo"
+            content="Fazer eu mesmo"
             :border="true"
             class="button-color margin-top"
             @click="pushCards()"
@@ -300,6 +318,13 @@ const pushCards = () => router.push('/cards')
   & .tutorial-container {
     height: 100%;
     width: 100%;
+
+    & .card-init {
+      position: fixed;
+      top: calc(50% - 195px);
+      left: calc(50% - 250px);
+      width: 500px;
+    }
 
     & .p-1 {
       width: 80%;
