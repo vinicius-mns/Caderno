@@ -10,7 +10,15 @@ import ThemeMarkown from '../atoms/ThemeMarkown.vue'
 
 const styleCard = useStylesCard()
 
-const props = defineProps<{ card: Icard }>()
+const props = withDefaults(
+  defineProps<{
+    card: Icard
+    textAlign?: 'justify' | 'center' | 'start'
+  }>(),
+  {
+    textAlign: 'justify'
+  }
+)
 
 const emit = defineEmits<{ (e: 'emitCard', v: Icard): void }>()
 
@@ -105,7 +113,7 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
     }
   }
   & .markdown-container {
-    text-align: justify;
+    text-align: v-bind('props.textAlign');
     width: 95%;
     padding: 0 10px 0 10px;
     box-sizing: border-box;
