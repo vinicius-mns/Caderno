@@ -67,6 +67,15 @@ Com isso voce verá todos os **projetos Ugentes** que **não forem feitos**.
 Isso Te ajudar a visualizar apenas os projetos importantes que voce deve e focar
 `
 
+const textIntro = `
+# Tutorial! 🎉 Vou te mostrar como o site funciona!
+
+👉 Clique no botão inferior esquerdo a baixo para **prosseguir**!  
+🔙 Ou, se você quiser voltar, é só clicar na setinha ao lado!
+
+Divirta-se navegando! 😄✨
+`
+
 const pushCards = () => router.push('/cards')
 </script>
 
@@ -74,6 +83,10 @@ const pushCards = () => router.push('/cards')
   <div class="page-container">
     <FlexContainer flex-direction="column" align-items="center" class="tutorial-container">
       <!-- <ThemeMarkown :content="`## ${String(path)}`" /> -->
+
+      <FlexContainer v-if="pathIn(0, 0)">
+        <ThemeMarkown :content="textIntro" />
+      </FlexContainer>
 
       <FlexContainer v-if="pathIn(1, 1)" class="animation p-1" justify-content="center">
         <FlexContainer class="text" justify-content="center">
