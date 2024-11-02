@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, nextTick, reactive } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -15,6 +15,7 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { v4 as uuid } from 'uuid'
+import FloatMessage from '../molecules/FloatMessage.vue'
 
 const window = useWindows()
 const cards = useCards()
@@ -24,6 +25,8 @@ const tags = useTags()
 const width = computed(() => `${config.config.value.cardWidth}px`)
 const cardsReverse = computed(() => [...cards.cards].reverse())
 const allTags = computed(() => tags.tags)
+
+const floatMessage = ref<InstanceType<typeof FloatMessage>>()
 
 const cardEmpty = (): Icard => {
   return {
@@ -89,7 +92,11 @@ const cardsUpdateReactive = async () => {
 const cardCreateSend = async (card: Icard) => {
   try {
     await cards.create(card)
+
     await cardsUpdateReactive()
+
+    floatMessage.value?.openMessage('Card Criado com sucesso')
+
     removeCardTo(card, 'create')
   } catch (e) {
     handleError(e)
@@ -179,6 +186,8 @@ const cardDeleteSend = async (card: Icard) => {
         </CardSlot>
       </div>
     </FlexContainer>
+
+    <FloatMessage ref="floatMessage" />
   </div>
 </template>
 
