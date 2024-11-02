@@ -116,8 +116,13 @@ const cardUpdateSend = async (card: Icard) => {
 const cardDeleteSend = async (card: Icard) => {
   try {
     await cards.deleteCard(card.id)
+
     await cardsUpdateReactive()
+
+    floatMessage.value?.openMessage('Card Deletado com sucesso')
+
     removeCardTo(card, 'delete')
+
     removeCardTo(card, 'edit')
   } catch (e) {
     handleError(e)
