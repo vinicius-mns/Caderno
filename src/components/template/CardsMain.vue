@@ -95,7 +95,7 @@ const cardCreateSend = async (card: Icard) => {
 
     await cardsUpdateReactive()
 
-    floatMessage.value?.openMessage('Card Criado com sucesso')
+    floatMessage.value?.openMessage('Card criado com sucesso')
 
     removeCardTo(card, 'create')
   } catch (e) {
@@ -123,7 +123,7 @@ const cardDeleteSend = async (card: Icard) => {
 
     await cardsUpdateReactive()
 
-    floatMessage.value?.openMessage('Card Deletado com sucesso')
+    floatMessage.value?.openMessage('Card deletado com sucesso')
 
     removeCardTo(card, 'delete')
 
