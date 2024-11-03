@@ -106,7 +106,11 @@ const cardCreateSend = async (card: Icard) => {
 const cardUpdateSend = async (card: Icard) => {
   try {
     await cards.update(card)
+
     await cardsUpdateReactive()
+
+    floatMessage.value?.openMessage('Card atualizado com sucesso')
+
     removeCardTo(card, 'edit')
   } catch (e) {
     handleError(e)
