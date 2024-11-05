@@ -132,6 +132,22 @@ const cardDeleteSend = async (card: Icard) => {
     handleError(e)
   }
 }
+
+const cardShareSend = async (card: Icard) => {
+  // const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
+  const local = `http://localhost:5173/#/cards/`
+  const cardString = JSON.stringify(card)
+  const encodedCardString = encodeURIComponent(cardString)
+  const url = `${local}${encodedCardString}`
+
+  try {
+    await navigator.clipboard.writeText(url)
+
+    floatMessage.value?.openMessage('Card copiado')
+  } catch (err) {
+    console.error('Falha ao copiar o URL: ', err)
+  }
+}
 </script>
 
 <template>
@@ -190,6 +206,7 @@ const cardDeleteSend = async (card: Icard) => {
               :card="card"
               @update="(card: Icard) => addCardTo(card, 'edit')"
               @delete="(card: Icard) => addCardTo(card, 'delete')"
+              @share="cardShareSend"
             />
           </FlexContainer>
         </CardSlot>
