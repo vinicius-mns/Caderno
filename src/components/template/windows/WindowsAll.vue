@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CardCreateWindow from './CardCreateWindow.vue'
 import CardDeleteWindow from './CardDeleteWindow.vue'
+import CardShareWindows from './CardShareWindows.vue'
 import CardUpdateWindow from './CardUpdateWindow.vue'
 import ConfigWindow from './ConfigWindow.vue'
 import ErrorMessageWindow from './ErrorMessageWindow.vue'
@@ -16,6 +17,7 @@ import TagUpdateWindow from './TagUpdateWindow.vue'
     <CardCreateWindow />
     <CardDeleteWindow />
     <CardUpdateWindow />
+    <CardShareWindows />
     <ConfigWindow />
     <TagCreateWindow />
     <TagDeleteCardWindow />
