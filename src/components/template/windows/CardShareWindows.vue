@@ -1,36 +1,52 @@
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
-import type { Icard } from '@/stores/cards/Interfaces'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import ThemeButton from '@/components/atoms/ThemeButton.vue'
-import PlusIco from '@/components/atoms/icons/PlusIco.vue'
-import SendIco from '@/components/atoms/icons/SendIco.vue'
-import FloatDescription from '@/components/atoms/FloatDescription.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
-import type { Itag } from '@/stores/tags/Interfaces'
-import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
-import { useStylesCard } from '@/stores/stylesCard/stylesCard'
-import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import RemoveItemHover from '@/components/molecules/RemoveItemHover.vue'
-import TagSelectorWithList from '@/components/organisms/TagSelectorWithList.vue'
 import CardView from '@/components/molecules/CardView.vue'
 import SaveIco from '@/components/atoms/icons/SaveIco.vue'
 
 const window = useWindows()
 
-const cardStyle = useStylesCard()
-
 const cards = useCards()
 
 const tags = useTags()
 
-const modal = ref<InstanceType<typeof FloatModalSlot>>()
+const card = computed(() => window.cardShare.props)
+
+const cardsUpdateReactive = async () => {
+  await cards.atualizeReactiveCards({
+    includeTags: tags.includeTags,
+    excludeTags: tags.excludeTags
+  })
+}
+
+const createEmptyTags = async () => {
+  const cardTags = card.value.tags
+  const alltagNames = tags.tags.map((t) => t[1])
+
+  const emptyTags = cardTags.filter((t) => !alltagNames.includes(t[1]))
+
+  if (emptyTags) {
+    const objectEmptytags = emptyTags.map((t) => ({ emoji: t[0], name: t[1] }))
+
+    await tags.createManyTags(objectEmptytags)
+  }
+}
+
+const createCard = async () => {
+  await cards.create(card.value)
+  await cardsUpdateReactive()
+}
+
+const saveCardAndTags = async () => {
+  await createEmptyTags()
+  await createCard()
+  window.cardShare.close()
+}
 </script>
 
 <template>
@@ -41,9 +57,10 @@ const modal = ref<InstanceType<typeof FloatModalSlot>>()
   >
     <FlexContainer class="main-container" flex-direction="column" align-items="center">
       <FlexContainer class="max-w scroll" flex-direction="column" align-items="center">
-        <CardView :card="window.cardShare.props" class="card" />
+        <CardView :card="card" class="card" />
       </FlexContainer>
-      <ButtonSlot content="Salvar" class="button">
+
+      <ButtonSlot content="Salvar" class="button" @click="saveCardAndTags">
         <SaveIco />
       </ButtonSlot>
     </FlexContainer>
