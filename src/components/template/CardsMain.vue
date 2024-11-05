@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, nextTick, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -16,11 +16,13 @@ import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { v4 as uuid } from 'uuid'
 import FloatMessage from '../molecules/FloatMessage.vue'
+import { useRoute } from 'vue-router'
 
 const window = useWindows()
 const cards = useCards()
 const config = useConfig()
 const tags = useTags()
+const route = useRoute()
 
 const width = computed(() => `${config.config.value.cardWidth}px`)
 const cardsReverse = computed(() => [...cards.cards].reverse())
@@ -148,6 +150,16 @@ const cardShareSend = async (card: Icard) => {
     console.error('Falha ao copiar o URL: ', err)
   }
 }
+
+onMounted(() => {
+  const id = route.params.id
+
+  if (id) {
+    const card = JSON.parse(id as string) as Icard
+
+    window.cardShare.open(card)
+  }
+})
 </script>
 
 <template>
