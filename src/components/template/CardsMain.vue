@@ -136,11 +136,11 @@ const cardDeleteSend = async (card: Icard) => {
 }
 
 const cardShareSend = async (card: Icard) => {
-  // const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
-  const local = `http://localhost:5173/#/cards/`
+  const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
+  // const local = `http://localhost:5173/#/cards/`
   const cardString = JSON.stringify(card)
   const encodedCardString = encodeURIComponent(cardString)
-  const url = `${local}${encodedCardString}`
+  const url = `${remote}${encodedCardString}`
 
   try {
     await navigator.clipboard.writeText(url)
