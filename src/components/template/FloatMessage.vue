@@ -2,6 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import ThemeP from '../atoms/ThemeP.vue'
+import { useFloatMessage } from '@/stores/floatMessage'
 
 const showMessage = ref(false)
 
@@ -24,11 +25,13 @@ watchEffect(() => {
 })
 
 defineExpose({ openMessage, timeToClose })
+
+const floatMessage = useFloatMessage()
 </script>
 
 <template>
-  <ModalCard v-if="showMessage" class="message-container">
-    <ThemeP :content="messageRef" />
+  <ModalCard v-if="floatMessage.show" class="message-container">
+    <ThemeP :content="floatMessage.message" />
   </ModalCard>
 </template>
 
@@ -41,6 +44,7 @@ defineExpose({ openMessage, timeToClose })
   opacity: 0;
   animation: intro 0.3s forwards;
 }
+
 @keyframes intro {
   to {
     opacity: 100%;

@@ -2,6 +2,7 @@
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import CardsTop from '@/components/template/CadsTop.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
+import FloatMessage from '@/components/template/FloatMessage.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
@@ -34,6 +35,8 @@ onMounted(async () => {
     </div>
 
     <WindowsAll class="all-windows" />
+
+    <FloatMessage />
   </FlexContainer>
 </template>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive } from 'vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -15,20 +15,19 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { v4 as uuid } from 'uuid'
-import FloatMessage from '../molecules/FloatMessage.vue'
 import { useRoute } from 'vue-router'
+import { useFloatMessage } from '@/stores/floatMessage'
 
 const window = useWindows()
 const cards = useCards()
 const config = useConfig()
 const tags = useTags()
 const route = useRoute()
+const floatMessage = useFloatMessage()
 
 const width = computed(() => `${config.config.value.cardWidth}px`)
 const cardsReverse = computed(() => [...cards.cards].reverse())
 const allTags = computed(() => tags.tags)
-
-const floatMessage = ref<InstanceType<typeof FloatMessage>>()
 
 const cardEmpty = (): Icard => {
   return {
@@ -97,7 +96,7 @@ const cardCreateSend = async (card: Icard) => {
 
     await cardsUpdateReactive()
 
-    floatMessage.value?.openMessage('Card criado com sucesso')
+    floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
 
     removeCardTo(card, 'create')
   } catch (e) {
@@ -111,7 +110,7 @@ const cardUpdateSend = async (card: Icard) => {
 
     await cardsUpdateReactive()
 
-    floatMessage.value?.openMessage('Card atualizado com sucesso')
+    floatMessage.openMessage(floatMessage.messages.cardUpdateSucess)
 
     removeCardTo(card, 'edit')
   } catch (e) {
@@ -125,7 +124,7 @@ const cardDeleteSend = async (card: Icard) => {
 
     await cardsUpdateReactive()
 
-    floatMessage.value?.openMessage('Card deletado com sucesso')
+    floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
 
     removeCardTo(card, 'delete')
 
@@ -145,7 +144,7 @@ const cardShareSend = async (card: Icard) => {
   try {
     await navigator.clipboard.writeText(url)
 
-    floatMessage.value?.openMessage('Card copiado')
+    floatMessage.openMessage(floatMessage.messages.cardCopySucess)
   } catch (err) {
     console.error('Falha ao copiar o URL: ', err)
   }
@@ -224,8 +223,6 @@ onMounted(() => {
         </CardSlot>
       </div>
     </FlexContainer>
-
-    <FloatMessage ref="floatMessage" />
   </div>
 </template>
 
