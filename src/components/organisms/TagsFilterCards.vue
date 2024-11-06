@@ -8,6 +8,8 @@ import EraserIco from '../atoms/icons/EraserIco.vue'
 import RadioBase from '../atoms/RadioBase.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
+import SendIco from '../atoms/icons/SendIco.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 
 const props = defineProps<{
   allTags: Itag[]
@@ -97,9 +99,15 @@ const emitCleanAll = () => emit('cleanAll')
       </CheckBoxBase>
     </FlexContainer>
 
-    <ButtonSlot content="Limpar filtro" class="button-eraser" @click="emitCleanAll">
-      <EraserIco />
-    </ButtonSlot>
+    <FlexContainer class="buttons-container">
+      <ButtonSlot content="Filtrar" class="button-filter">
+        <SendIco />
+      </ButtonSlot>
+
+      <ButtonCoinSlot content="Limpar filtro" class="button-eraser" @click="emitCleanAll">
+        <EraserIco />
+      </ButtonCoinSlot>
+    </FlexContainer>
   </FlexContainer>
 </template>
 
@@ -125,8 +133,12 @@ const emitCleanAll = () => emit('cleanAll')
     }
   }
 
-  & .button-eraser {
+  & .buttons-container {
     margin-top: 10px;
+    & .button-filter {
+      flex-shrink: 1;
+      margin-right: 10px;
+    }
   }
 }
 </style>
