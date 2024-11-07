@@ -131,6 +131,10 @@ const emitCleanAll = () => emit('cleanAll')
       width: calc(50% - 4px);
       margin: 2px;
     }
+
+    padding-top: 30px;
+    opacity: 20%;
+    animation: init 0.4s forwards;
   }
 
   & .buttons-container {
@@ -139,6 +143,13 @@ const emitCleanAll = () => emit('cleanAll')
       flex-shrink: 1;
       margin-right: 10px;
     }
+  }
+}
+
+@keyframes init {
+  to {
+    padding-top: 0;
+    opacity: 100%;
   }
 }
 </style>
