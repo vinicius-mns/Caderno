@@ -18,7 +18,9 @@ export const useFloatMessage = defineStore('float message', () => {
     cardCopySucess: 'Card copiado',
     tagCreateSucess: 'Tag criada',
     tagUpdateSucess: 'Tag tualizada',
-    tagDeleteSucess: 'Tag deletada'
+    tagDeleteSucess: 'Tag deletada',
+    tagClearFilterSucess: 'Filtro limpo',
+    tagsFilterSucess: 'Filtro Ativo'
   }
 
   const openMessage = (m: string) => {
@@ -28,7 +30,10 @@ export const useFloatMessage = defineStore('float message', () => {
 
     _open()
 
-    setTimeout(_close, timeToClose)
+    setTimeout(() => {
+      _close()
+      message.value = ''
+    }, timeToClose)
   }
 
   return {
