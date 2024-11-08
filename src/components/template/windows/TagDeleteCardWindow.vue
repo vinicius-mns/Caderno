@@ -8,9 +8,7 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import { useTags } from '@/stores/tags/tags'
 
 const window = useWindows()
-
 const cards = useCards()
-
 const tags = useTags()
 
 const cardsRef = ref<Icard[]>([])

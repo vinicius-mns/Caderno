@@ -8,9 +8,7 @@ import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 
 const window = useWindows()
-
 const cards = useCards()
-
 const tags = useTags()
 
 const tagDelete = async () => {

@@ -21,13 +21,12 @@ import { useFloatMessage } from '@/stores/floatMessage'
 const window = useWindows()
 const cards = useCards()
 const config = useConfig()
-const tags = useTags()
 const route = useRoute()
 const floatMessage = useFloatMessage()
+const tags = useTags()
 
 const width = computed(() => `${config.config.value.cardWidth}px`)
 const cardsReverse = computed(() => [...cards.cards].reverse())
-const allTags = computed(() => tags.tags)
 
 const cardEmpty = (): Icard => {
   return {
@@ -206,14 +205,14 @@ onMounted(() => {
         <CardSlot :card="card" :all-tags="tags.tags" class="card-w" v-else>
           <FlexContainer>
             <TagSelectorWithList
-              :all-tags="allTags"
+              :all-tags="tags.tags"
               :tags-checked="card.tags"
               :show-list="false"
               @emit-selected="(tags: Itag[]) => cardUpdateSend({ ...card, tags })"
             />
 
             <CardOptions
-              :all-tags="allTags"
+              :all-tags="tags.tags"
               :card="card"
               @update="(card: Icard) => addCardTo(card, 'edit')"
               @delete="(card: Icard) => addCardTo(card, 'delete')"

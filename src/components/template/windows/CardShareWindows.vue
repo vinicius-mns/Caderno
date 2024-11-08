@@ -10,12 +10,9 @@ import CardView from '@/components/molecules/CardView.vue'
 import SaveIco from '@/components/atoms/icons/SaveIco.vue'
 
 const window = useWindows()
-
 const cards = useCards()
-
-const tags = useTags()
-
 const card = computed(() => window.cardShare.props)
+const tags = useTags()
 
 const cardsUpdateReactive = async () => {
   await cards.atualizeReactiveCards({

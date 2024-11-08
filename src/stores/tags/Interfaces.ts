@@ -1,7 +1,5 @@
 export type Itag = [string, string]
 
-export type TypeOfTags = 'includeTags' | 'excludeTags'
-
 export interface IFilterTags {
   includeTags: Itag[]
   excludeTags: Itag[]
@@ -23,9 +21,10 @@ export interface ItagsApi {
   createTag: (param: { emoji: string; name: string }) => Promise<boolean>
   createManyTags: (param: { emoji: string; name: string }[]) => Promise<boolean>
   readTag: (name: string) => Promise<Itag>
-  readAllTags: () => Promise<Itag[]>
+  readAllTags: () => Promise<ItagsDb>
   updateTag: (param: { emoji: string; name: string; atualName: string }) => Promise<boolean>
   deleteTag: (name: string) => Promise<boolean>
   deleteAll: () => Promise<boolean>
-  filter: (type: TypeOfTags) => IFilterMethods
+  setFilter: (filter: IFilterTags) => Promise<boolean>
+  clearFilter: () => Promise<boolean>
 }

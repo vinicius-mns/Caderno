@@ -12,11 +12,8 @@ import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 
 const window = useWindows()
-
 const cards = useCards()
-
 const tags = useTags()
-
 const emojis = useEmoji()
 
 const allEmojis = computed(() => emojis.getAll())
@@ -26,7 +23,7 @@ const useTag = () => {
 
   const setTag = (tag: Itag) => (tagRef.value = tag)
 
-  const updateTag = async () => {
+  const sendUpdateTag = async () => {
     try {
       const atualName = window.tagEditor.props[1]
 
@@ -50,7 +47,7 @@ const useTag = () => {
   return {
     tagRef,
     setTag,
-    updateTag
+    updateTag: sendUpdateTag
   }
 }
 

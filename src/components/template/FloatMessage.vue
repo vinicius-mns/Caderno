@@ -1,30 +1,7 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import { useFloatMessage } from '@/stores/floatMessage'
-
-const showMessage = ref(false)
-
-const messageRef = ref('')
-
-const closeMessage = () => (showMessage.value = false)
-
-const openMessage = (message: string) => {
-  messageRef.value = message
-
-  showMessage.value = true
-}
-
-const timeToClose = 1000
-
-watchEffect(() => {
-  if (showMessage.value === true) {
-    setTimeout(closeMessage, timeToClose)
-  }
-})
-
-defineExpose({ openMessage, timeToClose })
 
 const floatMessage = useFloatMessage()
 </script>
