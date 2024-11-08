@@ -18,93 +18,145 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'includeTagAdd', v: string): void
-  (e: 'includeTagRemove', v: string): void
-  (e: 'excludeTagAdd', v: string): void
-  (e: 'excludeTagRemove', v: string): void
-  (e: 'cleanAll', v: void): void
+  (e: 'emitFilter', v: { include: Itag[]; exclude: Itag[] }): void
+  (e: 'clearFilter', v: void): void
 }>()
 
-const tagsTypeAtualRoute = ref('Com tag')
-const tagsTypeRoutes = ['Com tag', 'Sem tag']
+type FilterType = 'include' | 'exclude'
 
-const setTagTypeRoute = (v: string) => (tagsTypeAtualRoute.value = v)
+const include = ref<Itag[]>(props.includeTags)
+const exclude = ref<Itag[]>(props.excludeTags)
 
-const isChecked = (type: 'includeTags' | 'excludeTags', name: string) => {
-  return props[type].map((tag) => tag[1]).includes(name)
+const isChecked = (tag: Itag, type: FilterType) => {
+  if (type === 'include') {
+    return include.value.map((t) => t[1]).includes(tag[1])
+  }
+
+  if (type === 'exclude') {
+    return exclude.value.map((t) => t[1]).includes(tag[1])
+  }
+
+  return false
 }
 
-const handleIncludeTag = (name: string) => {
-  if (isChecked('includeTags', name)) emit('includeTagRemove', name)
-  else emit('includeTagAdd', name)
+const addTag = (tag: Itag, type: FilterType) => {
+  if (type === 'include') {
+    include.value = [...include.value, tag]
+    exclude.value = exclude.value.filter((t) => t[1] !== tag[1])
+  }
+
+  if (type === 'exclude') {
+    exclude.value = [...exclude.value, tag]
+    include.value = include.value.filter((t) => t[1] !== tag[1])
+  }
 }
 
-const handleExcludeTag = (name: string) => {
-  if (isChecked('excludeTags', name)) emit('excludeTagRemove', name)
-  else emit('excludeTagAdd', name)
+const removeTag = (tag: Itag, type: FilterType) => {
+  if (type === 'include') {
+    include.value = include.value.filter((t) => t[1] !== tag[1])
+  }
+
+  if (type === 'exclude') {
+    exclude.value = exclude.value.filter((t) => t[1] !== tag[1])
+  }
 }
 
-const emitCleanAll = () => emit('cleanAll')
+const handleAddOrRemove = (tag: Itag, type: FilterType) => {
+  if (type === 'include') {
+    if (isChecked(tag, 'include')) removeTag(tag, 'include')
+    else addTag(tag, 'include')
+  }
+
+  if (type === 'exclude') {
+    if (isChecked(tag, 'exclude')) removeTag(tag, 'exclude')
+    else addTag(tag, 'exclude')
+  }
+}
+
+const clear = () => {
+  include.value = []
+  exclude.value = []
+}
+
+type TagRouteOptions = 'Com tag' | 'Sem tag'
+
+const useTagRoute = () => {
+  const atualRoute = ref<TagRouteOptions>('Com tag')
+
+  const is = (v: TagRouteOptions) => v === atualRoute.value
+
+  const routes = ['Com tag', 'Sem tag']
+
+  const setRoute = (v: TagRouteOptions) => (atualRoute.value = v)
+
+  return {
+    atualRoute,
+    routes,
+    is,
+    setRoute
+  }
+}
+
+const tagRoute = useTagRoute()
+
+const emitFilter = () => emit('emitFilter', { include: include.value, exclude: exclude.value })
+
+const clearFilter = () => {
+  clear()
+  emit('clearFilter')
+}
 </script>
 
 <template>
   <FlexContainer flex-direction="column" class="cards-filter-container">
     <FlexContainer justify-content="space-between" class="top-container">
       <RadioBase
-        v-for="(option, i) in tagsTypeRoutes"
+        v-for="(routeTag, i) in tagRoute.routes"
         radio-name="filter-tags"
         :key="i"
-        :checked-value="tagsTypeAtualRoute"
-        :id="option"
+        :checked-value="tagRoute.atualRoute.value"
+        :id="routeTag"
         :style="{ width: 'calc(50% - 4px)', height: '36px', margin: '4px 0' }"
-        @select="setTagTypeRoute"
+        @select="tagRoute.setRoute"
       >
-        <ThemeP :content="option" />
+        <ThemeP :content="routeTag" />
       </RadioBase>
     </FlexContainer>
 
-    <FlexContainer
-      v-if="tagsTypeAtualRoute === 'Com tag'"
-      flex-wrap="wrap"
-      class="bottom-container"
-    >
+    <FlexContainer v-if="tagRoute.is('Com tag')" flex-wrap="wrap" class="bottom-container">
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
         checkbox-name="include-tags"
         :key="i"
-        :is-checked="isChecked('includeTags', tag[1])"
+        :is-checked="isChecked(tag, 'include')"
         :id="tag[1]"
         class="check-button"
-        @select="() => handleIncludeTag(tag[1])"
+        @select="() => handleAddOrRemove(tag, 'include')"
       >
         <TagView :tag="tag" />
       </CheckBoxBase>
     </FlexContainer>
 
-    <FlexContainer
-      v-if="tagsTypeAtualRoute === 'Sem tag'"
-      flex-wrap="wrap"
-      class="bottom-container"
-    >
+    <FlexContainer v-if="tagRoute.is('Sem tag')" flex-wrap="wrap" class="bottom-container">
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
         checkbox-name="include-tags"
         :key="i"
-        :is-checked="isChecked('excludeTags', tag[1])"
+        :is-checked="isChecked(tag, 'exclude')"
         :id="tag[1]"
         class="check-button"
-        @select="() => handleExcludeTag(tag[1])"
+        @select="() => handleAddOrRemove(tag, 'exclude')"
       >
         <TagView :tag="tag" />
       </CheckBoxBase>
     </FlexContainer>
 
     <FlexContainer class="buttons-container">
-      <ButtonSlot content="Filtrar" class="button-filter">
+      <ButtonSlot content="Aplicar filtro" class="button-filter" @click="emitFilter">
         <SendIco />
       </ButtonSlot>
 
-      <ButtonCoinSlot content="Limpar filtro" class="button-eraser" @click="emitCleanAll">
+      <ButtonCoinSlot content="Limpar filtro" class="button-eraser" @click="clearFilter()">
         <EraserIco />
       </ButtonCoinSlot>
     </FlexContainer>
