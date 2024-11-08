@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -237,4 +237,4 @@ watch(includeTags, () => card.setGlobalTags(includeTags.value), { deep: true })
     }
   }
 }
-</style>
+</style> -->

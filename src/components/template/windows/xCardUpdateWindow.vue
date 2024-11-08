@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -132,4 +132,4 @@ watchEffect(() => card.set(window.cardEdit.props))
     cursor: not-allowed;
   }
 }
-</style>
+</style> -->

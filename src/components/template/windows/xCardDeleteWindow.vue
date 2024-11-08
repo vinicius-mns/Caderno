@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import CardDelete from '@/components/organisms/CardDelete.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -40,4 +40,4 @@ const cardDelete = async (cardId: string) => {
   </WindowsSlot>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style> -->
