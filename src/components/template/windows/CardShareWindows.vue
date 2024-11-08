@@ -35,7 +35,7 @@ const createEmptyTags = async () => {
 }
 
 const createCard = async () => {
-  await cards.create(card.value)
+  await cards.insert(card.value)
   await cardsUpdateReactive()
 }
 

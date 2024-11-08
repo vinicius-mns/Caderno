@@ -149,13 +149,13 @@ const cardShareSend = async (card: Icard) => {
   }
 }
 
-onMounted(() => {
-  const id = route.params.id
+onMounted(async () => {
+  const paramId = route.params.id
 
-  if (id) {
-    const card = JSON.parse(id as string) as Icard
+  if (paramId) {
+    const cardParam = JSON.parse(paramId as string) as Icard
 
-    window.cardShare.open(card)
+    cards.shareCard(cardParam)
   }
 })
 </script>

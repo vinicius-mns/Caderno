@@ -3,10 +3,13 @@ import { CardsApiLocal } from './ApiLocalCards'
 import { ref } from 'vue'
 import type { Icard } from './Interfaces'
 import type { Itag } from '../tags/Interfaces'
+import { useWindows } from '../windows'
 
 const apiCards = new CardsApiLocal()
 
 export const useCards = defineStore('cards storage', () => {
+  const window = useWindows()
+
   const cards = ref<Icard[]>([])
 
   const _errorCard: Icard = {
@@ -30,6 +33,10 @@ export const useCards = defineStore('cards storage', () => {
 
   const create = async (param: { content: string; tags: Itag[] }): Promise<void> => {
     await apiCards.create(param)
+  }
+
+  const insert = async (card: Icard) => {
+    await apiCards.insert(card)
   }
 
   const createMany = async (param: { content: string; tags: Itag[] }[]) => {
@@ -101,16 +108,28 @@ export const useCards = defineStore('cards storage', () => {
     await apiCards.updateAllTags(props)
   }
 
+  const shareCard = async (card: Icard) => {
+    try {
+      await apiCards.readOne(card.id)
+    } catch (e) {
+      console.log('eee', e)
+      console.log('id', card.id)
+      window.cardShare.open(card)
+    }
+  }
+
   return {
     cards,
     init,
     create,
+    insert,
     createMany,
     read,
     atualizeReactiveCards,
     getCard,
     update,
     deleteCard,
-    updateAllTags
+    updateAllTags,
+    shareCard
   }
 })
