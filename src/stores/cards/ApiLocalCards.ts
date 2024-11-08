@@ -54,6 +54,22 @@ export class CardsApiLocal implements ICardsApi {
     })
   }
 
+  public insert = (card: Icard) => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this._validateCard(card)
+
+          this._insetCardOnDb(card)
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
   public createMany = (param: { content: string; tags: Itag[] }[]) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(() => {
