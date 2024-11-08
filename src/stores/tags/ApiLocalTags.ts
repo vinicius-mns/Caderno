@@ -1,5 +1,5 @@
 import LocalStorageApi from '../../myLocalStorage/LocalStorageApi'
-import type { Itag, ItagsApi, ItagsDb, TypeOfTags } from './Interfaces'
+import type { IFilterTags, Itag, ItagsApi, ItagsDb } from './Interfaces'
 
 const keyTagsLocalStorage = 'tags'
 
@@ -157,11 +157,12 @@ export class TagsApiLocal implements ItagsApi {
   }
 
   public readAllTags = () => {
-    return new Promise<Itag[]>((resolve, reject) => {
+    return new Promise<ItagsDb>((resolve, reject) => {
       setTimeout(() => {
         try {
-          const tags = this._storage.read().tags
-          resolve(tags)
+          const store = this._storage.read()
+
+          resolve(store)
         } catch (e) {
           if (e instanceof Error) {
             reject(new Error(`Erro ao capturar tags: ${e.message}`))
@@ -223,118 +224,43 @@ export class TagsApiLocal implements ItagsApi {
     })
   }
 
-  private _filterGetTags = async (type: TypeOfTags) => {
-    return new Promise<Itag[]>((resolve, reject) => {
-      const allTagsNames = this._storage.read().tags.map((tag) => tag[1])
-
-      const tagsFilter = this._storage.read().filter[type]
-
-      const TagsFiltredIfNotExist = tagsFilter.filter((tag) => allTagsNames.includes(tag[1]))
-
-      if (TagsFiltredIfNotExist) resolve(TagsFiltredIfNotExist)
-      else reject(new Error('Tags nao encontradas'))
-    })
-  }
-
-  private _filterAddToFilter = (type: TypeOfTags, name: string) => {
-    const addTagOnList = (tag: Itag, allTags: Itag[]) => [...allTags, tag]
-
-    const removeTagOnList = (tag: Itag, allTags: Itag[]) => allTags.filter((T) => T[1] !== tag[1])
-
-    return new Promise<boolean>((resolve, reject) => {
-      setTimeout(() => {
-        const oppositeType = type === 'includeTags' ? 'excludeTags' : 'includeTags'
-
-        const storage = this._storage.read()
-
-        const filterStorage = storage.filter
-
-        const tag = storage.tags.find((tag) => tag[1] === name)
-
-        if (tag) {
-          const tagsList = filterStorage[type]
-
-          const tagsOppositeList = filterStorage[oppositeType]
-
-          const newTagsList = addTagOnList(tag, tagsList)
-
-          const newOppositeTagsList = removeTagOnList(tag, tagsOppositeList)
-
-          const newFilterStore = {
-            ...filterStorage,
-            [type]: newTagsList,
-            [oppositeType]: newOppositeTagsList
-          }
-
-          this._storage.setAndReturn({ ...storage, filter: newFilterStore })
-
-          resolve(true)
-        } else {
-          reject(new Error('Tag não encontrada'))
-        }
-      }, 0)
-    })
-  }
-
-  private _filterRemoveToFilter = (type: TypeOfTags, name: string) => {
-    const removeTagOnList = (tag: Itag, allTags: Itag[]) => allTags.filter((T) => T[1] !== tag[1])
-
-    return new Promise<boolean>((resolve, reject) => {
-      setTimeout(() => {
-        const storage = this._storage.read()
-
-        const filterStorage = storage.filter
-
-        const tagsList = filterStorage[type]
-
-        const tag = storage.tags.find((tag) => tag[1] === name)
-
-        if (tag) {
-          const newTags = removeTagOnList(tag, tagsList)
-
-          this._storage.setAndReturn({
-            ...storage,
-            filter: { ...filterStorage, [type]: newTags }
-          })
-
-          resolve(true)
-        } else {
-          reject(new Error('Tag não encontrada'))
-        }
-      }, 0)
-    })
-  }
-
-  private _filterClear = (type: TypeOfTags) => {
+  setFilter = (newFilter: IFilterTags) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(() => {
         try {
           const storage = this._storage.read()
 
-          const filterStore = storage.filter
+          // verificar o filtro
 
-          const newTags = [] as string[]
-
-          this._storage.setAndReturn({ ...storage, filter: { ...filterStore, [type]: newTags } })
+          this._storage.setAndReturn({
+            ...storage,
+            filter: newFilter
+          })
 
           resolve(true)
         } catch (e) {
-          if (e instanceof Error) {
-            reject(new Error(`Erro ao limpar tags: ${e.message}`))
-          } else {
-            reject(new Error('Erro inesperado ao limpar tags'))
-          }
+          reject(e)
         }
       }, 0)
     })
   }
 
-  public filter = (type: TypeOfTags) => {
-    return {
-      getTags: () => this._filterGetTags(type),
-      addToFilter: (name: string) => this._filterAddToFilter(type, name),
-      removeToFilter: (name: string) => this._filterRemoveToFilter(type, name),
-      clear: () => this._filterClear(type)
-    }
+  clearFilter = () => {
+    return new Promise<boolean>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const storage = this._storage.read()
+
+          this._storage.setAndReturn({
+            ...storage,
+            filter: { includeTags: [], excludeTags: [] }
+          })
+
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
   }
 }
