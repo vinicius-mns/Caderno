@@ -36,7 +36,7 @@ onMounted(async () => {
 
     <WindowsAll class="all-windows" />
 
-    <FloatMessage />
+    <FloatMessage class="float-message" />
   </FlexContainer>
 </template>
 
@@ -71,6 +71,10 @@ onMounted(async () => {
     height: 80px;
     width: 100%;
     flex-shrink: 0;
+  }
+
+  & .float-message {
+    z-index: 9999;
   }
 }
 </style>
