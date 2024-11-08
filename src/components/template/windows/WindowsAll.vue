@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CardShareWindows from './CardShareWindows.vue'
 import ConfigWindow from './ConfigWindow.vue'
 import ErrorMessageWindow from './ErrorMessageWindow.vue'
 import Error_CardNoTag from './Error_CardNoTag.vue'
@@ -10,6 +11,7 @@ import TagUpdateWindow from './TagUpdateWindow.vue'
 
 <template>
   <div>
+    <CardShareWindows />
     <ConfigWindow />
     <TagCreateWindow />
     <TagDeleteCardWindow />
