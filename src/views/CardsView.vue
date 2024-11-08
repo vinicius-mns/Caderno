@@ -17,9 +17,10 @@ const tags = useTags()
 
 onMounted(async () => {
   await tags.init()
-  await cards.init({
-    includeTags: tags.getNames(tags.includeTags),
-    excludeTags: tags.getNames(tags.excludeTags)
+
+  await cards.atualizeReactiveCards({
+    includeTags: tags.includeTags,
+    excludeTags: tags.excludeTags
   })
 })
 </script>
