@@ -1,33 +1,34 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { TagsApiLocal } from './ApiLocalTags'
-import type { Itag, TypeOfTags } from './Interfaces'
+import type { IFilterTags, Itag, ItagsDb } from './Interfaces'
 
 const tagsApi = new TagsApiLocal()
 
 export const useTags = defineStore('tags', () => {
+  const emptyTagsDb: ItagsDb = {
+    filter: { includeTags: [], excludeTags: [] },
+    tags: []
+  }
+
+  const tagsDb = reactive<ItagsDb>(emptyTagsDb)
+
   const tags = ref<Itag[]>([])
 
-  const includeTags = ref<Itag[]>([])
+  const includeTags = computed(() => tagsDb.filter.includeTags)
 
-  const excludeTags = ref<Itag[]>([])
+  const excludeTags = computed(() => tagsDb.filter.excludeTags)
 
   const getNames = (tags: Itag[]) => tags.map((tag) => tag[1])
 
   // chamado no app para iniciar os valores reativos
   const init = async () => {
     try {
-      const [tagsDb, includeTagsDb, excludeTagsDb] = await Promise.all([
-        tagsApi.readAllTags(),
-        tagsApi.filter('includeTags').getTags(),
-        tagsApi.filter('excludeTags').getTags()
-      ])
+      const db = await tagsApi.readAllTags()
 
-      if (tagsDb) tags.value = tagsDb
-
-      if (includeTagsDb) includeTags.value = includeTagsDb
-
-      if (excludeTagsDb) excludeTags.value = excludeTagsDb
+      tagsDb.filter = db.filter
+      tagsDb.tags = db.tags
+      tags.value = db.tags
     } catch (e) {
       console.error(e)
     }
@@ -85,60 +86,23 @@ export const useTags = defineStore('tags', () => {
     }
   }
 
-  // const getTagsById = (ids: string[]) => {
-  //   const tagsFind = tags.value.filter(({ id }) => ids.includes(id))
-  //   return tagsFind
-  // }
+  const setFilter = async (filter: IFilterTags) => {
+    try {
+      await tagsApi.setFilter(filter)
 
-  const filter = (type: TypeOfTags) => {
-    const tagFilter = tagsApi.filter(type)
-
-    const updateFilter = async () => {
-      try {
-        const [includeTagsDb, excludeTagsDb] = await Promise.all([
-          tagsApi.filter('includeTags').getTags(),
-          tagsApi.filter('excludeTags').getTags()
-        ])
-
-        if (includeTagsDb) includeTags.value = includeTagsDb
-
-        if (excludeTagsDb) excludeTags.value = excludeTagsDb
-      } catch (e) {
-        console.error(e)
-      }
+      init()
+    } catch (e) {
+      console.error(e)
     }
+  }
 
-    const addTofilter = async (name: string) => {
-      try {
-        await tagFilter.addToFilter(name)
-        await updateFilter()
-      } catch (e) {
-        console.error(e)
-      }
-    }
+  const clearFilter = async () => {
+    try {
+      await tagsApi.clearFilter()
 
-    const removeToFilter = async (name: string) => {
-      try {
-        await tagFilter.removeToFilter(name)
-        await updateFilter()
-      } catch (e) {
-        console.error(e)
-      }
-    }
-
-    const clear = async () => {
-      try {
-        await tagFilter.clear()
-        await updateFilter()
-      } catch (e) {
-        console.error(e)
-      }
-    }
-
-    return {
-      addTofilter,
-      removeToFilter,
-      clear
+      init()
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -154,6 +118,7 @@ export const useTags = defineStore('tags', () => {
     readTag,
     updateTag,
     deletedTag,
-    filter
+    setFilter,
+    clearFilter
   }
 })
