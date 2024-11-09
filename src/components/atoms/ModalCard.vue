@@ -7,18 +7,22 @@ const props = withDefaults(
   defineProps<{
     backgroundColor?: 'front' | 'back'
     padding?: string
+    border?: boolean
     borderRadius?: 'inside' | 'outside'
   }>(),
   {
     backgroundColor: 'back',
     padding: '15px',
-    borderRadius: 'outside'
+    borderRadius: 'outside',
+    border: true
   }
 )
+
+const borderClass = props.border && 'border'
 </script>
 
 <template>
-  <div class="modal-card-container">
+  <div :class="[borderClass, 'modal-card-container']">
     <slot></slot>
   </div>
 </template>
@@ -29,7 +33,10 @@ const props = withDefaults(
   box-sizing: border-box;
   border-radius: v-bind('stylePage.borderRadius[props.borderRadius]');
   background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
-  border: solid 1px v-bind('stylePage.atualColor.border');
   box-shadow: v-bind('stylePage.atualColor.back') 0px 8px 28px;
+}
+
+.border {
+  border: solid 1px v-bind('stylePage.atualColor.border');
 }
 </style>
