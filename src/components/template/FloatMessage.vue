@@ -7,7 +7,7 @@ const floatMessage = useFloatMessage()
 </script>
 
 <template>
-  <ModalCard v-if="floatMessage.show" class="message-container">
+  <ModalCard v-if="floatMessage.show" class="message-container" :border="false">
     <ThemeP :content="floatMessage.message" />
   </ModalCard>
 </template>

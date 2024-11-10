@@ -3,13 +3,10 @@ import { CardsApiLocal } from './ApiLocalCards'
 import { ref } from 'vue'
 import type { Icard } from './Interfaces'
 import type { Itag } from '../tags/Interfaces'
-import { useWindows } from '../windows'
 
 const apiCards = new CardsApiLocal()
 
 export const useCards = defineStore('cards storage', () => {
-  const window = useWindows()
-
   const cards = ref<Icard[]>([])
 
   const _errorCard: Icard = {
@@ -19,28 +16,59 @@ export const useCards = defineStore('cards storage', () => {
     tags: []
   }
 
+  const isCard = (card: Icard | undefined) => {
+    return (
+      typeof card === 'object' &&
+      card !== null &&
+      'id' in card &&
+      'content' in card &&
+      'date' in card &&
+      'tags' in card
+    )
+  }
+
+  const _handleError = (e: Error | unknown) => {
+    if (e instanceof Error) {
+      throw new Error(e.message)
+    } else {
+      throw new Error('erro inesperado')
+    }
+  }
+
   const init = async (filter: { includeTags: string[]; excludeTags: string[] }): Promise<void> => {
     try {
       const allCards = await apiCards.read(filter)
 
       cards.value = allCards
     } catch (e) {
-      console.error(e)
+      _handleError(e)
 
       cards.value = [_errorCard]
     }
   }
 
   const create = async (param: { content: string; tags: Itag[] }): Promise<void> => {
-    await apiCards.create(param)
+    try {
+      await apiCards.create(param)
+    } catch (e) {
+      _handleError(e)
+    }
   }
 
   const insert = async (card: Icard) => {
-    await apiCards.insert(card)
+    try {
+      await apiCards.insert(card)
+    } catch (e) {
+      _handleError(e)
+    }
   }
 
   const createMany = async (param: { content: string; tags: Itag[] }[]) => {
-    await apiCards.createMany(param)
+    try {
+      await apiCards.createMany(param)
+    } catch (e) {
+      _handleError(e)
+    }
   }
 
   const read = async (filter: {
@@ -52,8 +80,7 @@ export const useCards = defineStore('cards storage', () => {
 
       return allCards
     } catch (e) {
-      if (e instanceof Error) console.error(e)
-      else console.log('erro inesperado ao capturar todos cards')
+      _handleError(e)
 
       return [_errorCard]
     }
@@ -75,7 +102,7 @@ export const useCards = defineStore('cards storage', () => {
 
       cards.value = allCards
     } catch (e) {
-      console.error(e)
+      _handleError(e)
     }
   }
 
@@ -85,7 +112,7 @@ export const useCards = defineStore('cards storage', () => {
 
       return findCard
     } catch (e) {
-      console.error(e)
+      _handleError(e)
 
       return _errorCard
     }
@@ -99,28 +126,30 @@ export const useCards = defineStore('cards storage', () => {
     try {
       await apiCards.delete(id)
     } catch (e) {
-      if (e instanceof Error) console.error(e)
-      else console.log('erro inesperado ao deletar card')
+      _handleError(e)
     }
   }
 
   const updateAllTags = async (props: { tag: Itag; name: string }) => {
-    await apiCards.updateAllTags(props)
+    try {
+      await apiCards.updateAllTags(props)
+    } catch (e) {
+      _handleError(e)
+    }
   }
 
-  const shareCard = async (card: Icard) => {
+  const openSharedCard = async (card: Icard) => {
     try {
       await apiCards.readOne(card.id)
     } catch (e) {
-      console.log('eee', e)
-      console.log('id', card.id)
-      window.cardShare.open(card)
+      return card
     }
   }
 
   return {
     cards,
     init,
+    isCard,
     create,
     insert,
     createMany,
@@ -130,6 +159,6 @@ export const useCards = defineStore('cards storage', () => {
     update,
     deleteCard,
     updateAllTags,
-    shareCard
+    shareCard: openSharedCard
   }
 })

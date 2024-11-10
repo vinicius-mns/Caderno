@@ -37,7 +37,7 @@ const cardEmpty = (): Icard => {
   }
 }
 
-const handleError = (error: unknown) => {
+const windowsHandleError = (error: unknown) => {
   error instanceof Error
     ? window.errorMessage.open(error.message)
     : window.errorMessage.open('erro inesperado')
@@ -85,7 +85,7 @@ const cardsUpdateReactive = async () => {
       excludeTags: tags.excludeTags
     })
   } catch (e) {
-    handleError(e)
+    windowsHandleError(e)
   }
 }
 
@@ -99,7 +99,7 @@ const cardCreateSend = async (card: Icard) => {
 
     removeCardTo(card, 'create')
   } catch (e) {
-    handleError(e)
+    windowsHandleError(e)
   }
 }
 
@@ -113,7 +113,7 @@ const cardUpdateSend = async (card: Icard) => {
 
     removeCardTo(card, 'edit')
   } catch (e) {
-    handleError(e)
+    windowsHandleError(e)
   }
 }
 
@@ -129,7 +129,7 @@ const cardDeleteSend = async (card: Icard) => {
 
     removeCardTo(card, 'edit')
   } catch (e) {
-    handleError(e)
+    windowsHandleError(e)
   }
 }
 
@@ -149,14 +149,31 @@ const cardShareSend = async (card: Icard) => {
   }
 }
 
-onMounted(async () => {
+const handleOpenSharedCard = async () => {
   const paramId = route.params.id
 
-  if (paramId) {
-    const cardParam = JSON.parse(paramId as string) as Icard
-
-    cards.shareCard(cardParam)
+  const getCardInParam = () => {
+    if (paramId) {
+      const card = JSON.parse(paramId as string) as Icard
+      return cards.isCard(card) && card
+    }
   }
+
+  const openSharedCard = async (card: Icard) => {
+    try {
+      await cards.getCard(card.id)
+    } catch (e) {
+      console.error(e)
+      window.cardShare.open(card)
+    }
+  }
+
+  const card = getCardInParam()
+  if (card) openSharedCard(card)
+}
+
+onMounted(async () => {
+  await handleOpenSharedCard()
 })
 </script>
 
