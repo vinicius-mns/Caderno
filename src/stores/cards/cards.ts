@@ -3,13 +3,10 @@ import { CardsApiLocal } from './ApiLocalCards'
 import { ref } from 'vue'
 import type { Icard } from './Interfaces'
 import type { Itag } from '../tags/Interfaces'
-import { useWindows } from '../windows'
 
 const apiCards = new CardsApiLocal()
 
 export const useCards = defineStore('cards storage', () => {
-  const window = useWindows()
-
   const cards = ref<Icard[]>([])
 
   const _errorCard: Icard = {
@@ -19,12 +16,23 @@ export const useCards = defineStore('cards storage', () => {
     tags: []
   }
 
-  const _handleError = (e: Error | unknown) => {
-    e instanceof Error
-      ? window.errorMessage.open(e.message)
-      : window.errorMessage.open('erro inesperado')
+  const isCard = (card: Icard | undefined) => {
+    return (
+      typeof card === 'object' &&
+      card !== null &&
+      'id' in card &&
+      'content' in card &&
+      'date' in card &&
+      'tags' in card
+    )
+  }
 
-    throw e
+  const _handleError = (e: Error | unknown) => {
+    if (e instanceof Error) {
+      throw new Error(e.message)
+    } else {
+      throw new Error('erro inesperado')
+    }
   }
 
   const init = async (filter: { includeTags: string[]; excludeTags: string[] }): Promise<void> => {
@@ -130,17 +138,18 @@ export const useCards = defineStore('cards storage', () => {
     }
   }
 
-  const shareCard = async (card: Icard) => {
+  const openSharedCard = async (card: Icard) => {
     try {
       await apiCards.readOne(card.id)
     } catch (e) {
-      window.cardShare.open(card)
+      return card
     }
   }
 
   return {
     cards,
     init,
+    isCard,
     create,
     insert,
     createMany,
@@ -150,6 +159,6 @@ export const useCards = defineStore('cards storage', () => {
     update,
     deleteCard,
     updateAllTags,
-    shareCard
+    shareCard: openSharedCard
   }
 })
