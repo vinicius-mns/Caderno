@@ -263,7 +263,7 @@ onMounted(async () => {
     width: v-bind(width);
     max-width: 95dvw;
     margin: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   & .cards-main {
     padding-top: 20px;
