@@ -48,7 +48,7 @@ const clearFilter = () => {
     <FlexContainer align-items="center" class="filter-container">
       <FloatModalSlot>
         <template #button-slot>
-          <ButtonCoinSlot content="Filtrar cards" :border="true">
+          <ButtonCoinSlot content="Filtrar cards">
             <FilterIco />
           </ButtonCoinSlot>
         </template>
@@ -75,7 +75,6 @@ const clearFilter = () => {
       <ButtonSlot
         content="Criar tag"
         class="create-tag-button button-x"
-        :border="true"
         @click="window.tagCreate.open(null)"
       >
         <PencilIco />
@@ -85,7 +84,7 @@ const clearFilter = () => {
 
       <FloatModalSlot>
         <template #button-slot>
-          <ButtonCoinSlot content="Tags" :border="true" class="button-x">
+          <ButtonCoinSlot content="Tags" class="button-x">
             <TagIco />
           </ButtonCoinSlot>
         </template>
@@ -116,12 +115,7 @@ const clearFilter = () => {
         </template>
       </FloatModalSlot>
 
-      <ButtonCoinSlot
-        content="configurações"
-        class="button-x"
-        :border="true"
-        @click="window.config.open(null)"
-      >
+      <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
         <GearIco />
       </ButtonCoinSlot>
     </FlexContainer>
