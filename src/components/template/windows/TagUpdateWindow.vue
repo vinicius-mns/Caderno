@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import TagEditor from '@/components/organisms/TagEditor.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
@@ -16,7 +16,9 @@ const cards = useCards()
 const tags = useTags()
 const emojis = useEmoji()
 
-const allEmojis = computed(() => emojis.getAll())
+const filterEmojiName = (name: string) => {
+  emojis.filterEmojiByName(name)
+}
 
 const useTag = () => {
   const tagRef = ref<Itag>(window.tagEditor.props)
@@ -61,7 +63,12 @@ const tag = useTag()
     @close="window.tagEditor.close"
   >
     <FlexContainer flex-direction="column" class="tag-update">
-      <TagEditor :tag="window.tagEditor.props" :emojis="allEmojis" @sendtag="tag.setTag" />
+      <TagEditor
+        :tag="window.tagEditor.props"
+        :emojis="emojis.allEmojis"
+        @sendtag="tag.setTag"
+        @search-emoji="filterEmojiName"
+      />
 
       <ButtonSlot content="Confirmar alteração" class="check-button" @click="tag.updateTag()">
         <CheckIco />
