@@ -82,38 +82,14 @@ const clearFilter = () => {
 
       <hr />
 
-      <FloatModalSlot>
-        <template #button-slot>
-          <ButtonCoinSlot content="Tags" class="button-x">
-            <TagIco />
-          </ButtonCoinSlot>
-        </template>
-
-        <template #container-slot>
-          <ModalCard class="tags-card">
-            <FlexContainer flex-direction="column" class="tags-flex-container">
-              <FlexContainer flex-wrap="wrap" class="tags-area">
-                <TagWithOptions
-                  v-for="(tag, i) in tags.tags"
-                  :key="i"
-                  :tag="tag"
-                  @update-tag="window.tagEditor.open"
-                  @delete-tag="window.tagDelete.open"
-                  @delete-cards-withtag="window.tagDeleteCard.open"
-                />
-              </FlexContainer>
-
-              <ButtonSlot
-                content="Criar tag"
-                class="create-tag-button"
-                @click="window.tagCreate.open(null)"
-              >
-                <PencilIco />
-              </ButtonSlot>
-            </FlexContainer>
-          </ModalCard>
-        </template>
-      </FloatModalSlot>
+      <TagWithOptions
+        :tags="tags.tags"
+        :text-filter="tags.textFilterTags"
+        @search-tag="tags.realAllTagsByName"
+        @update-tag="window.tagEditor.open"
+        @delete-tag="window.tagDelete.open"
+        @delete-cards-withtag="window.tagDeleteCard.open"
+      />
 
       <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
         <GearIco />
@@ -160,27 +136,6 @@ const clearFilter = () => {
 
     & .button-x {
       margin: 5px 3px;
-    }
-
-    & .tags-card {
-      display: flex;
-      flex-direction: column;
-      width: 340px;
-      max-height: 55dvh;
-
-      & .tags-flex-container {
-        height: 100%;
-        overflow: hidden;
-        & .tags-area {
-          height: 100%;
-          width: 100%;
-          overflow: auto;
-          flex-shrink: 1;
-        }
-        & .create-tag-button {
-          margin-top: 10px;
-        }
-      }
     }
   }
 
