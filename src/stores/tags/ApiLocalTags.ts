@@ -224,6 +224,28 @@ export class TagsApiLocal implements ItagsApi {
     })
   }
 
+  public realAllTagsByName = (name: string) => {
+    return new Promise<ItagsDb>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const storage = this._storage.read()
+
+          const filter = (tags: Itag[]) => {
+            return tags.filter((tag) => tag[1].toLocaleLowerCase().includes(name))
+          }
+
+          const tags = filter(storage.tags)
+          const includeTags = filter(storage.filter.includeTags)
+          const excludeTags = filter(storage.filter.excludeTags)
+
+          resolve({ tags, filter: { includeTags, excludeTags } })
+        } catch (e) {
+          reject(e)
+        }
+      }, 0)
+    })
+  }
+
   setFilter = (newFilter: IFilterTags) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(() => {
