@@ -11,6 +11,8 @@ export const useTags = defineStore('tags', () => {
     tags: []
   }
 
+  const textFilterTags = ref<string>('')
+
   const tagsDb = reactive<ItagsDb>(emptyTagsDb)
 
   const tags = ref<Itag[]>([])
@@ -86,6 +88,20 @@ export const useTags = defineStore('tags', () => {
     }
   }
 
+  const realAllTagsByName = async (name: string) => {
+    try {
+      textFilterTags.value = name
+
+      const db = await tagsApi.realAllTagsByName(name)
+
+      tagsDb.filter = db.filter
+      tagsDb.tags = db.tags
+      tags.value = db.tags
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const setFilter = async (filter: IFilterTags) => {
     try {
       await tagsApi.setFilter(filter)
@@ -108,6 +124,7 @@ export const useTags = defineStore('tags', () => {
 
   return {
     init,
+    textFilterTags,
     tags,
     includeTags,
     excludeTags,
@@ -119,6 +136,7 @@ export const useTags = defineStore('tags', () => {
     updateTag,
     deletedTag,
     setFilter,
-    clearFilter
+    clearFilter,
+    realAllTagsByName
   }
 })
