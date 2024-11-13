@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue'
 
+const props = withDefaults(defineProps<{ closeOnClick?: boolean }>(), { closeOnClick: false })
+
 const emit = defineEmits<{
   (e: 'open', v: void): void
   (e: 'close', v: void): void
@@ -54,6 +56,10 @@ const openCard = (e: MouseEvent) => {
   })
 }
 
+const closeIfCloseOnClick = () => {
+  props.closeOnClick && close()
+}
+
 defineExpose({
   open,
   close
@@ -65,8 +71,9 @@ defineExpose({
     <div class="button-slot" @click="openCard">
       <slot name="button-slot"></slot>
     </div>
+
     <div class="glass" v-if="showFlotModal" @click="close">
-      <div class="float-card" @click.stop ref="card">
+      <div class="float-card" @click.stop ref="card" @click="closeIfCloseOnClick">
         <slot class="slot" name="container-slot"></slot>
       </div>
     </div>
