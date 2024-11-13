@@ -10,7 +10,16 @@ import { ref } from 'vue'
 
 const stylePage = useStylesPage()
 
-const props = defineProps<{ placeholder: string; keyId: string }>()
+const props = withDefaults(
+  defineProps<{
+    placeholder: string
+    keyId: string
+    initContent?: string
+  }>(),
+  {
+    initContent: ''
+  }
+)
 
 const emit = defineEmits<{
   (e: 'emitContent', v: string): void
@@ -38,6 +47,7 @@ const emitContent = () => emit('emitContent', content.value)
 
       <ThemeImputText
         ref="textImput"
+        :init-content="props.initContent"
         class="text"
         :key-id="props.keyId"
         :placeholder="placeholder"
@@ -54,6 +64,7 @@ const emitContent = () => emit('emitContent', content.value)
 
 <style scoped lang="scss">
 .option-button-container {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   height: 40px;
