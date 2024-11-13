@@ -7,6 +7,7 @@ import ButtonCoinSlot from './ButtonCoinSlot.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref } from 'vue'
+import CrossIco from '../atoms/icons/CrossIco.vue'
 
 const stylePage = useStylesPage()
 
@@ -56,7 +57,7 @@ const emitContent = () => emit('emitContent', content.value)
       />
 
       <ButtonCoinSlot content="Limpar" class="eraser" @click="clearContent">
-        <EraserIco />
+        <CrossIco />
       </ButtonCoinSlot>
     </FlexContainer>
   </ThemeButton>
