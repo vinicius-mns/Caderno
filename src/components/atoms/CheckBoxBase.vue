@@ -31,8 +31,8 @@ input {
   width: 0;
 }
 .checked {
-  background-color: v-bind('stylePage.atualColor.front');
-  border: solid 1px v-bind('stylePage.atualColor.border');
+  background-color: v-bind('stylePage.atualColor.hover');
+  // border: solid 1px v-bind('stylePage.atualColor.border');
 }
 .check-button {
   box-sizing: border-box;
