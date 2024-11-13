@@ -9,6 +9,9 @@ import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   tag: Itag
@@ -141,7 +144,8 @@ const searchEmoji = (v: string) => {
         justify-content: center;
 
         &:hover {
-          background-color: red;
+          background-color: v-bind('stylePage.atualColor.hover');
+          border-radius: v-bind('stylePage.borderRadius.inside');
           cursor: pointer;
         }
       }
