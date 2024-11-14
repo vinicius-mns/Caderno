@@ -59,8 +59,10 @@ const clearFilter = () => {
               :allTags="tags.tags"
               :include-tags="tags.includeTags"
               :exclude-tags="tags.excludeTags"
+              :text-filter-tags="tags.textFilterTags"
               @emit-filter="sendFilter"
               @clear-filter="clearFilter"
+              @search-tag="tags.realAllTagsByName"
             />
           </ModalCard>
         </template>
@@ -111,7 +113,7 @@ const clearFilter = () => {
   & .modal-card {
     display: flex;
     flex-direction: column;
-    width: 360px;
+    width: 408px;
     max-width: 95dvw;
     max-height: 60dvh;
   }

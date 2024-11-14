@@ -10,16 +10,19 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import SendIco from '../atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import SearchImput from '../molecules/SearchImput.vue'
 
 const props = defineProps<{
   allTags: Itag[]
   includeTags: Itag[]
   excludeTags: Itag[]
+  textFilterTags: string
 }>()
 
 const emit = defineEmits<{
   (e: 'emitFilter', v: { include: Itag[]; exclude: Itag[] }): void
-  (e: 'clearFilter', v: void): void
+  (e: 'clearFilter', v: null): void
+  (e: 'searchTag', v: string): void
 }>()
 
 type FilterType = 'include' | 'exclude'
@@ -85,7 +88,7 @@ const useTagRoute = () => {
 
   const is = (v: TagRouteOptions) => v === atualRoute.value
 
-  const routes = ['Com tag', 'Sem tag']
+  const routes: TagRouteOptions[] = ['Com tag', 'Sem tag']
 
   const setRoute = (v: TagRouteOptions) => (atualRoute.value = v)
 
@@ -103,12 +106,19 @@ const emitFilter = () => emit('emitFilter', { include: include.value, exclude: e
 
 const clearFilter = () => {
   clear()
-  emit('clearFilter')
+  emit('clearFilter', null)
 }
 </script>
 
 <template>
   <FlexContainer flex-direction="column" class="cards-filter-container">
+    <SearchImput
+      key-id="search-tag-filter"
+      placeholder="Pesquisar tag"
+      class="search"
+      @emit-content="(v: string) => emit('searchTag', v)"
+    />
+
     <FlexContainer justify-content="space-between" class="top-container">
       <RadioBase
         v-for="(routeTag, i) in tagRoute.routes"
@@ -117,7 +127,7 @@ const clearFilter = () => {
         :checked-value="tagRoute.atualRoute.value"
         :id="routeTag"
         :style="{ width: 'calc(50% - 4px)', height: '36px', margin: '4px 0' }"
-        @select="tagRoute.setRoute"
+        @select="tagRoute.setRoute(routeTag)"
       >
         <ThemeP :content="routeTag" />
       </RadioBase>
@@ -175,12 +185,16 @@ const clearFilter = () => {
     width: 100%;
   }
 
+  & .search {
+    margin-bottom: 5px;
+  }
+
   & .bottom-container {
     height: 100%;
     overflow-y: auto;
 
     & .check-button {
-      width: calc(50% - 4px);
+      width: calc(33% - 4px);
       margin: 2px;
     }
 
