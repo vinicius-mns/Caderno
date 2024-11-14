@@ -31,11 +31,12 @@ const content = ref<string>('')
 
 const setContent = (v: string) => (content.value = v)
 
+const emitContent = () => emit('emitContent', content.value)
+
 const clearContent = () => {
   textImput.value?.clearContent()
+  emit('emitContent', '')
 }
-
-const emitContent = () => emit('emitContent', content.value)
 </script>
 
 <template>
