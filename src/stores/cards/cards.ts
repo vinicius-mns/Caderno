@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 import { CardsApiLocal } from './ApiLocalCards'
 import { ref } from 'vue'
-import type { Icard } from './Interfaces'
+import type { Icard, IfilterCard } from './Interfaces'
 import type { Itag } from '../tags/Interfaces'
 
 const apiCards = new CardsApiLocal()
 
 export const useCards = defineStore('cards storage', () => {
   const cards = ref<Icard[]>([])
+
+  const textFilterCards = ref<string>('')
 
   const _errorCard: Icard = {
     content: 'error',
@@ -35,17 +37,42 @@ export const useCards = defineStore('cards storage', () => {
     }
   }
 
-  const init = async (filter: { includeTags: string[]; excludeTags: string[] }): Promise<void> => {
+  const atualizeReactiveCards = async (filter: {
+    includeTags: Itag[]
+    excludeTags: Itag[]
+    content?: string
+  }): Promise<void> => {
     try {
-      const allCards = await apiCards.read(filter)
+      const includeTagsNames = filter.includeTags.map((tag) => tag[1])
+
+      const excludeTagsNames = filter.excludeTags.map((tag) => tag[1])
+
+      const allCards = await apiCards.read({
+        includeTags: includeTagsNames,
+        excludeTags: excludeTagsNames,
+        content: textFilterCards.value
+      })
 
       cards.value = allCards
     } catch (e) {
       _handleError(e)
-
-      cards.value = [_errorCard]
     }
   }
+
+  const textFilterCardsSet = (text: string) => {
+    textFilterCards.value = text
+  }
+  // const init = async (filter: { includeTags: string[]; excludeTags: string[] }): Promise<void> => {
+  //   try {
+  //     const allCards = await apiCards.read(filter)
+
+  //     cards.value = allCards
+  //   } catch (e) {
+  //     _handleError(e)
+
+  //     cards.value = [_errorCard]
+  //   }
+  // }
 
   const create = async (param: { content: string; tags: Itag[] }): Promise<void> => {
     try {
@@ -71,10 +98,7 @@ export const useCards = defineStore('cards storage', () => {
     }
   }
 
-  const read = async (filter: {
-    includeTags: string[]
-    excludeTags: string[]
-  }): Promise<Icard[]> => {
+  const read = async (filter: IfilterCard): Promise<Icard[]> => {
     try {
       const allCards = await apiCards.read(filter)
 
@@ -83,26 +107,6 @@ export const useCards = defineStore('cards storage', () => {
       _handleError(e)
 
       return [_errorCard]
-    }
-  }
-
-  const atualizeReactiveCards = async (filter: {
-    includeTags: Itag[]
-    excludeTags: Itag[]
-  }): Promise<void> => {
-    try {
-      const includeTagsNames = filter.includeTags.map((tag) => tag[1])
-
-      const excludeTagsNames = filter.excludeTags.map((tag) => tag[1])
-
-      const allCards = await apiCards.read({
-        includeTags: includeTagsNames,
-        excludeTags: excludeTagsNames
-      })
-
-      cards.value = allCards
-    } catch (e) {
-      _handleError(e)
     }
   }
 
@@ -148,7 +152,8 @@ export const useCards = defineStore('cards storage', () => {
 
   return {
     cards,
-    init,
+    textFilterCards,
+    textFilterCardsSet,
     isCard,
     create,
     insert,
