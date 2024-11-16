@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
 import ThemeMarkown from '@/components/atoms/ThemeMarkown.vue'
@@ -93,7 +93,6 @@ const pushCards = () => router.push('/cards')
 <template>
   <div class="page-container">
     <FlexContainer flex-direction="column" align-items="center" class="tutorial-container">
-      <!-- <ThemeMarkown :content="`## ${String(path)}`" /> -->
       <CardView
         v-if="pathIn(0, 0)"
         :card="newCard({ content: textIntro })"
@@ -445,4 +444,4 @@ const pushCards = () => router.push('/cards')
     margin-top: 0;
   }
 }
-</style>
+</style> -->
