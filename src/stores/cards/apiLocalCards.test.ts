@@ -101,7 +101,7 @@ describe('ApiLocalCards', () => {
           { content: cardObject2.content, tags: cardObject2.tags }
         ])
 
-        const allcards = await apiCards.read({ includeTags: [], excludeTags: [] })
+        const allcards = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
 
         expect(allcards.length).toBe(2)
         expect(allcards[1].content).toBe(cardObject2.content)
@@ -117,7 +117,7 @@ describe('ApiLocalCards', () => {
           { content: '', tags: cardObject2.tags }
         ])
 
-        await apiCards.read({ includeTags: [], excludeTags: [] })
+        await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
       } catch (e) {
         expect(e).toBeInstanceOf(Error)
 
@@ -130,7 +130,7 @@ describe('ApiLocalCards', () => {
     test('ler cards com sucesso', async () => {
       await apiCards.create({ content: cardObject2.content, tags: cardObject2.tags })
 
-      const readCards = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const readCards = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
 
       expect(readCards.length).toBe(1)
 
@@ -148,7 +148,8 @@ describe('ApiLocalCards', () => {
 
       const filterIncludeTags = await apiCards.read({
         includeTags: [cardObject1.tags[0][1]],
-        excludeTags: []
+        excludeTags: [],
+        content: ''
       })
 
       expect(filterIncludeTags.length).toBe(4)
@@ -173,7 +174,8 @@ describe('ApiLocalCards', () => {
 
       const filterIncludeTags = await apiCards.read({
         includeTags: [],
-        excludeTags: [cardObject3.tags[2][1]]
+        excludeTags: [cardObject3.tags[2][1]],
+        content: ''
       })
 
       expect(filterIncludeTags.length).toBe(2)
@@ -194,12 +196,34 @@ describe('ApiLocalCards', () => {
 
       const filterIncludeTags = await apiCards.read({
         includeTags: [cardObject4.tags[3][1]],
-        excludeTags: [cardObject3.tags[2][1]]
+        excludeTags: [cardObject3.tags[2][1]],
+        content: ''
       })
 
       expect(filterIncludeTags.length).toBe(1)
 
       expect(filterIncludeTags[0].content).toBe(cardObject1.content)
+    })
+
+    test('filtrar por content', async () => {
+      const createPromises = [
+        apiCards.create({ content: cardObject1.content, tags: cardObject1.tags }),
+        apiCards.create({ content: cardObject2.content, tags: cardObject2.tags }),
+        apiCards.create({ content: cardObject3.content, tags: cardObject3.tags }),
+        apiCards.create({ content: cardObject4.content, tags: cardObject4.tags })
+      ]
+
+      await Promise.all(createPromises)
+
+      const filterIncludeTags = await apiCards.read({
+        includeTags: [],
+        excludeTags: [],
+        content: cardObject2.content
+      })
+
+      expect(filterIncludeTags.length).toBe(1)
+
+      expect(filterIncludeTags[0].content).toBe(cardObject2.content)
     })
   })
 
@@ -213,7 +237,7 @@ describe('ApiLocalCards', () => {
 
       await apiCards.create({ content: cardObject4.content, tags: cardObject4.tags })
 
-      const allCards = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const allCards = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
 
       const card2Id = allCards[1].id
 
@@ -262,7 +286,7 @@ describe('ApiLocalCards', () => {
 
       await apiCards.create({ content: 'card dois', tags: [['😐', 'neutro']] })
 
-      const allcard = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const allcard = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
 
       const tagsInCard = allcard.map((card) => card.tags)
 
@@ -274,7 +298,7 @@ describe('ApiLocalCards', () => {
 
       await apiCards.updateAllTags({ tag: ['😢', 'chorando'], name: 'sorrindo' })
 
-      const newAllCards = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const newAllCards = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
 
       const newTagsInCard = newAllCards.map((card) => card.tags)
 
@@ -290,15 +314,25 @@ describe('ApiLocalCards', () => {
     test('delete por id com sucesso', async () => {
       await apiCards.create({ content: cardObject1.content, tags: cardObject1.tags })
 
-      const allcard = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const allcard = await apiCards.read({ includeTags: [], excludeTags: [], content: '' })
+
+      console.log('all cards', allcard)
 
       const cardId = allcard[0].id
+
+      console.log('card id', cardId)
 
       expect(allcard.length).toBe(1)
 
       const deleteCard = await apiCards.delete(cardId)
 
-      const allCardsAfterDelete = await apiCards.read({ includeTags: [], excludeTags: [] })
+      const allCardsAfterDelete = await apiCards.read({
+        includeTags: [],
+        excludeTags: [],
+        content: ''
+      })
+
+      console.log('all cards after delete', allCardsAfterDelete)
 
       expect(deleteCard).toBe(true)
 
