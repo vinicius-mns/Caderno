@@ -36,7 +36,11 @@ watch(tag, async () => {
   const tagName = tag.value[1]
 
   if (tagName !== '') {
-    const cardsFind = await cards.read({ includeTags: [tagName], excludeTags: [] })
+    const cardsFind = await cards.read({
+      includeTags: [tagName],
+      excludeTags: [],
+      content: ''
+    })
 
     cardsRef.value = cardsFind
   }
