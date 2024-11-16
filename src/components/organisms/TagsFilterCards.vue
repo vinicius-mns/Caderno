@@ -116,6 +116,7 @@ const clearFilter = () => {
       key-id="search-tag-filter"
       placeholder="Pesquisar tag"
       class="search"
+      :init-content="props.textFilterTags"
       @emit-content="(v: string) => emit('searchTag', v)"
     />
 
