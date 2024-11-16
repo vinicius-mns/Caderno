@@ -9,13 +9,13 @@ import TagsFilterCards from '../organisms/TagsFilterCards.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
-import TagIco from '../atoms/icons/TagIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import GearIco from '../atoms/icons/GearIco.vue'
 import TagWithOptions from '../organisms/TagWithOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useFloatMessage } from '@/stores/floatMessage'
+import SearchImput from '../molecules/SearchImput.vue'
 
 const window = useWindows()
 const cards = useCards()
@@ -45,7 +45,7 @@ const clearFilter = () => {
 
 <template>
   <FlexContainer class="cards-header" align-items="center" justify-content="space-between">
-    <FlexContainer align-items="center" class="filter-container">
+    <FlexContainer align-items="center" class="filter-container section">
       <FloatModalSlot>
         <template #button-slot>
           <ButtonCoinSlot content="Filtrar cards">
@@ -73,7 +73,11 @@ const clearFilter = () => {
       </FlexContainer>
     </FlexContainer>
 
-    <FlexContainer align-items="center" class="buttons-container">
+    <FlexContainer class="section search-card">
+      <SearchImput placeholder="Pesquisar" key-id="sear-card" />
+    </FlexContainer>
+
+    <FlexContainer align-items="center" justify-content="end" class="buttons-container section">
       <ButtonSlot
         content="Criar tag"
         class="create-tag-button button-x"
@@ -108,6 +112,15 @@ const clearFilter = () => {
 
   @media screen and (max-width: 767px) {
     width: calc(100% - 10px);
+  }
+
+  & .section {
+    overflow: hidden;
+    width: calc(50% - 190px);
+  }
+
+  & .search-card {
+    width: 320px;
   }
 
   & .modal-card {
