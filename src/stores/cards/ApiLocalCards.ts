@@ -1,6 +1,6 @@
 import LocalStorageApi from '../../myLocalStorage/LocalStorageApi'
 import type { Itag } from '../tags/Interfaces'
-import type { ICardDb, ICardsApi, Icard } from './Interfaces'
+import type { ICardDb, ICardsApi, Icard, IfilterCard } from './Interfaces'
 import { v4 as uuid } from 'uuid'
 
 const keyLocalStorageCards = 'cards'
@@ -117,23 +117,37 @@ export class CardsApiLocal implements ICardsApi {
     })
   }
 
-  public read = (filter: { includeTags: string[]; excludeTags: string[] }) => {
+  private _filterCardsBycontent = (param: { cards: Icard[]; content: string }) => {
+    const { cards, content } = param
+
+    return cards.filter((card) => card.content.toLowerCase().includes(content.toLowerCase()))
+  }
+
+  public read = ({ includeTags, excludeTags, content }: IfilterCard) => {
     return new Promise<Icard[]>((resolve, reject) => {
       setTimeout(() => {
-        const allCards = this._storage.read()
+        try {
+          const allCards = this._storage.read()
 
-        const cardsIncludeTags = this._filterCardsByTags({
-          cards: allCards,
-          tagsName: filter.includeTags
-        })
+          const cardsWithIncludeTags = this._filterCardsByTags({
+            cards: allCards,
+            tagsName: includeTags
+          })
 
-        const cardsExcludeTags = this._filterCardsByWithoutTags({
-          cards: cardsIncludeTags,
-          tagsName: filter.excludeTags
-        })
+          const cardsWithoutExcludeTags = this._filterCardsByWithoutTags({
+            cards: cardsWithIncludeTags,
+            tagsName: excludeTags
+          })
 
-        if (cardsExcludeTags) resolve(cardsExcludeTags)
-        else reject(new Error('not found'))
+          const cardsWithContent = this._filterCardsBycontent({
+            cards: cardsWithoutExcludeTags,
+            content
+          })
+
+          resolve(cardsWithContent)
+        } catch (e) {
+          reject(new Error(`Failed to read cards: ${e instanceof Error ? e.message : e}`))
+        }
       }, 0)
     })
   }
