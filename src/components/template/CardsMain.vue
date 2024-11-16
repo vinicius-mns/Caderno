@@ -199,6 +199,7 @@ onMounted(async () => {
         class="card-w"
         :card-p="card"
         :id-text-imput="`card-create-${i}`"
+        :textFilterTags="tags.textFilterTags"
         @emit-card="(card: Icard) => setCardTo(card, 'create')"
         @send-card="cardCreateSend"
         @emit-cancel="(card: Icard) => removeCardTo(card, 'create')"
@@ -211,6 +212,7 @@ onMounted(async () => {
           :card-p="cardsTo.edit.find((c) => c.id === card.id)!"
           :id-text-imput="`card-update-${i}`"
           @send-card="cardUpdateSend"
+          :text-filter-tags="tags.textFilterTags"
           @emit-card="(card: Icard) => setCardTo(card, 'edit')"
           @emit-cancel="(card: Icard) => removeCardTo(card, 'edit')"
         />

@@ -16,7 +16,7 @@ const cardStyle = useStylesCard()
 
 const tags = useTags()
 
-const props = defineProps<{ cardP: Icard; idTextImput: string }>()
+const props = defineProps<{ cardP: Icard; idTextImput: string; textFilterTags: string }>()
 
 const emit = defineEmits<{
   (e: 'emitCard', v: Icard): void
@@ -59,6 +59,7 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
     <FlexContainer flex-direction="column" align-items="center" class="base-width">
       <FlexContainer class="top-container">
         <TagSelectorWithList
+          :text-filter="props.textFilterTags"
           :all-tags="allTags"
           :tags-checked="card.cardRef.value.tags"
           @emit-selected="card.setCardTags"
