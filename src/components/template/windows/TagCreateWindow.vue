@@ -20,7 +20,9 @@ const tags = useTags()
 
 const emojis = useEmoji()
 
-const allEmojis = computed(() => emojis.getAll())
+const filterEmojiName = (name: string) => {
+  emojis.filterEmojiByName(name)
+}
 
 const useTagsHandle = () => {
   const tagsList = ref<Itag[]>([['', '']])
@@ -104,7 +106,8 @@ const textButton = computed(() => {
         >
           <TagEditor
             :tag="tag"
-            :emojis="allEmojis"
+            :emojis="emojis.allEmojis"
+            @search-emoji="filterEmojiName"
             @sendtag="(tag: Itag) => tagsHandle.setTag(i, tag)"
           />
         </RemoveItemHover>

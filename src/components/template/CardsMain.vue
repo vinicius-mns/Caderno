@@ -172,6 +172,10 @@ const handleOpenSharedCard = async () => {
   if (card) openSharedCard(card)
 }
 
+const realAllTagsByName = (text: string) => {
+  tags.realAllTagsByName(text)
+}
+
 onMounted(async () => {
   await handleOpenSharedCard()
 })
@@ -222,9 +226,11 @@ onMounted(async () => {
         <CardSlot :card="card" :all-tags="tags.tags" class="card-w" v-else>
           <FlexContainer>
             <TagSelectorWithList
+              :text-filter="tags.textFilterTags"
               :all-tags="tags.tags"
               :tags-checked="card.tags"
               :show-list="false"
+              @search-tag="realAllTagsByName"
               @emit-selected="(tags: Itag[]) => cardUpdateSend({ ...card, tags })"
             />
 

@@ -3,11 +3,15 @@ import { reactive, ref } from 'vue'
 import ThemeImputText from '@/components/atoms/ThemeImputText.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
 import EmojiPlusIco from '../atoms/icons/EmojiPlusIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import ThemeP from '../atoms/ThemeP.vue'
+import SearchImput from '../molecules/SearchImput.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+
+const stylePage = useStylesPage()
 
 const props = defineProps<{
   tag: Itag
@@ -16,6 +20,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'sendtag', v: Itag): void
+  (e: 'searchEmoji', v: string): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
@@ -34,16 +39,17 @@ const sendtag = () => {
 
 const nameSetAndSend = (name: string) => {
   tagReative.name = name
-
   sendtag()
 }
 
 const emojiSetAndSend = (emoji: string) => {
   tagReative.emoji = emoji
-
   sendtag()
-
   closeModal()
+}
+
+const searchEmoji = (v: string) => {
+  emit('searchEmoji', v)
 }
 </script>
 
@@ -62,14 +68,23 @@ const emojiSetAndSend = (emoji: string) => {
 
       <template #container-slot>
         <ModalCard class="modal-container">
-          <ThemeButton
-            v-for="(emoji, i) in props.emojis"
-            :key="i"
-            @click="() => emojiSetAndSend(emoji)"
-            class="option"
-          >
-            {{ emoji }}
-          </ThemeButton>
+          <SearchImput
+            key-id="search-emoji"
+            placeholder="Pesquisar emoji"
+            class="search-emoji"
+            @emit-content="searchEmoji"
+          />
+
+          <FlexContainer flex-wrap="wrap" class="tags-list">
+            <p
+              v-for="(emoji, i) in props.emojis"
+              :key="i"
+              @click="() => emojiSetAndSend(emoji)"
+              class="option"
+            >
+              {{ emoji }}
+            </p>
+          </FlexContainer>
         </ModalCard>
       </template>
     </FloatModalSlot>
@@ -101,23 +116,39 @@ const emojiSetAndSend = (emoji: string) => {
   }
 
   & .modal-container {
-    width: 360px;
+    width: 408px;
     max-width: 92%;
-    height: 45dvh;
-    overflow: auto;
+    max-height: 45dvh;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    .option {
-      height: 40px;
-      width: 40px;
-      margin: 2.5px;
-      font-size: 30px;
-      border: none;
-      background-color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+
+    & .search-emoji {
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    & .tags-list {
+      overflow: auto;
+      height: 100%;
+      margin-top: 10px;
+
+      .option {
+        height: 40px;
+        margin: 1px;
+        font-size: 28px;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: v-bind('stylePage.atualColor.hover');
+          border-radius: v-bind('stylePage.borderRadius.inside');
+          cursor: pointer;
+        }
+      }
     }
   }
 

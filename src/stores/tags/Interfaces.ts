@@ -22,6 +22,7 @@ export interface ItagsApi {
   createManyTags: (param: { emoji: string; name: string }[]) => Promise<boolean>
   readTag: (name: string) => Promise<Itag>
   readAllTags: () => Promise<ItagsDb>
+  realAllTagsByName: (name: string) => Promise<ItagsDb>
   updateTag: (param: { emoji: string; name: string; atualName: string }) => Promise<boolean>
   deleteTag: (name: string) => Promise<boolean>
   deleteAll: () => Promise<boolean>

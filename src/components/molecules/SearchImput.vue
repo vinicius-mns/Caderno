@@ -2,68 +2,133 @@
 import ThemeButton from '@/components/atoms/ThemeButton.vue'
 import SearchIco from '../atoms/icons/SearchIco.vue'
 import ThemeImputText from '../atoms/ThemeImputText.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
+import ButtonCoinSlot from './ButtonCoinSlot.vue'
+import EraserIco from '../atoms/icons/EraserIco.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import { ref } from 'vue'
 
-const props = defineProps<{ placeholder: string; keyId: string }>()
+const stylePage = useStylesPage()
+
+const props = withDefaults(
+  defineProps<{
+    placeholder: string
+    keyId: string
+    initContent?: string
+  }>(),
+  {
+    initContent: ''
+  }
+)
 
 const emit = defineEmits<{
   (e: 'emitContent', v: string): void
 }>()
 
-const emitContent = (v: string) => emit('emitContent', v)
+const textImput = ref<InstanceType<typeof ThemeImputText>>()
+
+const content = ref<string>('')
+
+const setContent = (v: string) => (content.value = v)
+
+const emitContent = () => emit('emitContent', content.value)
+
+const clearContent = () => {
+  textImput.value?.clearContent()
+  emit('emitContent', '')
+}
 </script>
 
 <template>
   <ThemeButton class="option-button-container">
-    <div class="option-button">
-      <div class="ico">
+    <FlexContainer align-items="center" class="search-container">
+      <ButtonCoinSlot content="Pesquisar" class="ico" @click="emitContent">
         <SearchIco />
-      </div>
-      <div class="text">
-        <ThemeImputText
-          :key-id="props.keyId"
-          :placeholder="placeholder"
-          @emit-content="emitContent"
-        />
-      </div>
-    </div>
+      </ButtonCoinSlot>
+
+      <ThemeImputText
+        ref="textImput"
+        :init-content="props.initContent"
+        class="text"
+        :key-id="props.keyId"
+        :placeholder="placeholder"
+        @emit-content="setContent"
+        @keydown.enter="emitContent"
+      />
+
+      <ButtonCoinSlot content="Limpar" class="eraser" @click="clearContent">
+        <EraserIco />
+      </ButtonCoinSlot>
+    </FlexContainer>
   </ThemeButton>
 </template>
 
 <style scoped lang="scss">
 .option-button-container {
-  width: 100%;
-  height: 40px;
   flex-shrink: 0;
-  flex-grow: 0;
-  border: none;
-  & .option-button {
-    height: 100%;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 100%;
+  position: relative;
+  border: solid v-bind('stylePage.atualColor.border') 1px;
+  overflow: hidden;
+
+  & .search-container {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
     & .ico {
-      flex-shrink: 0;
-      height: 100%;
-      width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute;
+      left: 5px;
     }
+
     & .text {
+      flex-grow: 1;
       flex-shrink: 0;
-      width: calc(100% - 30px);
-      height: 100%;
-      display: flex;
-      align-items: center;
-      & p {
-        padding-left: 10px;
-        font-size: 14px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
-      }
+      height: 40px;
+      width: 100%;
+      padding: 0 50px;
+    }
+
+    & .eraser {
+      position: absolute;
+      right: 5px;
     }
   }
 }
+//   width: 100%;
+//   height: 40px;
+//   flex-shrink: 0;
+//   flex-grow: 0;
+//   border: none;
+//   & .option-button {
+//     height: 100%;
+//     width: 100%;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     & .ico {
+//       flex-shrink: 0;
+//       height: 100%;
+//       width: 30px;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//     }
+//     & .text {
+//       flex-shrink: 0;
+//       width: calc(100% - 30px);
+//       height: 100%;
+//       display: flex;
+//       align-items: center;
+//       & p {
+//         padding-left: 10px;
+//         font-size: 14px;
+//         overflow: hidden;
+//         text-overflow: ellipsis;
+//         text-wrap: nowrap;
+//       }
+//     }
+//   }
+// }
 </style>

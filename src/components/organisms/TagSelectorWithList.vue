@@ -13,14 +13,19 @@ import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import { useWindows } from '@/stores/windows'
+import SearchImput from '../molecules/SearchImput.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const windows = useWindows()
+
+const stylesPage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
     allTags: Itag[]
     tagsChecked: Itag[]
     showList?: boolean
+    textFilter: string
   }>(),
   {
     showList: true
@@ -29,11 +34,14 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
+  (e: 'searchTag', v: string): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
 
 const closeModal = () => modal.value?.close()
+
+const isEmptyTags = computed(() => props.allTags.length <= 0)
 
 const useTags = () => {
   const tagsSelected = ref<Itag[]>(props.tagsChecked)
@@ -106,6 +114,10 @@ const emitTagsAndCloseModal = () => {
   }
 }
 
+const searchTag = (v: string) => {
+  emit('searchTag', v)
+}
+
 const openCreateTagAndCloseModal = () => {
   windows.tagCreate.open(null)
   closeModal()
@@ -136,7 +148,14 @@ const openCreateTagAndCloseModal = () => {
     </template>
 
     <template #container-slot>
-      <ModalCard class="modal-card-tags" v-if="allTags.length > 0">
+      <ModalCard class="modal-card-tags" background-color="front">
+        <SearchImput
+          key-id="search-tag"
+          placeholder="Pesquisar tag"
+          @emit-content="searchTag"
+          :init-content="textFilter"
+        />
+
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
             v-for="(tag, i) in props.allTags"
@@ -151,23 +170,30 @@ const openCreateTagAndCloseModal = () => {
           </CheckBoxBase>
         </FlexContainer>
 
+        <ThemeP
+          content="Nenhuma tag encontrada 😢"
+          size="20px"
+          class="no-tag-tittle"
+          v-show="isEmptyTags"
+        />
+
         <ButtonSlot
+          content="Criar tag"
+          @click="openCreateTagAndCloseModal()"
+          :border="true"
+          v-show="isEmptyTags"
+        >
+          <PencilIco />
+        </ButtonSlot>
+
+        <ButtonSlot
+          v-show="!isEmptyTags"
           content="Confirmar alteração"
-          :class="[tags.butttonStatusClass.value, 'confirm-button']"
+          :class="tags.butttonStatusClass.value"
           @click="emitTagsAndCloseModal()"
         >
           <CheckIco />
         </ButtonSlot>
-      </ModalCard>
-
-      <ModalCard v-else>
-        <FlexContainer flex-direction="column" align-items="center" class="no-tag-container">
-          <ThemeP content="Nenhuma tag criada 😢" size="20px" class="no-tag-tittle" />
-
-          <ButtonSlot content="Criar tag" @click="openCreateTagAndCloseModal()">
-            <PencilIco />
-          </ButtonSlot>
-        </FlexContainer>
       </ModalCard>
     </template>
   </FloatModalSlot>
@@ -182,7 +208,7 @@ const openCreateTagAndCloseModal = () => {
 .modal-card-tags {
   display: flex;
   flex-direction: column;
-  width: 350px;
+  width: 408px;
   max-width: 95dvw;
   max-height: 50dvh;
 
@@ -190,32 +216,27 @@ const openCreateTagAndCloseModal = () => {
     height: 100%;
     overflow: auto;
     overflow-x: auto;
+    margin: 10px 0;
   }
 
   & .tag-selectable {
-    width: calc(50% - 4px);
+    width: calc(33% - 4px);
     margin: 2px;
     height: 40px;
   }
 
-  & .confirm-button {
-    margin-top: 10px;
+  & .no-tag-tittle {
+    margin: 10px;
   }
 
   & .locked {
-    background-color: rgba(255, 0, 0, 0.5);
+    border: solid 1px rgba(255, 0, 0, 0.37);
     cursor: not-allowed;
-    opacity: 30%;
   }
 
   & .unlocked {
-    background-color: rgba(0, 128, 0, 0.5);
-  }
-}
-
-.no-tag-container {
-  & .no-tag-tittle {
-    margin: 10px;
+    border: solid 1px rgba(0, 128, 0, 0.5);
+    background-color: v-bind('stylesPage.atualColor.hover');
   }
 }
 </style>

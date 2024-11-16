@@ -32,22 +32,6 @@ const props = withDefaults(
   padding: 0;
   &:hover {
     background-color: v-bind('stylePage.atualColor.hover');
-    // animation: hoverAnitation 0.3s;
-  }
-  &:active {
-    transform: scale(0.95);
-    background-color: v-bind('stylePage.atualColor.back');
-  }
-}
-@keyframes hoverAnitation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.94);
-  }
-  100% {
-    transform: scale(1);
   }
 }
 </style>

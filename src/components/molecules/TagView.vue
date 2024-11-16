@@ -4,7 +4,7 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 
 const props = withDefaults(defineProps<{ tag: Itag; tagEmojiSize?: string }>(), {
-  tagEmojiSize: '18px'
+  tagEmojiSize: '16px'
 })
 </script>
 
@@ -28,7 +28,7 @@ $height: 33px;
     font-size: v-bind('props.tagEmojiSize');
   }
   & .content {
-    margin-left: 10px;
+    margin-left: 5px;
     padding-right: 10px;
     overflow: hidden;
     text-overflow: ellipsis;

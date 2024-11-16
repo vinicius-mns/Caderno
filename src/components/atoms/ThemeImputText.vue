@@ -17,6 +17,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'emitContent', vale: string): void
+  (e: 'clearContent', v: void): void
 }>()
 
 const contentReactive = ref(props.initContent)
@@ -24,6 +25,12 @@ const contentReactive = ref(props.initContent)
 const emitContent = () => {
   emit('emitContent', contentReactive.value)
 }
+
+const clearContent = () => {
+  contentReactive.value = ''
+}
+
+defineExpose({ clearContent })
 </script>
 
 <template>

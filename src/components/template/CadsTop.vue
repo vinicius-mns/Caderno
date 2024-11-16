@@ -9,13 +9,13 @@ import TagsFilterCards from '../organisms/TagsFilterCards.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
-import TagIco from '../atoms/icons/TagIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import GearIco from '../atoms/icons/GearIco.vue'
 import TagWithOptions from '../organisms/TagWithOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useFloatMessage } from '@/stores/floatMessage'
+import SearchImput from '../molecules/SearchImput.vue'
 
 const window = useWindows()
 const cards = useCards()
@@ -45,10 +45,10 @@ const clearFilter = () => {
 
 <template>
   <FlexContainer class="cards-header" align-items="center" justify-content="space-between">
-    <FlexContainer align-items="center" class="filter-container">
+    <FlexContainer align-items="center" class="filter-container section">
       <FloatModalSlot>
         <template #button-slot>
-          <ButtonCoinSlot content="Filtrar cards" :border="true">
+          <ButtonCoinSlot content="Filtrar cards">
             <FilterIco />
           </ButtonCoinSlot>
         </template>
@@ -59,8 +59,10 @@ const clearFilter = () => {
               :allTags="tags.tags"
               :include-tags="tags.includeTags"
               :exclude-tags="tags.excludeTags"
+              :text-filter-tags="tags.textFilterTags"
               @emit-filter="sendFilter"
               @clear-filter="clearFilter"
+              @search-tag="tags.realAllTagsByName"
             />
           </ModalCard>
         </template>
@@ -71,11 +73,14 @@ const clearFilter = () => {
       </FlexContainer>
     </FlexContainer>
 
-    <FlexContainer align-items="center" class="buttons-container">
+    <FlexContainer class="section search-card">
+      <SearchImput placeholder="Pesquisar" key-id="sear-card" />
+    </FlexContainer>
+
+    <FlexContainer align-items="center" justify-content="end" class="buttons-container section">
       <ButtonSlot
         content="Criar tag"
         class="create-tag-button button-x"
-        :border="true"
         @click="window.tagCreate.open(null)"
       >
         <PencilIco />
@@ -83,45 +88,16 @@ const clearFilter = () => {
 
       <hr />
 
-      <FloatModalSlot>
-        <template #button-slot>
-          <ButtonCoinSlot content="Tags" :border="true" class="button-x">
-            <TagIco />
-          </ButtonCoinSlot>
-        </template>
+      <TagWithOptions
+        :tags="tags.tags"
+        :text-filter="tags.textFilterTags"
+        @search-tag="tags.realAllTagsByName"
+        @update-tag="window.tagEditor.open"
+        @delete-tag="window.tagDelete.open"
+        @delete-cards-withtag="window.tagDeleteCard.open"
+      />
 
-        <template #container-slot>
-          <ModalCard class="tags-card">
-            <FlexContainer flex-direction="column" class="tags-flex-container">
-              <FlexContainer flex-wrap="wrap" class="tags-area">
-                <TagWithOptions
-                  v-for="(tag, i) in tags.tags"
-                  :key="i"
-                  :tag="tag"
-                  @update-tag="window.tagEditor.open"
-                  @delete-tag="window.tagDelete.open"
-                  @delete-cards-withtag="window.tagDeleteCard.open"
-                />
-              </FlexContainer>
-
-              <ButtonSlot
-                content="Criar tag"
-                class="create-tag-button"
-                @click="window.tagCreate.open(null)"
-              >
-                <PencilIco />
-              </ButtonSlot>
-            </FlexContainer>
-          </ModalCard>
-        </template>
-      </FloatModalSlot>
-
-      <ButtonCoinSlot
-        content="configurações"
-        class="button-x"
-        :border="true"
-        @click="window.config.open(null)"
-      >
+      <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
         <GearIco />
       </ButtonCoinSlot>
     </FlexContainer>
@@ -138,10 +114,19 @@ const clearFilter = () => {
     width: calc(100% - 10px);
   }
 
+  & .section {
+    overflow: hidden;
+    width: calc(50% - 190px);
+  }
+
+  & .search-card {
+    width: 320px;
+  }
+
   & .modal-card {
     display: flex;
     flex-direction: column;
-    width: 360px;
+    width: 408px;
     max-width: 95dvw;
     max-height: 60dvh;
   }
@@ -166,27 +151,6 @@ const clearFilter = () => {
 
     & .button-x {
       margin: 5px 3px;
-    }
-
-    & .tags-card {
-      display: flex;
-      flex-direction: column;
-      width: 340px;
-      max-height: 55dvh;
-
-      & .tags-flex-container {
-        height: 100%;
-        overflow: hidden;
-        & .tags-area {
-          height: 100%;
-          width: 100%;
-          overflow: auto;
-          flex-shrink: 1;
-        }
-        & .create-tag-button {
-          margin-top: 10px;
-        }
-      }
     }
   }
 
