@@ -22,6 +22,12 @@ const cards = useCards()
 const floatMessage = useFloatMessage()
 const tags = useTags()
 
+const windowsHandleError = (error: unknown) => {
+  error instanceof Error
+    ? window.errorMessage.open(error.message)
+    : window.errorMessage.open('erro inesperado')
+}
+
 const sendFilter = async (filter: { include: Itag[]; exclude: Itag[] }) => {
   const newFilter = {
     includeTags: filter.include,
@@ -40,6 +46,22 @@ const sendFilter = async (filter: { include: Itag[]; exclude: Itag[] }) => {
 
 const clearFilter = () => {
   floatMessage.openMessage(floatMessage.messages.tagClearFilterSucess)
+}
+
+const searchCardByText = async (text: string) => {
+  try {
+    cards.textFilterCardsSet(text)
+
+    await cards.atualizeReactiveCards({
+      includeTags: tags.includeTags,
+      excludeTags: tags.excludeTags,
+      content: text
+    })
+
+    floatMessage.openMessage(floatMessage.messages.searchSucess)
+  } catch (e) {
+    windowsHandleError(e)
+  }
 }
 </script>
 
@@ -74,7 +96,12 @@ const clearFilter = () => {
     </FlexContainer>
 
     <FlexContainer class="section search-card">
-      <SearchImput placeholder="Pesquisar" key-id="sear-card" />
+      <SearchImput
+        placeholder="Pesquisar"
+        key-id="sear-card"
+        :init-content="cards.textFilterCards"
+        @emit-content="searchCardByText"
+      />
     </FlexContainer>
 
     <FlexContainer align-items="center" justify-content="end" class="buttons-container section">
