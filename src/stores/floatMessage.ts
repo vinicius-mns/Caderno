@@ -20,7 +20,8 @@ export const useFloatMessage = defineStore('float message', () => {
     tagUpdateSucess: 'Tag tualizada',
     tagDeleteSucess: 'Tag deletada',
     tagClearFilterSucess: 'Filtro limpo',
-    tagsFilterSucess: 'Filtro Ativo'
+    tagsFilterSucess: 'Filtro Ativo',
+    searchSucess: 'Pesquisa ativa'
   }
 
   const openMessage = (m: string) => {
