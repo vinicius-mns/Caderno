@@ -131,6 +131,7 @@ const searTagByName = (text: string) => {
         @update-tag="window.tagEditor.open"
         @delete-tag="window.tagDelete.open"
         @delete-cards-withtag="window.tagDeleteCard.open"
+        @open-create-tag="window.tagCreate.open"
       />
 
       <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
