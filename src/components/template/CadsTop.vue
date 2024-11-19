@@ -145,6 +145,8 @@ const searTagByName = (text: string) => {
   width: calc(100% - 150px);
   justify-self: center;
   height: 100%;
+  width: 90%;
+  margin-left: 5%;
 
   @media screen and (max-width: 767px) {
     width: calc(100% - 10px);

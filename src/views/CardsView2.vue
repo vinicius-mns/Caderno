@@ -2,6 +2,7 @@
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
 import CardsSide from '@/components/template/CardsSide.vue'
+import CardsTop from '@/components/template/CadsTop.vue'
 import PageTemplate from '@/components/template/PageTemplate.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'
@@ -23,18 +24,19 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <PageTemplate>
-      <template #side>
-        <CardsSide />
-      </template>
-      <template #page>
-        <CardsMain />
-      </template>
-    </PageTemplate>
+  <PageTemplate>
+    <template #header>
+      <CardsTop />
+    </template>
+    <template #side>
+      <CardsSide />
+    </template>
+    <template #page>
+      <CardsMain />
+    </template>
+  </PageTemplate>
 
-    <WindowsAll />
-  </div>
+  <WindowsAll />
 </template>
 
 <style scoped lang="scss"></style>

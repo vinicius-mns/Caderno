@@ -256,6 +256,7 @@ onMounted(async () => {
   height: 300px;
   width: 300px;
 }
+
 .cards-main-container {
   width: 100%;
 

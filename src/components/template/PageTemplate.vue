@@ -14,12 +14,16 @@ const stylesPage = useStylesPage()
 
     <FlexContainer class="main-container">
       <slot name="page"></slot>
+
+      <FlexContainer class="header-container">
+        <slot name="header"></slot>
+      </FlexContainer>
     </FlexContainer>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
-$side-size: 408px;
+$side-size: 308px;
 
 .page-template-container {
   & .side-container {
@@ -44,6 +48,14 @@ $side-size: 408px;
     margin-left: $side-size;
     min-height: 100dvh;
     background-color: v-bind('stylesPage.atualColor.front');
+    padding-top: 40px;
+
+    & .header-container {
+      position: fixed;
+      top: 0;
+      flex-shrink: 0;
+      width: calc(100% - $side-size);
+    }
   }
 }
 </style>
