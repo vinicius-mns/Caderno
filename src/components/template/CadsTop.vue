@@ -63,6 +63,15 @@ const searchCardByText = async (text: string) => {
     windowsHandleError(e)
   }
 }
+
+const searTagByName = (text: string) => {
+  try {
+    tags.realAllTagsByName(text)
+    floatMessage.openMessage(floatMessage.messages.searchSucess)
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
 </script>
 
 <template>
@@ -84,7 +93,7 @@ const searchCardByText = async (text: string) => {
               :text-filter-tags="tags.textFilterTags"
               @emit-filter="sendFilter"
               @clear-filter="clearFilter"
-              @search-tag="tags.realAllTagsByName"
+              @search-tag="searTagByName"
             />
           </ModalCard>
         </template>
