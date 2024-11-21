@@ -234,6 +234,7 @@ onMounted(async () => {
               :show-list="false"
               @search-tag="realAllTagsByName"
               @emit-selected="(tags: Itag[]) => cardUpdateSend({ ...card, tags })"
+              @open-create-tag="window.tagCreate.open"
             />
 
             <CardOptions

@@ -12,11 +12,8 @@ import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
-import { useWindows } from '@/stores/windows'
 import SearchImput from '../molecules/SearchImput.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-
-const windows = useWindows()
 
 const stylesPage = useStylesPage()
 
@@ -35,6 +32,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
   (e: 'searchTag', v: string): void
+  (e: 'openCreateTag', v: null): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
@@ -117,11 +115,6 @@ const emitTagsAndCloseModal = () => {
 const searchTag = (v: string) => {
   emit('searchTag', v)
 }
-
-const openCreateTagAndCloseModal = () => {
-  windows.tagCreate.open(null)
-  closeModal()
-}
 </script>
 
 <template>
@@ -149,12 +142,24 @@ const openCreateTagAndCloseModal = () => {
 
     <template #container-slot>
       <ModalCard class="modal-card-tags" background-color="front">
-        <SearchImput
-          key-id="search-tag"
-          placeholder="Pesquisar tag"
-          @emit-content="searchTag"
-          :init-content="textFilter"
-        />
+        <FlexContainer class="header-container">
+          <SearchImput
+            key-id="search-tag"
+            placeholder="Pesquisar tag"
+            @emit-content="searchTag"
+            :init-content="textFilter"
+            class="search-tag"
+          />
+
+          <ButtonCoinSlot
+            content="Criar tag"
+            @click="() => emit('openCreateTag', null)"
+            :border="true"
+            class="create-tag"
+          >
+            <PencilIco />
+          </ButtonCoinSlot>
+        </FlexContainer>
 
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
@@ -178,19 +183,9 @@ const openCreateTagAndCloseModal = () => {
         />
 
         <ButtonSlot
-          content="Criar tag"
-          @click="openCreateTagAndCloseModal()"
-          :border="true"
-          v-show="isEmptyTags"
-        >
-          <PencilIco />
-        </ButtonSlot>
-
-        <ButtonSlot
-          v-show="!isEmptyTags"
           content="Confirmar alteração"
           :class="tags.butttonStatusClass.value"
-          @click="emitTagsAndCloseModal()"
+          @click="() => emitTagsAndCloseModal()"
         >
           <CheckIco />
         </ButtonSlot>
@@ -211,6 +206,16 @@ const openCreateTagAndCloseModal = () => {
   width: 408px;
   max-width: 95dvw;
   max-height: 50dvh;
+
+  & .header-container {
+    width: 100%;
+
+    & .search-tag {
+      width: 100%;
+      flex-shrink: 1;
+      margin-right: 10px;
+    }
+  }
 
   & .tags {
     height: 100%;
