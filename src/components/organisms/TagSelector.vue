@@ -12,29 +12,21 @@ import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
-import { useWindows } from '@/stores/windows'
 import SearchImput from '../molecules/SearchImput.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const windows = useWindows()
-
 const stylesPage = useStylesPage()
 
-const props = withDefaults(
-  defineProps<{
-    allTags: Itag[]
-    tagsChecked: Itag[]
-    showList?: boolean
-    textFilter: string
-  }>(),
-  {
-    showList: true
-  }
-)
+const props = defineProps<{
+  allTags: Itag[]
+  tagsChecked: Itag[]
+  textFilter: string
+}>()
 
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
   (e: 'searchTag', v: string): void
+  (e: 'openCreateTag', v: null): void
 }>()
 
 const modal = ref<InstanceType<typeof FloatModalSlot>>()
@@ -118,43 +110,39 @@ const searchTag = (v: string) => {
   emit('searchTag', v)
 }
 
-const openCreateTagAndCloseModal = () => {
-  windows.tagCreate.open(null)
-  closeModal()
+const openCreateTag = () => {
+  emit('openCreateTag', null)
 }
 </script>
 
 <template>
   <FloatModalSlot ref="modal" class="max-width">
     <template #button-slot>
-      <FlexContainer class="button-tags-container max-width">
-        <ButtonCoinSlot content="Selecionar tags" :border="false" :circle="true">
-          <AddTagIco />
-        </ButtonCoinSlot>
-
-        <FlexContainer class="tags-selected-container max-width" v-if="props.showList">
-          <ButtonCoinSlot
-            v-for="(tag, i) in tags.visibleTags.value"
-            :key="i"
-            :content="tag[1]"
-            :border="false"
-            class="tag"
-            background-color="transparent"
-          >
-            <ThemeP :content="tag[0]" class="tag-emoji" />
-          </ButtonCoinSlot>
-        </FlexContainer>
-      </FlexContainer>
+      <ButtonCoinSlot content="Selecionar tags xx" :border="false" :circle="true">
+        <AddTagIco />
+      </ButtonCoinSlot>
     </template>
 
     <template #container-slot>
       <ModalCard class="modal-card-tags" background-color="front">
-        <SearchImput
-          key-id="search-tag"
-          placeholder="Pesquisar tag"
-          @emit-content="searchTag"
-          :init-content="textFilter"
-        />
+        <FlexContainer class="header-container">
+          <SearchImput
+            key-id="search-tag"
+            placeholder="Pesquisar tag"
+            @emit-content="searchTag"
+            :init-content="textFilter"
+            class="search-tag"
+          />
+
+          <ButtonCoinSlot
+            content="Criar tag"
+            @click="openCreateTag"
+            :border="true"
+            class="create-tag"
+          >
+            <PencilIco />
+          </ButtonCoinSlot>
+        </FlexContainer>
 
         <FlexContainer flex-wrap="wrap" class="tags">
           <CheckBoxBase
@@ -178,19 +166,9 @@ const openCreateTagAndCloseModal = () => {
         />
 
         <ButtonSlot
-          content="Criar tag"
-          @click="openCreateTagAndCloseModal()"
-          :border="true"
-          v-show="isEmptyTags"
-        >
-          <PencilIco />
-        </ButtonSlot>
-
-        <ButtonSlot
-          v-show="!isEmptyTags"
           content="Confirmar alteração"
           :class="tags.butttonStatusClass.value"
-          @click="emitTagsAndCloseModal()"
+          @click="() => emitTagsAndCloseModal()"
         >
           <CheckIco />
         </ButtonSlot>
@@ -212,6 +190,16 @@ const openCreateTagAndCloseModal = () => {
   max-width: 95dvw;
   max-height: 50dvh;
 
+  & .header-container {
+    width: 100%;
+
+    & .search-tag {
+      width: 100%;
+      flex-shrink: 1;
+      margin-right: 10px;
+    }
+  }
+
   & .tags {
     height: 100%;
     overflow: auto;
@@ -230,12 +218,11 @@ const openCreateTagAndCloseModal = () => {
   }
 
   & .locked {
-    border: solid 1px rgba(255, 0, 0, 0.37);
     cursor: not-allowed;
+    height: 0;
   }
 
   & .unlocked {
-    border: solid 1px rgba(0, 128, 0, 0.5);
     background-color: v-bind('stylesPage.atualColor.hover');
   }
 }

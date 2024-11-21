@@ -9,7 +9,7 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import CardSlot from '../organisms/CardSlot.vue'
-import TagSelectorWithList from '../organisms/TagSelectorWithList.vue'
+import TagSelectorWithList from '../organisms/TagSelector.vue'
 import CardOptions from '../organisms/CardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
@@ -234,6 +234,7 @@ onMounted(async () => {
               :show-list="false"
               @search-tag="realAllTagsByName"
               @emit-selected="(tags: Itag[]) => cardUpdateSend({ ...card, tags })"
+              @open-create-tag="window.tagCreate.open"
             />
 
             <CardOptions

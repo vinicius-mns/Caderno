@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
@@ -23,7 +22,7 @@ const emit = defineEmits<{
   (e: 'deleteCardsWithtag', v: Itag): void
   (e: 'deleteTag', v: Itag): void
   (e: 'searchTag', v: string): void
-  (e: 'openCreateTag', v: void): void
+  (e: 'openCreateTag', v: null): void
 }>()
 
 const emitUpdate = (tag: Itag) => emit('updateTag', tag)
@@ -34,7 +33,7 @@ const emitDeleteCardsWithTag = (tag: Itag) => emit('deleteCardsWithtag', tag)
 
 const searchTag = (v: string) => emit('searchTag', v)
 
-const openCreateTag = () => emit('openCreateTag')
+const openCreateTag = () => emit('openCreateTag', null)
 </script>
 
 <template>
