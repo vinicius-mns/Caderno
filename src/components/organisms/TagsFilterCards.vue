@@ -11,6 +11,10 @@ import ButtonSlot from '../molecules/ButtonSlot.vue'
 import SendIco from '../atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import PlusIco from '../atoms/icons/PlusIco.vue'
+
+const stylesPage = useStylesPage()
 
 const props = defineProps<{
   allTags: Itag[]
@@ -120,7 +124,51 @@ const clearFilter = () => {
       @emit-content="(v: string) => emit('searchTag', v)"
     />
 
-    <FlexContainer justify-content="space-between" class="top-container">
+    <FlexContainer class="tag-option-container" flex-direction="column">
+      <ThemeP content="Com tag" class="title" />
+
+      <FlexContainer flex-wrap="wrap">
+        <CheckBoxBase
+          v-for="(tag, i) in include"
+          checkbox-name="include-tags"
+          :key="i"
+          :is-checked="isChecked(tag, 'include')"
+          :id="tag[1]"
+          class="tag-check-button include"
+          @select="() => handleAddOrRemove(tag, 'include')"
+        >
+          <TagView :tag="tag" class="tag" />
+        </CheckBoxBase>
+
+        <ButtonSlot content="Adicionar tag" class="tag-check-button add-tag-button">
+          <PlusIco />
+        </ButtonSlot>
+      </FlexContainer>
+    </FlexContainer>
+
+    <FlexContainer class="tag-option-container" flex-direction="column">
+      <ThemeP content="Sem tag" class="title" />
+
+      <FlexContainer flex-wrap="wrap">
+        <CheckBoxBase
+          v-for="(tag, i) in exclude"
+          checkbox-name="exclude-tags"
+          :key="i"
+          :is-checked="isChecked(tag, 'exclude')"
+          :id="tag[1]"
+          class="tag-check-button exclude"
+          @select="() => handleAddOrRemove(tag, 'exclude')"
+        >
+          <TagView :tag="tag" class="tag" />
+        </CheckBoxBase>
+
+        <ButtonSlot content="Adicionar tag" class="tag-check-button add-tag-button">
+          <PlusIco />
+        </ButtonSlot>
+      </FlexContainer>
+    </FlexContainer>
+
+    <!-- <FlexContainer justify-content="space-between" class="top-container">
       <RadioBase
         v-for="(routeTag, i) in tagRoute.routes"
         radio-name="filter-tags"
@@ -132,9 +180,9 @@ const clearFilter = () => {
       >
         <ThemeP :content="routeTag" />
       </RadioBase>
-    </FlexContainer>
+    </FlexContainer> -->
 
-    <FlexContainer v-if="tagRoute.is('Com tag')" flex-wrap="wrap" class="bottom-container">
+    <!-- <FlexContainer v-if="tagRoute.is('Com tag')" flex-wrap="wrap" class="bottom-container">
       <CheckBoxBase
         v-for="(tag, i) in props.allTags"
         checkbox-name="include-tags"
@@ -160,9 +208,9 @@ const clearFilter = () => {
       >
         <TagView :tag="tag" />
       </CheckBoxBase>
-    </FlexContainer>
+    </FlexContainer> -->
 
-    <FlexContainer class="buttons-container">
+    <!-- <FlexContainer class="buttons-container">
       <ButtonSlot content="Aplicar filtro" class="button-filter" @click="emitFilter">
         <SendIco />
       </ButtonSlot>
@@ -170,7 +218,7 @@ const clearFilter = () => {
       <ButtonCoinSlot content="Limpar filtro" class="button-eraser" @click="clearFilter()">
         <EraserIco />
       </ButtonCoinSlot>
-    </FlexContainer>
+    </FlexContainer> -->
   </FlexContainer>
 </template>
 
@@ -188,6 +236,39 @@ const clearFilter = () => {
 
   & .search {
     margin-bottom: 5px;
+  }
+
+  & .tag-option-container {
+    width: 100%;
+
+    & .title {
+      margin: 15px 12px 6px;
+    }
+
+    & .tag-check-button {
+      width: calc(33% - 6px);
+      margin: 3px;
+      border: solid 1px v-bind('stylesPage.atualColor.border');
+      background-color: transparent;
+      border-radius: 100px;
+      height: 32px;
+    }
+
+    & .include {
+      border-color: green;
+    }
+
+    & .exclude {
+      border-color: red;
+    }
+
+    & .tag {
+      height: 32px;
+    }
+
+    & .add-tag-button {
+      width: auto;
+    }
   }
 
   & .bottom-container {
