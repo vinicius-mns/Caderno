@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
@@ -11,6 +11,10 @@ import ButtonSlot from '../molecules/ButtonSlot.vue'
 import SendIco from '../atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import PlusIco from '../atoms/icons/PlusIco.vue'
+
+const stylesPage = useStylesPage()
 
 const props = defineProps<{
   allTags: Itag[]
@@ -25,70 +29,99 @@ const emit = defineEmits<{
   (e: 'searchTag', v: string): void
 }>()
 
-type FilterType = 'include' | 'exclude'
+const useTags = () => {
+  const _reativeTags = () => {
+    const tags = ref<Itag[]>([])
 
-const include = ref<Itag[]>(props.includeTags)
-const exclude = ref<Itag[]>(props.excludeTags)
+    const set = (newTags: Itag[]) => (tags.value = newTags)
 
-const isChecked = (tag: Itag, type: FilterType) => {
-  if (type === 'include') {
-    return include.value.map((t) => t[1]).includes(tag[1])
+    return { tags, set }
   }
 
-  if (type === 'exclude') {
-    return exclude.value.map((t) => t[1]).includes(tag[1])
+  const include = _reativeTags()
+  const exclude = _reativeTags()
+  const remainingTags = _reativeTags()
+
+  const _getTagName = (tag: Itag) => tag[1]
+
+  const _getReminingTags = (param: {
+    allTags: Itag[]
+    includeTags: Itag[]
+    excludeTags: Itag[]
+  }) => {
+    const lastTags = param.allTags.map((tag) => {
+      if (!includes({ tags: param.includeTags, tag })) return tag
+      if (!includes({ tags: param.excludeTags, tag })) return tag
+    }) as Itag[]
+
+    return [...param.includeTags, ...param.excludeTags, ...lastTags]
   }
 
-  return false
+  const includes = (param: { tags: Itag[]; tag: Itag }) => {
+    return param.tags.map(_getTagName).includes(_getTagName(param.tag))
+  }
+
+  const handleAddOrRemove = (tag: Itag) => {
+    const isInclude = includes({ tags: include.tags.value, tag })
+
+    const isExclude = includes({ tags: exclude.tags.value, tag })
+
+    const updateRemainingTags = () => {
+      const remove = remainingTags.tags.value.filter(
+        (t) =>
+          !include.tags.value.some((tt) => tt[1] === t[1]) &&
+          !exclude.tags.value.some((tt) => tt[1] === t[1])
+      )
+
+      setTimeout(() => {
+        remainingTags.set([...include.tags.value, ...exclude.tags.value, ...remove])
+      }, 0)
+    }
+
+    const addRemainingTags = () => {
+      remainingTags.set([tag, ...remainingTags.tags.value])
+    }
+
+    const addInclude = () => {
+      include.set([...include.tags.value, tag])
+      exclude.set(exclude.tags.value.filter((t) => _getTagName(t) !== _getTagName(tag)))
+      updateRemainingTags()
+    }
+
+    const addExclude = () => {
+      exclude.set([...exclude.tags.value, tag])
+      include.set(include.tags.value.filter((t) => _getTagName(t) !== _getTagName(tag)))
+      updateRemainingTags()
+    }
+
+    const removeAll = () => {
+      include.set(include.tags.value.filter((t) => _getTagName(t) !== _getTagName(tag)))
+      exclude.set(exclude.tags.value.filter((t) => _getTagName(t) !== _getTagName(tag)))
+      // addRemainingTags()
+    }
+
+    if (!isInclude && !isExclude) addInclude()
+    else if (isInclude) addExclude()
+    else if (isExclude) removeAll()
+  }
+
+  return {
+    include,
+    exclude,
+    remainingTags,
+    handleAddOrRemove,
+    includes
+  }
 }
 
-const addTag = (tag: Itag, type: FilterType) => {
-  if (type === 'include') {
-    include.value = [...include.value, tag]
-    exclude.value = exclude.value.filter((t) => t[1] !== tag[1])
-  }
-
-  if (type === 'exclude') {
-    exclude.value = [...exclude.value, tag]
-    include.value = include.value.filter((t) => t[1] !== tag[1])
-  }
-}
-
-const removeTag = (tag: Itag, type: FilterType) => {
-  if (type === 'include') {
-    include.value = include.value.filter((t) => t[1] !== tag[1])
-  }
-
-  if (type === 'exclude') {
-    exclude.value = exclude.value.filter((t) => t[1] !== tag[1])
-  }
-}
-
-const handleAddOrRemove = (tag: Itag, type: FilterType) => {
-  if (type === 'include') {
-    if (isChecked(tag, 'include')) removeTag(tag, 'include')
-    else addTag(tag, 'include')
-  }
-
-  if (type === 'exclude') {
-    if (isChecked(tag, 'exclude')) removeTag(tag, 'exclude')
-    else addTag(tag, 'exclude')
-  }
-}
-
-const clear = () => {
-  include.value = []
-  exclude.value = []
-}
-
-type TagRouteOptions = 'Com tag' | 'Sem tag'
+type TagRouteOptions = 'Tags' | 'Filtro'
 
 const useTagRoute = () => {
-  const atualRoute = ref<TagRouteOptions>('Com tag')
+  const atualRoute = ref<TagRouteOptions>('Tags')
 
   const is = (v: TagRouteOptions) => v === atualRoute.value
 
-  const routes: TagRouteOptions[] = ['Com tag', 'Sem tag']
+  const routes: TagRouteOptions[] = ['Tags', 'Filtro']
 
   const setRoute = (v: TagRouteOptions) => (atualRoute.value = v)
 
@@ -102,12 +135,17 @@ const useTagRoute = () => {
 
 const tagRoute = useTagRoute()
 
-const emitFilter = () => emit('emitFilter', { include: include.value, exclude: exclude.value })
+const tags = useTags()
 
-const clearFilter = () => {
-  clear()
-  emit('clearFilter', null)
-}
+const allTags = computed(() => props.allTags)
+
+watch(
+  allTags,
+  () => {
+    tags.remainingTags.set(allTags.value)
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -120,67 +158,77 @@ const clearFilter = () => {
       @emit-content="(v: string) => emit('searchTag', v)"
     />
 
-    <FlexContainer justify-content="space-between" class="top-container">
+    <FlexContainer justify-content="space-between">
       <RadioBase
-        v-for="(routeTag, i) in tagRoute.routes"
-        radio-name="filter-tags"
+        v-for="(route, i) in tagRoute.routes"
+        radio-name="tag-or-filter"
         :key="i"
         :checked-value="tagRoute.atualRoute.value"
-        :id="routeTag"
-        :style="{ width: 'calc(50% - 4px)', height: '36px', margin: '4px 0' }"
-        @select="tagRoute.setRoute(routeTag)"
+        :id="route"
+        class="tag-or-filter"
+        @select="() => tagRoute.setRoute(route)"
       >
-        <ThemeP :content="routeTag" />
+        <ThemeP :content="route" />
       </RadioBase>
     </FlexContainer>
 
-    <FlexContainer v-if="tagRoute.is('Com tag')" flex-wrap="wrap" class="bottom-container">
-      <CheckBoxBase
-        v-for="(tag, i) in props.allTags"
-        checkbox-name="include-tags"
-        :key="i"
-        :is-checked="isChecked(tag, 'include')"
-        :id="tag[1]"
-        class="check-button"
-        @select="() => handleAddOrRemove(tag, 'include')"
-      >
-        <TagView :tag="tag" />
-      </CheckBoxBase>
-    </FlexContainer>
+    <FlexContainer class="tags-container" flex-direction="column">
+      <FlexContainer class="tag-option-container" flex-direction="column">
+        <ThemeP content="Tags >" class="title" />
 
-    <FlexContainer v-if="tagRoute.is('Sem tag')" flex-wrap="wrap" class="bottom-container">
-      <CheckBoxBase
-        v-for="(tag, i) in props.allTags"
-        checkbox-name="include-tags"
-        :key="i"
-        :is-checked="isChecked(tag, 'exclude')"
-        :id="tag[1]"
-        class="check-button"
-        @select="() => handleAddOrRemove(tag, 'exclude')"
-      >
-        <TagView :tag="tag" />
-      </CheckBoxBase>
-    </FlexContainer>
+        <FlexContainer flex-wrap="wrap">
+          <!-- <CheckBoxBase
+            v-for="(tag, i) in tags.include.tags.value"
+            checkbox-name="include-tags"
+            :key="i"
+            :is-checked="true"
+            :id="tag[1]"
+            class="tag-check-button include"
+            @select="() => tags.handleAddOrRemove(tag)"
+          >
+            <TagView :tag="tag" class="tag" />
+          </CheckBoxBase> -->
 
-    <FlexContainer class="buttons-container">
-      <ButtonSlot content="Aplicar filtro" class="button-filter" @click="emitFilter">
-        <SendIco />
-      </ButtonSlot>
+          <!-- <CheckBoxBase
+            v-for="(tag, i) in tags.exclude.tags.value"
+            checkbox-name="exclude-tags"
+            :key="i"
+            :is-checked="true"
+            :id="tag[1]"
+            class="tag-check-button exclude"
+            @select="() => tags.handleAddOrRemove(tag)"
+          >
+            <TagView :tag="tag" class="tag" />
+          </CheckBoxBase> -->
 
-      <ButtonCoinSlot content="Limpar filtro" class="button-eraser" @click="clearFilter()">
-        <EraserIco />
-      </ButtonCoinSlot>
+          <CheckBoxBase
+            v-for="(tag, i) in tags.remainingTags.tags.value"
+            checkbox-name="remaining-tags"
+            :key="i"
+            :is-checked="false"
+            :id="tag[1]"
+            :class="[
+              tags.includes({ tags: tags.include.tags.value, tag }) && 'include',
+              tags.includes({ tags: tags.exclude.tags.value, tag }) && 'exclude',
+              'tag-check-button'
+            ]"
+            @select="() => tags.handleAddOrRemove(tag)"
+          >
+            <TagView :tag="tag" class="tag" />
+          </CheckBoxBase>
+        </FlexContainer>
+      </FlexContainer>
     </FlexContainer>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .cards-filter-container {
-  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
+  overflow: auto;
 
   & .top-container {
     width: 100%;
@@ -190,33 +238,104 @@ const clearFilter = () => {
     margin-bottom: 5px;
   }
 
-  & .bottom-container {
-    height: 100%;
-    overflow-y: auto;
+  & .tag-or-filter {
+    width: calc(50% - 4px);
+    height: 34px;
+  }
 
-    & .check-button {
-      width: calc(33% - 4px);
-      margin: 2px;
+  & .tags-container {
+    overflow: auto;
+
+    & hr {
+      width: 0;
+      margin: 10px 0;
     }
 
-    padding-top: 30px;
-    opacity: 20%;
-    animation: init 0.4s forwards;
-  }
+    & .tag-option-container {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
 
-  & .buttons-container {
-    margin-top: 10px;
-    & .button-filter {
-      flex-shrink: 1;
-      margin-right: 10px;
+      & .title {
+        margin: 0px 12px 4px;
+        font-size: 20px;
+      }
+
+      & .tag-check-button {
+        width: calc(33% - 8px);
+        margin: 4px;
+        border: solid 1px v-bind('stylesPage.atualColor.border');
+        background-color: transparent;
+        border-radius: 100px;
+        height: 32px;
+      }
+
+      & .include {
+        border-color: rgb(86, 110, 86);
+        background-color: rgba(86, 140, 86, 0.2);
+      }
+
+      & .exclude {
+        border-color: rgb(110, 86, 86);
+        background-color: rgb(140, 86, 86, 0.2);
+      }
+
+      & .tag {
+        height: 32px;
+        transition: all 0.3s;
+
+        &:hover {
+          position: relative;
+
+          // &::after {
+          //   content: 'remover';
+          //   position: absolute;
+          //   height: 100%;
+          //   width: 100%;
+          //   display: flex;
+          //   align-items: center;
+          //   justify-content: center;
+          //   background-color: rgb(90, 48, 48);
+          //   color: rgb(218, 27, 27);
+          //   border: solid 1px rgb(218, 27, 27);
+          //   border-radius: 100px;
+          // }
+        }
+      }
+
+      & .add-tag-button {
+        width: auto;
+      }
     }
   }
+
+  // & .bottom-container {
+  //   height: 100%;
+  //   overflow-y: auto;
+
+  //   & .check-button {
+  //     width: calc(33% - 4px);
+  //     margin: 2px;
+  //   }
+
+  //   padding-top: 30px;
+  //   opacity: 20%;
+  //   animation: init 0.4s forwards;
+  // }
+
+  // & .buttons-container {
+  //   margin-top: 10px;
+  //   & .button-filter {
+  //     flex-shrink: 1;
+  //     margin-right: 10px;
+  //   }
+  // }
 }
 
-@keyframes init {
-  to {
-    padding-top: 0;
-    opacity: 100%;
-  }
-}
+// @keyframes init {
+//   to {
+//     padding-top: 0;
+//     opacity: 100%;
+//   }
+// }
 </style>

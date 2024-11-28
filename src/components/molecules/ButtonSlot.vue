@@ -76,6 +76,7 @@ watchEffect(() => {
   & .text {
     flex-shrink: 0;
     width: 100%;
+    margin-right: 5px;
 
     & p {
       margin-left: 10px;
