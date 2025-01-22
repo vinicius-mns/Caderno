@@ -15,11 +15,11 @@ const props = withDefaults(
 </script>
 
 <template>
-  <p class="paragraph">{{ props.content }}</p>
+  <p class="title-1">{{ props.content }}</p>
 </template>
 
 <style scoped lang="scss">
-.paragraph {
+.title-1 {
   color: v-bind('stylePage.atualColor.text');
   font-size: v-bind('props.size');
   margin: 0;

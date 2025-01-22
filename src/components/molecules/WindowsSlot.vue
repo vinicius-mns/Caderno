@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import CrossIco from '../atoms/icons/CrossIco.vue'
 import { onMounted, onUnmounted } from 'vue'
-import ThemeP from '../atoms/ThemeP.vue'
+// import ThemeP from '../atoms/ThemeP.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
+import ThemeH1 from '../atoms/ThemeH1.vue'
 
 const props = defineProps<{
   title: string
@@ -30,10 +31,11 @@ onUnmounted(() => {
 
 <template>
   <div class="glass">
-    <ModalCard class="windows">
+    <ModalCard class="windows" background-color="front">
       <FlexContainer align-items="center" flex-direction="column">
         <header>
-          <ThemeP :content="props.title" />
+          <!-- <ThemeP :content="props.title" /> -->
+          <ThemeH1 :content="props.title" />
           <button class="close" @click="emitClose">
             <CrossIco />
           </button>
@@ -54,12 +56,18 @@ onUnmounted(() => {
   position: fixed;
   left: 0;
   top: 0;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  // background-color: rgba(1, 7, 27, 0.2);
+  // backdrop-filter: blur(3px);
+  // -webkit-backdrop-filter: blur(3px);
+
   & .windows {
     padding: 0;
     position: fixed;
     transition: all 0.3s;
+    overflow: hidden;
+    box-shadow:
+      rgba(17, 17, 26, 0.5) 0px 4px 16px,
+      rgba(17, 17, 26, 0.2) 0px 8px 32px;
     // display: flex;
     // flex-direction: column;
     // align-items: center;
@@ -72,10 +80,11 @@ onUnmounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 15px;
+      padding: 10px;
+
       & .close {
         position: absolute;
-        right: 20px;
+        right: 10px;
         height: 30px;
         aspect-ratio: 1;
         border: none;

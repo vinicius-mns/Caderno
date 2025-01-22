@@ -5,10 +5,7 @@ import ThemeImputText from '../atoms/ThemeImputText.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ButtonCoinSlot from './ButtonCoinSlot.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { ref } from 'vue'
-
-const stylePage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
@@ -42,7 +39,13 @@ const clearContent = () => {
 <template>
   <ThemeButton class="option-button-container">
     <FlexContainer align-items="center" class="search-container">
-      <ButtonCoinSlot content="Pesquisar" class="ico" @click="emitContent">
+      <ButtonCoinSlot
+        content="Pesquisar"
+        class="ico"
+        @click="emitContent"
+        background-color="transparent"
+        border-color="transparent"
+      >
         <SearchIco />
       </ButtonCoinSlot>
 
@@ -56,7 +59,13 @@ const clearContent = () => {
         @keydown.enter="emitContent"
       />
 
-      <ButtonCoinSlot content="Limpar" class="eraser" @click="clearContent">
+      <ButtonCoinSlot
+        content="Limpar"
+        class="eraser"
+        background-color="transparent"
+        border-color="transparent"
+        @click="clearContent"
+      >
         <EraserIco />
       </ButtonCoinSlot>
     </FlexContainer>
@@ -65,13 +74,13 @@ const clearContent = () => {
 
 <style scoped lang="scss">
 .option-button-container {
+  height: 36px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  height: 40px;
   width: 100%;
   position: relative;
-  border: solid v-bind('stylePage.atualColor.border') 1px;
+  border-radius: 50px;
   overflow: hidden;
 
   & .search-container {
@@ -91,8 +100,13 @@ const clearContent = () => {
     }
 
     & .eraser {
+      opacity: 40%;
       position: absolute;
       right: 5px;
+
+      &:hover {
+        opacity: 100%;
+      }
     }
   }
 }

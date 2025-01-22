@@ -85,7 +85,7 @@ const searTagByName = (text: string) => {
         </template>
 
         <template #container-slot>
-          <ModalCard class="modal-card">
+          <ModalCard class="modal-container" background-color="front">
             <TagsFilterCards
               :allTags="tags.tags"
               :include-tags="tags.includeTags"
@@ -114,7 +114,7 @@ const searTagByName = (text: string) => {
     </FlexContainer>
 
     <FlexContainer align-items="center" justify-content="end" class="buttons-container section">
-      <ButtonSlot
+      <!-- <ButtonSlot
         content="Criar tag"
         class="create-tag-button button-x"
         @click="window.tagCreate.open(null)"
@@ -132,7 +132,7 @@ const searTagByName = (text: string) => {
         @delete-tag="window.tagDelete.open"
         @delete-cards-withtag="window.tagDeleteCard.open"
         @open-create-tag="window.tagCreate.open"
-      />
+      /> -->
 
       <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
         <GearIco />
@@ -162,7 +162,7 @@ const searTagByName = (text: string) => {
     width: 320px;
   }
 
-  & .modal-card {
+  & .modal-container {
     display: flex;
     flex-direction: column;
     width: 408px;

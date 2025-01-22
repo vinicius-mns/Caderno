@@ -13,6 +13,9 @@ import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import PlusIco from '../atoms/icons/PlusIco.vue'
+import FilterIco from '../atoms/icons/FilterIco.vue'
+import TagIco from '../atoms/icons/TagIco.vue'
+import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 
 const stylesPage = useStylesPage()
 
@@ -114,26 +117,21 @@ const useTags = () => {
   }
 }
 
-type TagRouteOptions = 'Tags' | 'Filtro'
+const useSlot = () => {
+  const showSlot = ref(false)
 
-const useTagRoute = () => {
-  const atualRoute = ref<TagRouteOptions>('Tags')
+  const openSlot = () => (showSlot.value = true)
 
-  const is = (v: TagRouteOptions) => v === atualRoute.value
-
-  const routes: TagRouteOptions[] = ['Tags', 'Filtro']
-
-  const setRoute = (v: TagRouteOptions) => (atualRoute.value = v)
+  const closeSlot = () => (showSlot.value = false)
 
   return {
-    atualRoute,
-    routes,
-    is,
-    setRoute
+    showSlot,
+    openSlot,
+    closeSlot
   }
 }
 
-const tagRoute = useTagRoute()
+const slot = useSlot()
 
 const tags = useTags()
 
@@ -158,8 +156,8 @@ watch(
       @emit-content="(v: string) => emit('searchTag', v)"
     />
 
-    <FlexContainer justify-content="space-between">
-      <RadioBase
+    <FlexContainer class="tag-or-filter-container">
+      <!-- <RadioBase
         v-for="(route, i) in tagRoute.routes"
         radio-name="tag-or-filter"
         :key="i"
@@ -169,13 +167,18 @@ watch(
         @select="() => tagRoute.setRoute(route)"
       >
         <ThemeP :content="route" />
-      </RadioBase>
+      </RadioBase> -->
+      <ButtonCoinSlot content="Tags" :circle="true" background-color="transparent" :border="true">
+        <TagIco />
+      </ButtonCoinSlot>
+
+      <ButtonCoinSlot content="Filter" :circle="true" background-color="transparent" :border="true">
+        <FilterIco />
+      </ButtonCoinSlot>
     </FlexContainer>
 
     <FlexContainer class="tags-container" flex-direction="column">
       <FlexContainer class="tag-option-container" flex-direction="column">
-        <ThemeP content="Tags >" class="title" />
-
         <FlexContainer flex-wrap="wrap">
           <!-- <CheckBoxBase
             v-for="(tag, i) in tags.include.tags.value"
@@ -213,9 +216,26 @@ watch(
               'tag-check-button'
             ]"
             @select="() => tags.handleAddOrRemove(tag)"
+            @mouseenter="slot.openSlot()"
+            @mouseleave="slot.closeSlot()"
           >
             <TagView :tag="tag" class="tag" />
+            <div v-if="slot.showSlot.value">
+              <slot></slot>
+            </div>
           </CheckBoxBase>
+
+          <!-- <FloatModalSlot>
+            <template #button-slot>
+              <ButtonCoinSlot content="Mais">
+                <PlusIco />
+              </ButtonCoinSlot>
+            </template>
+
+            <template #container-slot>
+              <slot></slot>
+            </template>
+          </FloatModalSlot> -->
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>
@@ -238,9 +258,14 @@ watch(
     margin-bottom: 5px;
   }
 
-  & .tag-or-filter {
-    width: calc(50% - 4px);
-    height: 34px;
+  & .tag-or-filter-container {
+    width: 65%;
+
+    & .tag-or-filter {
+      width: calc(50% - 4px);
+      height: 34px;
+      border-radius: 100px;
+    }
   }
 
   & .tags-container {

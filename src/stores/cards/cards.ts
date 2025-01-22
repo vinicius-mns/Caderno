@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { CardsApiLocal } from './ApiLocalCards'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import type { Icard, IfilterCard } from './Interfaces'
 import type { Itag } from '../tags/Interfaces'
 
@@ -53,7 +53,9 @@ export const useCards = defineStore('cards storage', () => {
         content: textFilterCards.value
       })
 
-      cards.value = allCards
+      cards.value = []
+
+      nextTick(() => (cards.value = allCards))
     } catch (e) {
       _handleError(e)
     }

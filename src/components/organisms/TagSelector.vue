@@ -3,19 +3,15 @@ import { computed, ref } from 'vue'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
-import AddTagIco from '@/components/atoms/icons/AddTagIco.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'
-import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/TagView.vue'
 import CheckIco from '../atoms/icons/CheckIco.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import SearchImput from '../molecules/SearchImput.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-
-const stylesPage = useStylesPage()
+import TagIco from '../atoms/icons/TagIco.vue'
+import TagView2 from '../molecules/TagView2.vue'
 
 const props = defineProps<{
   allTags: Itag[]
@@ -116,16 +112,16 @@ const openCreateTag = () => {
 </script>
 
 <template>
-  <FloatModalSlot ref="modal" class="max-width">
+  <FloatModalSlot ref="modal">
     <template #button-slot>
-      <ButtonCoinSlot content="Selecionar tags xx" :border="false" :circle="true">
-        <AddTagIco />
-      </ButtonCoinSlot>
+      <ButtonSlot content="Selecionar tags" :style="{ width: 'auto' }" border-radius="50px">
+        <TagIco />
+      </ButtonSlot>
     </template>
 
     <template #container-slot>
       <ModalCard class="modal-card-tags" background-color="front">
-        <FlexContainer class="header-container">
+        <FlexContainer class="header-container" align-items="center">
           <SearchImput
             key-id="search-tag"
             placeholder="Pesquisar tag"
@@ -134,38 +130,41 @@ const openCreateTag = () => {
             class="search-tag"
           />
 
-          <ButtonCoinSlot
-            content="Criar tag"
-            @click="openCreateTag"
-            :border="true"
-            class="create-tag"
-          >
+          <ButtonCoinSlot content="Criar tag" @click="openCreateTag" :invert-color="true">
             <PencilIco />
           </ButtonCoinSlot>
         </FlexContainer>
 
-        <FlexContainer flex-wrap="wrap" class="tags">
-          <CheckBoxBase
+        <FlexContainer flex-wrap="wrap" class="tags-container">
+          <TagView2
             v-for="(tag, i) in props.allTags"
             :key="i"
-            :id="tag[1]"
-            :is-checked="tags.isSelectedTag(tag)"
-            checkbox-name="select-tag-in-card"
-            @select="tags.addOrRemoveTag"
-            class="tag-selectable"
-          >
-            <TagView :tag="tag" />
-          </CheckBoxBase>
+            :tag="tag"
+            class="tag"
+            :type="tags.isSelectedTag(tag) ? 'selected' : 'none'"
+            @click="tags.addOrRemoveTag(tag[1])"
+          />
         </FlexContainer>
 
         <ThemeP
           content="Nenhuma tag encontrada 😢"
           size="20px"
           class="no-tag-tittle"
-          v-show="isEmptyTags"
+          v-if="isEmptyTags"
         />
 
         <ButtonSlot
+          v-if="isEmptyTags"
+          border-radius="50px"
+          content="Criar tag"
+          :invert-color="true"
+          @click="() => emitTagsAndCloseModal()"
+        >
+          <PencilIco />
+        </ButtonSlot>
+
+        <ButtonSlot
+          border-radius="50px"
           content="Confirmar alteração"
           :class="tags.butttonStatusClass.value"
           @click="() => emitTagsAndCloseModal()"
@@ -178,11 +177,6 @@ const openCreateTag = () => {
 </template>
 
 <style scoped lang="scss">
-.max-width {
-  width: 100%;
-  overflow: hidden;
-}
-
 .modal-card-tags {
   display: flex;
   flex-direction: column;
@@ -200,17 +194,16 @@ const openCreateTag = () => {
     }
   }
 
-  & .tags {
+  & .tags-container {
     height: 100%;
     overflow: auto;
     overflow-x: auto;
-    margin: 10px 0;
-  }
+    margin-top: 8px;
 
-  & .tag-selectable {
-    width: calc(33% - 4px);
-    margin: 2px;
-    height: 40px;
+    & .tag {
+      width: calc(33% - 4px - 2px);
+      margin: 2px;
+    }
   }
 
   & .no-tag-tittle {
@@ -220,10 +213,13 @@ const openCreateTag = () => {
   & .locked {
     cursor: not-allowed;
     height: 0;
+    border: none;
+    width: fit-content;
   }
 
   & .unlocked {
-    background-color: v-bind('stylesPage.atualColor.hover');
+    margin-top: 8px;
+    width: fit-content;
   }
 }
 </style>

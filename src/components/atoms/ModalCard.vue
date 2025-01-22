@@ -33,7 +33,7 @@ const borderClass = props.border && 'border'
   box-sizing: border-box;
   border-radius: v-bind('stylePage.borderRadius[props.borderRadius]');
   background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
-  box-shadow: v-bind('stylePage.atualColor.back') 0px 8px 28px;
+  // box-shadow: v-bind('stylePage.atualColor.back') 0px 8px 28px;
 }
 
 .border {

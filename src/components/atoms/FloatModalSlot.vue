@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { nextTick, reactive, ref } from 'vue'
+
+const stylePage = useStylesPage()
 
 const props = withDefaults(defineProps<{ closeOnClick?: boolean }>(), { closeOnClick: false })
 
@@ -91,10 +94,12 @@ defineExpose({
     margin: 0;
     width: 100dvw;
     height: 100dvh;
-    border-radius: 16px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    // border-radius: 16px;
+    // backdrop-filter: blur(3px);
+    // background-color: rgba(1, 7, 27, 0.2);
+    // -webkit-backdrop-filter: blur(3px);
   }
+
   & .float-card {
     position: fixed;
     opacity: 0;
@@ -102,6 +107,10 @@ defineExpose({
     top: v-bind('cursorPosition.y');
     animation: initModal 0.3s forwards;
     margin-top: 20px;
+    border-radius: v-bind('stylePage.borderRadius.outside');
+    box-shadow:
+      rgba(17, 17, 26, 0.5) 0px 4px 16px,
+      rgba(17, 17, 26, 0.2) 0px 8px 32px;
   }
 }
 @keyframes initModal {

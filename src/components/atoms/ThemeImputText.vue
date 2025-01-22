@@ -49,10 +49,10 @@ defineExpose({ clearContent })
 .content-input {
   width: 100%;
   height: 36px;
-  background-color: v-bind('stylePage.atualColor.front');
-  border-radius: v-bind('stylePage.borderRadius.inside');
   color: v-bind('stylePage.atualColor.text');
-  border: none;
+  border-radius: 50px;
+  background-color: v-bind('stylePage.atualColor.front');
+  border: solid 1px v-bind('stylePage.atualColor.border');
   overflow: hidden;
   outline: none;
   box-sizing: border-box;

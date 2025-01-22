@@ -11,8 +11,12 @@ import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TagSelectorWithList from '@/components/organisms/TagSelector.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import CrossIco from '../atoms/icons/CrossIco.vue'
+import TagView from '../molecules/TagView.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const cardStyle = useStylesCard()
+
+const stylesPage = useStylesPage()
 
 const tags = useTags()
 
@@ -22,6 +26,7 @@ const emit = defineEmits<{
   (e: 'emitCard', v: Icard): void
   (e: 'emitCancel', v: Icard): void
   (e: 'sendCard', v: Icard): void
+  (e: 'openCreateTag', v: null): void
 }>()
 
 const allTags = computed(() => tags.tags)
@@ -57,13 +62,41 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
 <template>
   <FlexContainer class="main-container" flex-direction="column" align-items="center">
     <FlexContainer flex-direction="column" align-items="center" class="base-width">
-      <FlexContainer class="top-container">
-        <TagSelectorWithList
+      <FlexContainer class="top-container" align-items="center">
+        <FlexContainer class="tags-selector-container">
+          <TagSelectorWithList
+            :text-filter="props.textFilterTags"
+            :all-tags="allTags"
+            :tags-checked="card.cardRef.value.tags"
+            :coin-button="false"
+            @emit-selected="card.setCardTags"
+            @open-create-tag="emit('openCreateTag', null)"
+            class="tag-selector"
+          />
+        </FlexContainer>
+
+        <FlexContainer class="tags-container" align-items="center">
+          <TagView
+            v-for="(tag, i) in card.cardRef.value.tags"
+            :key="i"
+            :tag="tag"
+            class="tag"
+            :mini-tag="true"
+          />
+        </FlexContainer>
+
+        <!-- <TagSelectorWithList
           :text-filter="props.textFilterTags"
           :all-tags="allTags"
           :tags-checked="card.cardRef.value.tags"
+          :coin-button="false"
           @emit-selected="card.setCardTags"
+          class="tag-selector"
         />
+
+        <FlexContainer class="tags-container">
+          <TagView v-for="(tag, i) in card.cardRef.value.tags" :key="i" :tag="tag" class="tag" />
+        </FlexContainer> -->
       </FlexContainer>
 
       <ThemeTextArea
@@ -80,7 +113,6 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
         content="Confirmar alteração"
         @click="sendCard()"
         class="confirm-button"
-        :reverse-color="true"
         :border="true"
       >
         <PencilIco />
@@ -98,6 +130,11 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
   max-height: 80dvh;
   overflow: auto;
   position: relative;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: v-bind('stylesPage.borderRadius.outside');
+  border: solid 1px v-bind('stylesPage.atualColor.border');
+  // background-color: v-bind('stylesPage.atualColor.hover');
 
   & .base-width {
     width: 100%;
@@ -105,6 +142,29 @@ const emitCancel = () => emit('emitCancel', card.cardRef.value)
 
   & .top-container {
     width: 100%;
+    margin-bottom: 8px;
+    height: 40px;
+
+    & .tags-selector-container {
+      width: auto;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    & .tags-container {
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+
+      & .tag {
+        width: auto;
+      }
+    }
+  }
+
+  & .textarea {
+    background-color: v-bind('stylesPage.atualColor.front');
+    border: solid 1px red;
   }
 
   & .buttons-container {

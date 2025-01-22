@@ -1,22 +1,32 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, nextTick, onMounted, reactive } from 'vue'
-import PlusIco from '../atoms/icons/PlusIco.vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
+import PencilIco from '../atoms/icons/PencilIco.vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import { useConfig } from '@/stores/config'
 import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
-import CardSlot from '../organisms/CardSlot.vue'
+import CardSlot from '../organisms/CardOptions.vue'
 import TagSelectorWithList from '../organisms/TagSelector.vue'
-import CardOptions from '../organisms/CardOptions.vue'
+import CardOptions from '../organisms/xCardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
 import { v4 as uuid } from 'uuid'
 import { useRoute } from 'vue-router'
 import { useFloatMessage } from '@/stores/floatMessage'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import SearchImput from '../molecules/SearchImput.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import FilterIco from '../atoms/icons/FilterIco.vue'
+import TagsFilter from '../organisms/TagsFilter.vue'
+import TagsFiltred from '../organisms/TagsFiltred.vue'
+import GearIco from '../atoms/icons/GearIco.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import CardView from '../molecules/CardView.vue'
+import CardTypes from '../organisms/CardTypes.vue'
 
 const window = useWindows()
 const cards = useCards()
@@ -24,8 +34,10 @@ const config = useConfig()
 const route = useRoute()
 const floatMessage = useFloatMessage()
 const tags = useTags()
+const stylesPage = useStylesPage()
 
 const width = computed(() => `${config.config.value.cardWidth}px`)
+
 const cardsReverse = computed(() => [...cards.cards].reverse())
 
 const cardEmpty = (): Icard => {
@@ -42,6 +54,67 @@ const windowsHandleError = (error: unknown) => {
     ? window.errorMessage.open(error.message)
     : window.errorMessage.open('erro inesperado')
 }
+
+const cardsUpdateReactive = async () => {
+  try {
+    await cards.atualizeReactiveCards({
+      includeTags: tags.includeTags,
+      excludeTags: tags.excludeTags
+    })
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
+
+const useCardCreate = () => {
+  const cardList = ref<Icard[]>([])
+
+  const push = () => {
+    cardList.value = [...cardList.value, cardEmpty()]
+  }
+
+  const remove = (cardParam: Icard) => {
+    const atualList = cardList.value
+
+    cardList.value = []
+
+    nextTick(() => {
+      cardList.value = atualList.filter((card) => card.id !== cardParam.id)
+    })
+  }
+
+  const create = async (cardParam: Icard) => {
+    try {
+      await cards.create(cardParam)
+
+      await cardsUpdateReactive()
+
+      remove(cardParam)
+
+      floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
+    } catch (e) {
+      windowsHandleError(e)
+    }
+  }
+
+  return { list: cardList, push, remove, create }
+}
+
+const cardDelete = async (card: Icard) => {
+  console.log('deletando card')
+
+  try {
+    await cards.deleteCard(card.id)
+
+    await cardsUpdateReactive()
+
+    floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
+
+const cardCreate = useCardCreate()
 
 type ICardTo = 'edit' | 'delete' | 'create'
 
@@ -76,17 +149,6 @@ const removeCardTo = (card: Icard, to: ICardTo) => {
 const isCardTo = (card: Icard, to: ICardTo) => {
   const cardsToIds = cardsTo[to].map((c) => c.id)
   return cardsToIds.includes(card.id)
-}
-
-const cardsUpdateReactive = async () => {
-  try {
-    await cards.atualizeReactiveCards({
-      includeTags: tags.includeTags,
-      excludeTags: tags.excludeTags
-    })
-  } catch (e) {
-    windowsHandleError(e)
-  }
 }
 
 const cardCreateSend = async (card: Icard) => {
@@ -133,7 +195,7 @@ const cardDeleteSend = async (card: Icard) => {
   }
 }
 
-const cardShareSend = async (card: Icard) => {
+const copyCard = async (card: Icard) => {
   const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
   // const local = `http://localhost:5173/#/cards/`
   const cardString = JSON.stringify(card)
@@ -176,6 +238,20 @@ const realAllTagsByName = (text: string) => {
   tags.realAllTagsByName(text)
 }
 
+// const cardColumns = (cardList: Icard[], columnQuantity: number) => {
+//   const columns = Array.from({ length: columnQuantity }, () => [] as Icard[])
+
+//   for (let i = 0; i < cardList.length; i++) {
+//     const listaIndex = i % columnQuantity
+
+//     columns[listaIndex].push(cardList[i])
+//   }
+
+//   return columns
+// }
+
+// const columnNumber = 4
+
 onMounted(async () => {
   await handleOpenSharedCard()
 })
@@ -183,100 +259,180 @@ onMounted(async () => {
 
 <template>
   <div class="cards-main-container">
-    <FlexContainer
-      flex-wrap="wrap"
-      :align-items="'start'"
-      justify-content="center"
-      class="cards-main"
-    >
-      <ThemeButton class="card-w card-create-button" @click="addCardTo(null, 'create')">
-        <PlusIco />
-      </ThemeButton>
-
-      <CardEditor
-        v-for="(card, i) in cardsTo.create"
-        :key="i"
-        class="card-w"
-        :card-p="card"
-        :id-text-imput="`card-create-${i}`"
-        :textFilterTags="tags.textFilterTags"
-        @emit-card="(card: Icard) => setCardTo(card, 'create')"
-        @send-card="cardCreateSend"
-        @emit-cancel="(card: Icard) => removeCardTo(card, 'create')"
+    <FlexContainer class="header" align-items="center" justify-content="center">
+      <SearchImput
+        key-id="search-card"
+        placeholder="Pesquisar"
+        @search="realAllTagsByName"
+        class="search-card"
       />
 
-      <div v-for="(card, i) in cardsReverse" :key="i">
-        <CardEditor
-          v-if="isCardTo(card, 'edit')"
+      <ButtonCoinSlot
+        content="Configurações"
+        :circle="true"
+        background-color="transparent"
+        :border="true"
+        @click="window.config.open(null)"
+      >
+        <GearIco />
+      </ButtonCoinSlot>
+    </FlexContainer>
+
+    <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
+      <ButtonSlot content="Criar card" class="card-w card-create-button" @click="cardCreate.push()">
+        <PencilIco />
+      </ButtonSlot>
+
+      <CardTypes
+        v-for="(card, i) in cardCreate.list.value"
+        :card-props="card"
+        :key="i"
+        :all-tags="tags.tags"
+        class="card-w"
+        type="create"
+        @create-card="cardCreate.create"
+        @cancel-card="cardCreate.remove"
+      />
+
+      <div v-for="(card, i) in cardsReverse" :key="i" class="card-with-options-container">
+        <CardTypes
           class="card-w"
-          :card-p="cardsTo.edit.find((c) => c.id === card.id)!"
-          :id-text-imput="`card-update-${i}`"
-          @send-card="cardUpdateSend"
-          :text-filter-tags="tags.textFilterTags"
-          @emit-card="(card: Icard) => setCardTo(card, 'edit')"
-          @emit-cancel="(card: Icard) => removeCardTo(card, 'edit')"
+          :cardProps="card"
+          type="view"
+          :all-tags="tags.tags"
+          @delete-card="cardDelete"
         />
-
-        <CardDelete
-          v-else-if="isCardTo(card, 'delete')"
-          :card="card"
-          class="card-w"
-          @emit-card="cardDeleteSend"
-          @emit-cancel="(card: Icard) => removeCardTo(card, 'delete')"
-        />
-
-        <CardSlot :card="card" :all-tags="tags.tags" class="card-w" v-else>
-          <FlexContainer>
-            <TagSelectorWithList
-              :text-filter="tags.textFilterTags"
-              :all-tags="tags.tags"
-              :tags-checked="card.tags"
-              :show-list="false"
-              @search-tag="realAllTagsByName"
-              @emit-selected="(tags: Itag[]) => cardUpdateSend({ ...card, tags })"
-              @open-create-tag="window.tagCreate.open"
-            />
-
-            <CardOptions
-              :all-tags="tags.tags"
-              :card="card"
-              @update="(card: Icard) => addCardTo(card, 'edit')"
-              @delete="(card: Icard) => addCardTo(card, 'delete')"
-              @share="cardShareSend"
-            />
-          </FlexContainer>
-        </CardSlot>
       </div>
     </FlexContainer>
   </div>
 </template>
 
 <style scoped lang="scss">
-.card-editor {
-  background-color: red;
-  height: 300px;
-  width: 300px;
-}
-
 .cards-main-container {
   width: 100%;
 
-  & .card-create-button {
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 50%;
+  & .header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: v-bind('stylesPage.atualColor.front');
+    height: 50px;
+
+    & .search-card {
+      flex-shrink: 0;
+      width: 40%;
+    }
   }
 
-  & .card-w {
-    width: v-bind(width);
-    max-width: 95dvw;
-    margin: 5px;
-    margin-bottom: 20px;
-  }
   & .cards-main {
-    padding-top: 20px;
+    & .card-w {
+      width: v-bind(width);
+      // z-index: 1;
+    }
+
+    & .card-with-options-container {
+      position: relative;
+      margin: 5px;
+
+      & .card-option-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+    }
+
+    & .card-create-button {
+      filter: invert(1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60px;
+      position: sticky;
+      top: 50px;
+      z-index: 1;
+    }
   }
 }
+// .card-editor {
+//   background-color: red;
+//   height: 300px;
+//   width: 300px;
+// }
+
+// .cards-main-container {
+//   width: 100%;
+
+//   & .header {
+//     position: sticky;
+//     top: 0;
+//     z-index: 1;
+//     width: 100%;
+//     background-color: v-bind('stylesPage.atualColor.front');
+//     height: 50px;
+
+//     & .search-card {
+//       flex-shrink: 0;
+//       width: 40%;
+//     }
+//   }
+
+//   & .filter-container {
+//     background-color: v-bind('stylesPage.atualColor.front');
+//     z-index: 1;
+//     position: sticky;
+//     top: 50px;
+
+//     & .tags-filter {
+//       margin-left: 30px;
+//     }
+//   }
+
+//   & .card-create-button {
+//     height: 80px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     background-color: transparent;
+//     border: solid 1px v-bind('stylesPage.atualColor.border');
+//   }
+
+//   & .column-container {
+//     box-sizing: border-box;
+//     padding: 20px;
+
+//     & .column {
+//       width: calc(100% / v-bind(columnNumber));
+//       flex-direction: column;
+//     }
+
+//     & .card-w {
+//       width: v-bind(width);
+//       max-width: 95dvw;
+//       padding: 10px;
+//       box-sizing: border-box;
+//       // margin: 5px;
+//       // margin-bottom: 20px;
+//     }
+//   }
+
+//   & .cards-main {
+//     padding-top: 20px;
+//   }
+// }
+
+// .card-animation {
+//   width: v-bind(width);
+//   max-width: 95dvw;
+//   margin: 5px;
+//   margin-bottom: 20px;
+//   margin-top: 30px;
+//   animation: cardAnimation 0.3s forwards;
+// }
+
+// @keyframes cardAnimation {
+//   to {
+//     margin-top: 0;
+//   }
+// }
 </style>

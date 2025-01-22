@@ -9,17 +9,17 @@ const props = withDefaults(
     size?: string
   }>(),
   {
-    size: '26px'
+    size: '21px'
   }
 )
 </script>
 
 <template>
-  <h1 class="title-1">{{ props.content }}</h1>
+  <h2 class="title-2">{{ props.content }}</h2>
 </template>
 
 <style scoped lang="scss">
-.title-1 {
+.title-2 {
   color: v-bind('stylePage.atualColor.text');
   font-size: v-bind('props.size');
   margin: 0;
