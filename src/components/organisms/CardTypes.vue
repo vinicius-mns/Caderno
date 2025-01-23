@@ -20,24 +20,38 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
+import { v4 as uuid } from 'uuid'
 
 const cardStyle = useStylesCard()
 
 const stylePage = useStylesPage()
 
+const cardEmpty: Icard = {
+  id: uuid(),
+  content: '',
+  date: new Date(),
+  tags: []
+}
+
 type ICardType = 'card' | 'create' | 'editor' | 'view' | 'delete'
 
-const props = defineProps<{ cardProps: Icard; type: ICardType; allTags: Itag[] }>()
+const props = defineProps<{
+  cardProps: Icard | null
+  type: ICardType
+  allTags: Itag[]
+}>()
 
 const emit = defineEmits<{
   (e: 'createCard', v: Icard): void
   (e: 'updateCard', v: Icard): void
-  (e: 'deleteCard', v: Icard): void
   (e: 'cancelCard', v: Icard): void
+  (e: 'deleteCard', v: Icard): void
 }>()
 
+const viewComponent = ref(true)
+
 const useCard = () => {
-  const card = ref(props.cardProps)
+  const card = ref<Icard>(props.cardProps || cardEmpty)
 
   const cardSet = (newCard: Icard) => {
     card.value = newCard
@@ -101,7 +115,7 @@ const sendTags = (tags: Itag[]) => {
 
 const sendDelete = () => {
   console.log('delete chamado no card')
-  emit('deleteCard', props.cardProps)
+  emit('deleteCard', props.cardProps || cardEditor.card.value)
 }
 
 // const cardContentSet = () => {
@@ -124,6 +138,7 @@ const sendDelete = () => {
 
 <template>
   <FlexContainer
+    v-if="viewComponent"
     class="card-type-container"
     flex-direction="column"
     @mouseenter="buttonMoreOptions.open()"

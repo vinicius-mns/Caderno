@@ -14,7 +14,6 @@ import CardOptions from '../organisms/xCardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
 import CardDelete from '../organisms/CardDelete.vue'
-import { v4 as uuid } from 'uuid'
 import { useRoute } from 'vue-router'
 import { useFloatMessage } from '@/stores/floatMessage'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
@@ -40,15 +39,6 @@ const width = computed(() => `${config.config.value.cardWidth}px`)
 
 const cardsReverse = computed(() => [...cards.cards].reverse())
 
-const cardEmpty = (): Icard => {
-  return {
-    id: uuid(),
-    content: '',
-    date: new Date(),
-    tags: tags.includeTags
-  }
-}
-
 const windowsHandleError = (error: unknown) => {
   error instanceof Error
     ? window.errorMessage.open(error.message)
@@ -67,39 +57,41 @@ const cardsUpdateReactive = async () => {
 }
 
 const useCardCreate = () => {
-  const cardList = ref<Icard[]>([])
+  const view = ref<'button' | 'card'>('button')
 
-  const push = () => {
-    cardList.value = [...cardList.value, cardEmpty()]
+  const setView = (param: 'button' | 'card') => (view.value = param)
+
+  return {
+    view,
+    set: setView
   }
-
-  const remove = (cardParam: Icard) => {
-    const atualList = cardList.value
-
-    cardList.value = []
-
-    nextTick(() => {
-      cardList.value = atualList.filter((card) => card.id !== cardParam.id)
-    })
-  }
-
-  const create = async (cardParam: Icard) => {
-    try {
-      await cards.create(cardParam)
-
-      await cardsUpdateReactive()
-
-      remove(cardParam)
-
-      floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
-    } catch (e) {
-      windowsHandleError(e)
-    }
-  }
-
-  return { list: cardList, push, remove, create }
 }
 
+const cardCreateView = useCardCreate()
+
+const cardCreate = async (cardParam: Icard) => {
+  try {
+    await cards.create(cardParam)
+
+    await cardsUpdateReactive()
+
+    cardCreateView.set('button')
+
+    floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
+
+const cardUpdate = async (cardParam: Icard) => {
+  try {
+    await cards.update(cardParam)
+
+    await cardsUpdateReactive()
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
 const cardDelete = async (card: Icard) => {
   console.log('deletando card')
 
@@ -114,8 +106,6 @@ const cardDelete = async (card: Icard) => {
   }
 }
 
-const cardCreate = useCardCreate()
-
 type ICardTo = 'edit' | 'delete' | 'create'
 
 const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
@@ -124,21 +114,21 @@ const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
   delete: []
 })
 
-const addCardTo = (card: Icard | null, to: ICardTo) => {
-  const newCards = [...cardsTo[to], card ? card : cardEmpty()]
-  cardsTo[to] = newCards
+// const addCardTo = (card: Icard | null, to: ICardTo) => {
+//   const newCards = [...cardsTo[to], card ? card : cardEmpty()]
+//   cardsTo[to] = newCards
 
-  if (tags.tags.length <= 0) window.errorCardNoTag.open(null)
-}
+//   if (tags.tags.length <= 0) window.errorCardNoTag.open(null)
+// }
 
-const setCardTo = (card: Icard, to: ICardTo) => {
-  const newCards = cardsTo[to].map((c) => {
-    if (c.id === card.id) return card
-    else return c
-  })
+// const setCardTo = (card: Icard, to: ICardTo) => {
+//   const newCards = cardsTo[to].map((c) => {
+//     if (c.id === card.id) return card
+//     else return c
+//   })
 
-  cardsTo[to] = newCards
-}
+//   cardsTo[to] = newCards
+// }
 
 const removeCardTo = (card: Icard, to: ICardTo) => {
   const newCards = cardsTo[to].filter((c) => c.id !== card.id)
@@ -146,70 +136,70 @@ const removeCardTo = (card: Icard, to: ICardTo) => {
   nextTick(() => (cardsTo[to] = newCards))
 }
 
-const isCardTo = (card: Icard, to: ICardTo) => {
-  const cardsToIds = cardsTo[to].map((c) => c.id)
-  return cardsToIds.includes(card.id)
-}
+// const isCardTo = (card: Icard, to: ICardTo) => {
+//   const cardsToIds = cardsTo[to].map((c) => c.id)
+//   return cardsToIds.includes(card.id)
+// }
 
-const cardCreateSend = async (card: Icard) => {
-  try {
-    await cards.create(card)
+// const cardCreateSend = async (card: Icard) => {
+//   try {
+//     await cards.create(card)
 
-    await cardsUpdateReactive()
+//     await cardsUpdateReactive()
 
-    floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
+//     floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
 
-    removeCardTo(card, 'create')
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
+//     removeCardTo(card, 'create')
+//   } catch (e) {
+//     windowsHandleError(e)
+//   }
+// }
 
-const cardUpdateSend = async (card: Icard) => {
-  try {
-    await cards.update(card)
+// const cardUpdateSend = async (card: Icard) => {
+//   try {
+//     await cards.update(card)
 
-    await cardsUpdateReactive()
+//     await cardsUpdateReactive()
 
-    floatMessage.openMessage(floatMessage.messages.cardUpdateSucess)
+//     floatMessage.openMessage(floatMessage.messages.cardUpdateSucess)
 
-    removeCardTo(card, 'edit')
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
+//     removeCardTo(card, 'edit')
+//   } catch (e) {
+//     windowsHandleError(e)
+//   }
+// }
 
-const cardDeleteSend = async (card: Icard) => {
-  try {
-    await cards.deleteCard(card.id)
+// const cardDeleteSend = async (card: Icard) => {
+//   try {
+//     await cards.deleteCard(card.id)
 
-    await cardsUpdateReactive()
+//     await cardsUpdateReactive()
 
-    floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
+//     floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
 
-    removeCardTo(card, 'delete')
+//     removeCardTo(card, 'delete')
 
-    removeCardTo(card, 'edit')
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
+//     removeCardTo(card, 'edit')
+//   } catch (e) {
+//     windowsHandleError(e)
+//   }
+// }
 
-const copyCard = async (card: Icard) => {
-  const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
-  // const local = `http://localhost:5173/#/cards/`
-  const cardString = JSON.stringify(card)
-  const encodedCardString = encodeURIComponent(cardString)
-  const url = `${remote}${encodedCardString}`
+// const copyCard = async (card: Icard) => {
+//   const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
+//   // const local = `http://localhost:5173/#/cards/`
+//   const cardString = JSON.stringify(card)
+//   const encodedCardString = encodeURIComponent(cardString)
+//   const url = `${remote}${encodedCardString}`
 
-  try {
-    await navigator.clipboard.writeText(url)
+//   try {
+//     await navigator.clipboard.writeText(url)
 
-    floatMessage.openMessage(floatMessage.messages.cardCopySucess)
-  } catch (err) {
-    console.error('Falha ao copiar o URL: ', err)
-  }
-}
+//     floatMessage.openMessage(floatMessage.messages.cardCopySucess)
+//   } catch (err) {
+//     console.error('Falha ao copiar o URL: ', err)
+//   }
+// }
 
 const handleOpenSharedCard = async () => {
   const paramId = route.params.id
@@ -279,28 +269,33 @@ onMounted(async () => {
     </FlexContainer>
 
     <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
-      <ButtonSlot content="Criar card" class="card-w card-create-button" @click="cardCreate.push()">
+      <ButtonSlot
+        v-if="cardCreateView.view.value === 'button'"
+        content="Criar card"
+        class="card-w card-create-button"
+        @click="cardCreateView.set('card')"
+      >
         <PencilIco />
       </ButtonSlot>
 
       <CardTypes
-        v-for="(card, i) in cardCreate.list.value"
-        :card-props="card"
-        :key="i"
+        :card-props="null"
+        v-if="cardCreateView.view.value === 'card'"
         :all-tags="tags.tags"
         class="card-w"
         type="create"
-        @create-card="cardCreate.create"
-        @cancel-card="cardCreate.remove"
+        @create-card="cardCreate"
+        @cancel-card="cardCreateView.set('button')"
       />
 
       <div v-for="(card, i) in cardsReverse" :key="i" class="card-with-options-container">
         <CardTypes
           class="card-w"
-          :cardProps="card"
+          :card-props="card"
           type="view"
           :all-tags="tags.tags"
           @delete-card="cardDelete"
+          @update-card="cardUpdate"
         />
       </div>
     </FlexContainer>
