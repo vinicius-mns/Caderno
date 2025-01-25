@@ -269,25 +269,6 @@ onMounted(async () => {
     </FlexContainer>
 
     <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
-      <ButtonSlot
-        v-if="cardCreateView.view.value === 'button'"
-        content="Criar card"
-        class="card-w card-create-button"
-        @click="cardCreateView.set('card')"
-      >
-        <PencilIco />
-      </ButtonSlot>
-
-      <CardTypes
-        :card-props="null"
-        v-if="cardCreateView.view.value === 'card'"
-        :all-tags="tags.tags"
-        class="card-w"
-        type="create"
-        @create-card="cardCreate"
-        @cancel-card="cardCreateView.set('button')"
-      />
-
       <div v-for="(card, i) in cardsReverse" :key="i" class="card-with-options-container">
         <CardTypes
           class="card-w"
@@ -305,6 +286,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 .cards-main-container {
   width: 100%;
+  padding-bottom: 120px;
 
   & .header {
     position: sticky;

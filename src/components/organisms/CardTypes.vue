@@ -46,6 +46,7 @@ const emit = defineEmits<{
   (e: 'updateCard', v: Icard): void
   (e: 'cancelCard', v: Icard): void
   (e: 'deleteCard', v: Icard): void
+  (e: 'tagCreateOpen', v: null): void
 }>()
 
 const viewComponent = ref(true)
@@ -204,7 +205,7 @@ const sendDelete = () => {
       class="card"
       :id="cardEditor.card.value.id"
       :content="cardEditor.card.value.content"
-      :max-height-px="14000"
+      :max-height-px="426"
       :style="cardStyle.atualStyle"
       @emit-content="cardEditor.set({ ...cardEditor.card.value, content: $event })"
     />
@@ -225,6 +226,7 @@ const sendDelete = () => {
           :tags-checked="cardEditor.card.value.tags"
           text-filter=""
           @emit-selected="sendTags"
+          @open-create-tag="emit('tagCreateOpen', null)"
         />
 
         <ButtonCoinSlot

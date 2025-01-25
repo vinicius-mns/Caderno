@@ -60,7 +60,12 @@ const invertClass = computed(() => (props.invertColor ? 'invert' : ''))
   overflow: hidden;
   outline: none;
   cursor: pointer;
-  transition: all 0.1s;
+  transition:
+    all 0.1s,
+    border-radius 0s,
+    border-width 0s,
+    border-color 0s;
+
   margin: 0;
   padding: 0;
 
