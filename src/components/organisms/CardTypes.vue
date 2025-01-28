@@ -33,20 +33,29 @@ const cardEmpty: Icard = {
   tags: []
 }
 
-type ICardType = 'card' | 'create' | 'editor' | 'view' | 'delete'
+export type ICardType = 'create' | 'editor' | 'view' | 'delete'
 
-const props = defineProps<{
-  cardProps: Icard | null
-  type: ICardType
-  allTags: Itag[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    cardProps: Icard | null
+    type: ICardType
+    allTags: Itag[]
+    fontSize?: string
+  }>(),
+  {
+    fontSize: ''
+  }
+)
 
 const emit = defineEmits<{
   (e: 'createCard', v: Icard): void
   (e: 'updateCard', v: Icard): void
+  (e: 'shareCard', v: Icard): void
   (e: 'cancelCard', v: Icard): void
   (e: 'deleteCard', v: Icard): void
+  (e: 'openCard', v: Icard): void
   (e: 'tagCreateOpen', v: null): void
+  (e: 'emitOpenOptions', v: null): void
 }>()
 
 const viewComponent = ref(true)
@@ -115,26 +124,8 @@ const sendTags = (tags: Itag[]) => {
 }
 
 const sendDelete = () => {
-  console.log('delete chamado no card')
   emit('deleteCard', props.cardProps || cardEditor.card.value)
 }
-
-// const cardContentSet = () => {
-//   card.set({ ...card.card.value, content: cardEditor.card.value.content })
-//   cardType.set('card')
-//   // showOptions.close()
-// }
-
-// const cardTagsSet = () => {
-//   card.set({ ...card.card.value, tags: cardEditor.card.value.tags })
-//   // cardType.set('card')
-// }
-
-// const cardEditorCancel = () => {
-//   cardEditor.set(card.card.value)
-//   cardType.set('view')
-//   // showOptions.close()
-// }
 </script>
 
 <template>
@@ -151,7 +142,12 @@ const sendDelete = () => {
       class="more-options-container"
     >
       <template #button-slot>
-        <ButtonCoinSlot content="Mais" :circle="true" class="button-more-options">
+        <ButtonCoinSlot
+          content="Mais"
+          :circle="true"
+          class="button-more-options"
+          @click="emit('emitOpenOptions', null)"
+        >
           <PlusIco />
         </ButtonCoinSlot>
       </template>
@@ -175,7 +171,7 @@ const sendDelete = () => {
             <ButtonSlot
               content="Compartir Card"
               border-color="transparent"
-              @click="cardType.set('card')"
+              @click="emit('shareCard', cardEditor.card.value)"
               class="button-option"
             >
               <ShareIco />
@@ -197,7 +193,7 @@ const sendDelete = () => {
     <ThemeH1
       v-if="cardType.is(['create', 'editor'])"
       class="title"
-      :content="cardType.is('card') ? 'Visualizando card...' : 'Criando card...'"
+      :content="cardType.is('editor') ? 'Editando card...' : 'Criando card...'"
     />
 
     <ThemeTextArea
@@ -211,10 +207,11 @@ const sendDelete = () => {
     />
 
     <CardView
-      v-if="cardType.is(['card', 'delete', 'view'])"
+      v-if="cardType.is(['delete', 'view'])"
       class="card"
       :card="card.card.value"
-      :font-size="cardType.isNot('view') ? 'large' : ''"
+      :font-size="props.fontSize"
+      @click="emit('openCard', card.card.value)"
     />
 
     <FlexContainer class="footer" v-if="cardType.is(['editor', 'create', 'delete'])">
@@ -272,6 +269,7 @@ const sendDelete = () => {
 <style scoped lang="scss">
 .card-type-container {
   margin-bottom: 18px;
+  position: relative;
 
   & .more-options-container {
     & .button-more-options {
@@ -296,6 +294,7 @@ const sendDelete = () => {
   }
 
   & .card {
+    cursor: pointer;
     width: 100%;
   }
 

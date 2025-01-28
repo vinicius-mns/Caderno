@@ -129,14 +129,14 @@ const cardCreate = {
   & .bottom-card {
     padding: 8px;
     border-radius: 100px;
-    margin-top: 12px;
+    margin-top: 8px;
 
     & .button-margin {
       margin: 0 4px;
     }
 
     & .button-create-card {
-      width: 180px;
+      padding: 0 10px;
       justify-content: center;
     }
   }

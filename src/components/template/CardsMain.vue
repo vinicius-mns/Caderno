@@ -277,6 +277,7 @@ onMounted(async () => {
           :all-tags="tags.tags"
           @delete-card="cardDelete"
           @update-card="cardUpdate"
+          @open-card="window.cardView.open"
         />
       </div>
     </FlexContainer>
