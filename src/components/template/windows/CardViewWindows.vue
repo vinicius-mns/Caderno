@@ -20,12 +20,13 @@ import CardEditor from '@/components/organisms/CardEditor.vue'
 import type { ICardType } from '@/components/organisms/CardTypes.vue'
 import CardTypes from '@/components/organisms/CardTypes.vue'
 import { useCards } from '@/stores/cards/cards'
+import type { Icard } from '@/stores/cards/Interfaces'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { useTags } from '@/stores/tags/tags'
 import { useWindows } from '@/stores/windows'
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 const stylesPage = useStylesPage()
 
@@ -44,75 +45,101 @@ const card = computed(() => windows.cardView.props)
 const tagsInCard = computed(() => windows.cardView.props.tags)
 
 const useCardPerspective = () => {
-  const lock = ref(true)
-  const xRotate = ref('0deg')
-  const yRotate = ref('0deg')
+  const props = reactive({
+    lock: true,
+    axle: {
+      x: '0deg',
+      y: '0deg'
+    },
+    size: 6,
+    jump: 1
+  })
 
   const cursorX = ref(0)
   const cursorY = ref(0)
 
   const lockSet = () => {
-    lock.value = !lock.value
-
-    xRotate.value = '0deg'
-
-    yRotate.value = '0deg'
+    props.lock = !props.lock
+    props.axle.x = '0deg'
+    props.axle.y = '0deg'
   }
 
-  const handdleRotate = (rotante: number, position: 'x' | 'y') => {
-    const size = 5
-
-    if (position === 'x') {
-      xRotate.value = `${rotante}deg`
-      if (rotante >= size) xRotate.value = `${size}deg`
-      if (rotante <= -size) xRotate.value = `${-size}deg`
-    }
-
-    if (position === 'y') {
-      yRotate.value = `${rotante}deg`
-      if (rotante >= size) yRotate.value = `${size}deg`
-      if (rotante <= -size) yRotate.value = `${-size}deg`
-    }
+  const handdleRotate = (rotate: number, position: 'x' | 'y') => {
+    if (rotate >= props.size || rotate <= -props.size) return
+    props.axle[position] = `${rotate}deg`
   }
 
-  const move = (cursor: MouseEvent, position: 'x' | 'y') => {
-    if (position === 'x') {
-      if (cursor.clientX < cursorX.value) {
-        handdleRotate(parseInt(xRotate.value) + 1, 'x')
-      }
-      if (cursor.clientX > cursorX.value) {
-        handdleRotate(parseInt(xRotate.value) - 1, 'x')
-      }
+  const move = (cursor: MouseEvent) => {
+    if (props.lock) return
 
-      cursorX.value = cursor.clientX
+    const centerX = window.innerWidth / 2
+    const centerY = window.innerHeight / 2
+
+    const execute = {
+      x: () => {
+        if (cursor.clientX < centerX) {
+          handdleRotate(parseInt(props.axle.x) + props.jump, 'x')
+        }
+        if (cursor.clientX > centerX) {
+          handdleRotate(parseInt(props.axle.x) - props.jump, 'x')
+        }
+
+        cursorX.value = cursor.clientX
+      },
+      y: () => {
+        if (cursor.clientY < centerY) {
+          handdleRotate(parseInt(props.axle.y) - props.jump, 'y')
+        }
+        if (cursor.clientY > centerY) {
+          handdleRotate(parseInt(props.axle.y) + props.jump, 'y')
+        }
+
+        cursorY.value = cursor.clientY
+      }
     }
 
-    if (position === 'y') {
-      if (cursor.clientY < cursorY.value) {
-        handdleRotate(parseInt(yRotate.value) - 1, 'y')
-      }
-      if (cursor.clientY > cursorY.value) {
-        handdleRotate(parseInt(yRotate.value) + 1, 'y')
-      }
-
-      cursorY.value = cursor.clientY
-    }
+    execute['x']()
+    execute['y']()
   }
 
-  const moveCard = (cursor: MouseEvent) => {
-    if (!lock.value) {
-      move(cursor, 'x')
-      move(cursor, 'y')
-    }
-  }
-
-  return { x: xRotate, y: yRotate, lock, lockSet, moveCard }
+  return { props, lockSet, move }
 }
 
 const cardPerspective = useCardPerspective()
 
 const openOptions = () => {
-  if (!cardPerspective.lock.value) cardPerspective.lockSet()
+  if (!cardPerspective.props.lock) cardPerspective.lockSet()
+}
+
+const windowsHandleError = (error: unknown) => {
+  error instanceof Error
+    ? windows.errorMessage.open(error.message)
+    : windows.errorMessage.open('erro inesperado')
+}
+
+const cardsUpdateReactive = async () => {
+  await cards.atualizeReactiveCards({
+    includeTags: tags.includeTags,
+    excludeTags: tags.excludeTags
+  })
+}
+
+const cardUpdate = async (card: Icard) => {
+  try {
+    await cards.update(card)
+    await cardsUpdateReactive()
+  } catch (e) {
+    windowsHandleError(e)
+  }
+}
+
+const cardDelete = async (card: Icard) => {
+  try {
+    await cards.deleteCard(card.id)
+    await cardsUpdateReactive()
+  } catch (e) {
+    windowsHandleError(e)
+  }
 }
 </script>
 
@@ -124,16 +151,16 @@ const openOptions = () => {
     v-if="windows.cardView.show"
   >
     <FlexContainer
-      :class="['card-with-close', !cardPerspective.lock.value && 'perspectiveCard']"
+      :class="['card-with-close', !cardPerspective.props.lock && 'perspectiveCard']"
       ref="cardWithClose"
       flex-direction="column"
       align-items="center"
-      @mousemove="cardPerspective.moveCard"
+      @mousemove="cardPerspective.move"
     >
       <FlexContainer class="header" align-items="center" justify-content="end">
         <ButtonCoinSlot content="Destravar card" @click="cardPerspective.lockSet">
-          <LockIco v-if="cardPerspective.lock.value" />
-          <UnlockIco v-if="!cardPerspective.lock.value" />
+          <LockIco v-if="cardPerspective.props.lock" />
+          <UnlockIco v-if="!cardPerspective.props.lock" />
         </ButtonCoinSlot>
 
         <ButtonCoinSlot
@@ -155,6 +182,8 @@ const openOptions = () => {
           class="card"
           type="view"
           @emit-open-options="openOptions"
+          @update-card="cardUpdate"
+          @delete-card="cardDelete"
         />
       </FlexContainer>
     </FlexContainer>
@@ -183,14 +212,15 @@ const openOptions = () => {
 
     & .card-container {
       margin: 4px;
-      max-height: calc(40dvw - 40px);
+      max-height: calc(90dvh - 80px);
+      max-width: 95dvw;
       overflow-y: auto;
       overflow-x: hidden;
 
       & .card {
         margin: 4px;
-        width: 100%;
         width: 600px;
+        max-width: calc(95dvw - 8px);
       }
     }
 
@@ -201,10 +231,10 @@ const openOptions = () => {
 }
 
 .perspectiveCard {
-  transition: all 0.3s;
+  transition: all 0.3s ease-out;
   transform-style: preserve-3d;
-  transform: perspective(1200px) rotateX(v-bind('cardPerspective.y.value'))
-    rotateY(v-bind('cardPerspective.x.value'));
+  transform: perspective(1200px) rotateX(v-bind('cardPerspective.props.axle.y'))
+    rotateY(v-bind('cardPerspective.props.axle.x'));
 }
 
 @keyframes intro-animation {

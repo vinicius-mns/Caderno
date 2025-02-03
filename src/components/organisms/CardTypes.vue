@@ -108,13 +108,17 @@ const buttonMoreOptions = useButtonMoreOptions()
 
 const cardCancel = () => {
   if (cardType.is('create')) emit('cancelCard', cardEditor.card.value)
-  else cardType.set('view')
+  cardEditor.set(card.card.value)
+  cardType.set('view')
 }
 
 const sendCard = () => {
   if (cardType.is('create')) emit('createCard', cardEditor.card.value)
-
-  if (cardType.is('editor')) emit('updateCard', cardEditor.card.value)
+  if (cardType.is('editor')) {
+    card.set(cardEditor.card.value)
+    cardType.set('view')
+    emit('updateCard', cardEditor.card.value)
+  }
 }
 
 const sendTags = (tags: Itag[]) => {
@@ -126,6 +130,8 @@ const sendTags = (tags: Itag[]) => {
 const sendDelete = () => {
   emit('deleteCard', props.cardProps || cardEditor.card.value)
 }
+
+defineExpose({ cardType })
 </script>
 
 <template>

@@ -10,58 +10,33 @@ import ModalCard from '../atoms/ModalCard.vue'
 import CardTypes from '../organisms/CardTypes.vue'
 import { ref } from 'vue'
 import { useTags } from '@/stores/tags/tags'
-import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
-import { useFloatMessage } from '@/stores/floatMessage'
+import FloatDescription from '../atoms/FloatDescription.vue'
+import ThemeP from '../atoms/ThemeP.vue'
+import { useCardsTags } from '@/stores/cardsTags'
 
 const tags = useTags()
 
-const cards = useCards()
-
 const windows = useWindows()
 
-const floatMessage = useFloatMessage()
+const cardsTags = useCardsTags()
 
-const windowsHandleError = (error: unknown) => {
-  error instanceof Error
-    ? windows.errorMessage.open(error.message)
-    : windows.errorMessage.open('erro inesperado')
+const cardCreateShow = {
+  value: ref(false),
+  open: () => (cardCreateShow.value.value = true),
+  close: () => (cardCreateShow.value.value = false)
 }
 
-const cardsUpdateReactive = async () => {
-  try {
-    await cards.atualizeReactiveCards({
-      includeTags: tags.includeTags,
-      excludeTags: tags.excludeTags
-    })
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
-
-const cardCreate = {
-  show: ref(false),
-  showSet: (v: boolean) => (cardCreate.show.value = v),
-  create: async (cardParam: Icard) => {
-    try {
-      await cards.create(cardParam)
-
-      await cardsUpdateReactive()
-
-      cardCreate.showSet(false)
-
-      floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
-    } catch (e) {
-      windowsHandleError(e)
-    }
-  }
+const cardCreate = async (card: Icard) => {
+  const sucess = await cardsTags.card.create(card)
+  if (sucess) cardCreateShow.close()
 }
 </script>
 
 <template>
   <FlexContainer class="bottom-container" align-items="center" flex-direction="column">
     <ModalCard
-      v-if="cardCreate.show.value"
+      v-if="cardCreateShow.value.value"
       class="modal-create-card"
       :box-shadow="true"
       :intro-animation="true"
@@ -71,11 +46,33 @@ const cardCreate = {
         type="create"
         :card-props="null"
         :all-tags="tags.tags"
-        @create-card="cardCreate.create"
-        @cancel-card="cardCreate.showSet(false)"
+        @create-card="cardCreate"
+        @cancel-card="cardCreateShow.close"
         @tag-create-open="windows.tagCreate.open"
       />
     </ModalCard>
+
+    <FlexContainer class="filter-view" @click="windows.filterCardsByTags.open(null)">
+      <FlexContainer flex-direction="column" class="tags-filter">
+        <ThemeP class="title" content="com tags" />
+
+        <FlexContainer>
+          <FloatDescription v-for="(tag, i) in tags.includeTags" :content="tag[1]" :key="i">
+            <p class="tag include">{{ tag[0] }}</p>
+          </FloatDescription>
+        </FlexContainer>
+      </FlexContainer>
+
+      <FlexContainer flex-direction="column" class="tags-filter">
+        <ThemeP class="title" content="sem tags" />
+
+        <FlexContainer>
+          <FloatDescription v-for="(tag, i) in tags.excludeTags" :content="tag[1]" :key="i">
+            <p class="tag exclude">{{ tag[0] }}</p>
+          </FloatDescription>
+        </FlexContainer>
+      </FlexContainer>
+    </FlexContainer>
 
     <ModalCard class="bottom-card" :box-shadow="true">
       <FlexContainer>
@@ -83,7 +80,7 @@ const cardCreate = {
           border-radius="50px"
           class="button-create-card button-margin"
           content="Criar card"
-          @click="cardCreate.showSet(true)"
+          @click="cardCreateShow.open"
           :invert-color="true"
         >
           <PencilIco />
@@ -123,6 +120,33 @@ const cardCreate = {
 
     & .card {
       width: 100%;
+    }
+  }
+
+  & .filter-view {
+    cursor: pointer;
+
+    & .tags-filter {
+      margin: 0 4px;
+
+      & .tag {
+        border: solid 1px;
+        border-radius: 50%;
+        padding: 3px;
+        margin: 0 2px;
+      }
+
+      & .title {
+        margin-left: 4px;
+      }
+
+      & .include {
+        border-color: blue;
+      }
+
+      & .exclude {
+        border-color: red;
+      }
     }
   }
 
