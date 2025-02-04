@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 const stylePage = useStylesPage()
 

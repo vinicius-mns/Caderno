@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
-import ThemeP from '../atoms/ThemeP.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
-import EraserIco from '../atoms/icons/EraserIco.vue'
-import RadioBase from '../atoms/RadioBase.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
-import ButtonSlot from '../molecules/ButtonSlot.vue'
-import SendIco from '../atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import PlusIco from '../atoms/icons/PlusIco.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
-import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 
 const stylesPage = useStylesPage()
 
@@ -47,18 +40,18 @@ const useTags = () => {
 
   const _getTagName = (tag: Itag) => tag[1]
 
-  const _getReminingTags = (param: {
-    allTags: Itag[]
-    includeTags: Itag[]
-    excludeTags: Itag[]
-  }) => {
-    const lastTags = param.allTags.map((tag) => {
-      if (!includes({ tags: param.includeTags, tag })) return tag
-      if (!includes({ tags: param.excludeTags, tag })) return tag
-    }) as Itag[]
+  // const _getReminingTags = (param: {
+  //   allTags: Itag[]
+  //   includeTags: Itag[]
+  //   excludeTags: Itag[]
+  // }) => {
+  //   const lastTags = param.allTags.map((tag) => {
+  //     if (!includes({ tags: param.includeTags, tag })) return tag
+  //     if (!includes({ tags: param.excludeTags, tag })) return tag
+  //   }) as Itag[]
 
-    return [...param.includeTags, ...param.excludeTags, ...lastTags]
-  }
+  //   return [...param.includeTags, ...param.excludeTags, ...lastTags]
+  // }
 
   const includes = (param: { tags: Itag[]; tag: Itag }) => {
     return param.tags.map(_getTagName).includes(_getTagName(param.tag))
@@ -81,9 +74,9 @@ const useTags = () => {
       }, 0)
     }
 
-    const addRemainingTags = () => {
-      remainingTags.set([tag, ...remainingTags.tags.value])
-    }
+    // const addRemainingTags = () => {
+    //   remainingTags.set([tag, ...remainingTags.tags.value])
+    // }
 
     const addInclude = () => {
       include.set([...include.tags.value, tag])

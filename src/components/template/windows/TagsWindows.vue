@@ -1,28 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useTags } from '@/stores/tags/tags'
-import { useCards } from '@/stores/cards/cards'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import SearchImput from '@/components/molecules/SearchImput.vue'
-import TagView2 from '@/components/molecules/TagView2.vue'
-import ThemeP from '@/components/atoms/ThemeP.vue'
 import TagOptions from '@/components/organisms/TagOptions.vue'
-import RadioBase from '@/components/atoms/RadioBase.vue'
-import SendIco from '@/components/atoms/icons/SendIco.vue'
-import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
-import EraserIco from '@/components/atoms/icons/EraserIco.vue'
-import SaveIco from '@/components/atoms/icons/SaveIco.vue'
-import UploadIco from '@/components/atoms/icons/UploadIco.vue'
-import PlusIco from '@/components/atoms/icons/PlusIco.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 
 const window = useWindows()
-
-const cards = useCards()
 
 const tags = useTags()
 
@@ -101,19 +89,19 @@ const useTagsFilter = () => {
 
 const tagsFilter = useTagsFilter()
 
-const sendFilter = async () => {
-  const { include, exclude } = tagsFilter.sendTags()
+// const sendFilter = async () => {
+//   const { include, exclude } = tagsFilter.sendTags()
 
-  await tags.setFilter({
-    includeTags: include,
-    excludeTags: exclude
-  })
+//   await tags.setFilter({
+//     includeTags: include,
+//     excludeTags: exclude
+//   })
 
-  await cards.atualizeReactiveCards({
-    includeTags: include,
-    excludeTags: exclude
-  })
-}
+//   await cards.atualizeReactiveCards({
+//     includeTags: include,
+//     excludeTags: exclude
+//   })
+// }
 
 watch([allTags, includeTags, excludeTags], () => {
   tagsFilter.update(allTags.value, includeTags.value, excludeTags.value)

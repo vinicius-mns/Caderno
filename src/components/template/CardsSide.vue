@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { useTags } from '@/stores/tags/tags'
 import FlexContainer from '../atoms/FlexContainer.vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
 import SearchImput from '../molecules/SearchImput.vue'
-import TagsFiltredsList from '../organisms/TagsFiltredsList.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import TagsFilterCards from '../organisms/TagsFilterCards.vue'
-import TagsFilter from '../organisms/TagsFilter.vue'
 import TagFilter from '../organisms/TagFilter.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import { computed } from 'vue'

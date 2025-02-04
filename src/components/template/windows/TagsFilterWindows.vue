@@ -9,13 +9,11 @@ import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import SearchImput from '@/components/molecules/SearchImput.vue'
 import TagView2 from '@/components/molecules/TagView2.vue'
-import TagOptions from '@/components/organisms/TagOptions.vue'
 import SendIco from '@/components/atoms/icons/SendIco.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import EraserIco from '@/components/atoms/icons/EraserIco.vue'
 import SaveIco from '@/components/atoms/icons/SaveIco.vue'
 import UploadIco from '@/components/atoms/icons/UploadIco.vue'
-import PlusIco from '@/components/atoms/icons/PlusIco.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 
 const window = useWindows()

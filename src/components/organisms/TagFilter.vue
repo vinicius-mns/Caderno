@@ -3,9 +3,6 @@ import { computed, ref } from 'vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
 import TagView from '../molecules/TagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-
-const stylesPage = useStylesPage()
 
 const props = defineProps<{
   tag: Itag

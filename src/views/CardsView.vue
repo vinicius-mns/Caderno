@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import CardsTop from '@/components/template/xCadsTop.vue'
 import CardsBottom from '@/components/template/CardsBottom.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
-import CardsSide from '@/components/template/CardsSide.vue'
 import FloatMessage from '@/components/template/FloatMessage.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'

@@ -1,36 +1,15 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import CrossIco from '@/components/atoms/icons/CrossIco.vue'
 import LockIco from '@/components/atoms/icons/LockIco.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
-import ShareIco from '@/components/atoms/icons/ShareIco.vue'
-import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import UnlockIco from '@/components/atoms/icons/UnlockIco.vue'
-import ThemeButtonClose from '@/components/atoms/ThemeButtonClose.vue'
-import ThemeMarkown from '@/components/atoms/ThemeMarkown.vue'
-import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
-import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import CardView from '@/components/molecules/CardView.vue'
-import SearchImput from '@/components/molecules/SearchImput.vue'
-import TagView2 from '@/components/molecules/TagView2.vue'
-import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
-import CardEditor from '@/components/organisms/CardEditor.vue'
-import type { ICardType } from '@/components/organisms/CardTypes.vue'
 import CardTypes from '@/components/organisms/CardTypes.vue'
 import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
-import { useStylesCard } from '@/stores/stylesCard/stylesCard'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import type { Itag } from '@/stores/tags/Interfaces'
 import { useTags } from '@/stores/tags/tags'
 import { useWindows } from '@/stores/windows'
 import { computed, reactive, ref } from 'vue'
-
-const stylesPage = useStylesPage()
-
-const cardStyle = useStylesCard()
 
 const windows = useWindows()
 
@@ -38,11 +17,7 @@ const tags = useTags()
 
 const cards = useCards()
 
-const allTags = computed(() => tags.tags)
-
 const card = computed(() => windows.cardView.props)
-
-const tagsInCard = computed(() => windows.cardView.props.tags)
 
 const useCardPerspective = () => {
   const props = reactive({

@@ -1,30 +1,13 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import PencilIco from '../atoms/icons/PencilIco.vue'
+import { computed, onMounted } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import { useConfig } from '@/stores/config'
 import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
-import ThemeButton from '../atoms/ThemeButton.vue'
-import CardSlot from '../organisms/CardOptions.vue'
-import TagSelectorWithList from '../organisms/xTagSelector.vue'
-import CardOptions from '../organisms/xCardOptions.vue'
-import type { Itag } from '@/stores/tags/Interfaces'
-import CardEditor from '../organisms/CardEditor.vue'
-import CardDelete from '../organisms/CardDelete.vue'
 import { useRoute } from 'vue-router'
 import { useFloatMessage } from '@/stores/floatMessage'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
-import SearchImput from '../molecules/SearchImput.vue'
-import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
-import FilterIco from '../atoms/icons/FilterIco.vue'
-import TagsFilter from '../organisms/TagsFilter.vue'
-import TagsFiltred from '../organisms/TagsFiltred.vue'
-import GearIco from '../atoms/icons/GearIco.vue'
-import ButtonSlot from '../molecules/ButtonSlot.vue'
-import CardView from '../molecules/CardView.vue'
 import CardTypes from '../organisms/CardTypes.vue'
 
 const window = useWindows()
@@ -33,7 +16,6 @@ const config = useConfig()
 const route = useRoute()
 const floatMessage = useFloatMessage()
 const tags = useTags()
-const stylesPage = useStylesPage()
 
 const width = computed(() => `${config.config.value.cardWidth}px`)
 
@@ -56,32 +38,32 @@ const cardsUpdateReactive = async () => {
   }
 }
 
-const useCardCreate = () => {
-  const view = ref<'button' | 'card'>('button')
+// const useCardCreate = () => {
+//   const view = ref<'button' | 'card'>('button')
 
-  const setView = (param: 'button' | 'card') => (view.value = param)
+//   const setView = (param: 'button' | 'card') => (view.value = param)
 
-  return {
-    view,
-    set: setView
-  }
-}
+//   return {
+//     view,
+//     set: setView
+//   }
+// }
 
-const cardCreateView = useCardCreate()
+// const cardCreateView = useCardCreate()
 
-const cardCreate = async (cardParam: Icard) => {
-  try {
-    await cards.create(cardParam)
+// const cardCreate = async (cardParam: Icard) => {
+//   try {
+//     await cards.create(cardParam)
 
-    await cardsUpdateReactive()
+//     await cardsUpdateReactive()
 
-    cardCreateView.set('button')
+//     cardCreateView.set('button')
 
-    floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
+//     floatMessage.openMessage(floatMessage.messages.cardCreateSucess)
+//   } catch (e) {
+//     windowsHandleError(e)
+//   }
+// }
 
 const cardUpdate = async (cardParam: Icard) => {
   try {
@@ -106,13 +88,13 @@ const cardDelete = async (card: Icard) => {
   }
 }
 
-type ICardTo = 'edit' | 'delete' | 'create'
+// type ICardTo = 'edit' | 'delete' | 'create'
 
-const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
-  create: [],
-  edit: [],
-  delete: []
-})
+// const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
+//   create: [],
+//   edit: [],
+//   delete: []
+// })
 
 // const addCardTo = (card: Icard | null, to: ICardTo) => {
 //   const newCards = [...cardsTo[to], card ? card : cardEmpty()]
@@ -130,11 +112,11 @@ const cardsTo = reactive<{ edit: Icard[]; delete: Icard[]; create: Icard[] }>({
 //   cardsTo[to] = newCards
 // }
 
-const removeCardTo = (card: Icard, to: ICardTo) => {
-  const newCards = cardsTo[to].filter((c) => c.id !== card.id)
-  cardsTo[to] = []
-  nextTick(() => (cardsTo[to] = newCards))
-}
+// const removeCardTo = (card: Icard, to: ICardTo) => {
+//   const newCards = cardsTo[to].filter((c) => c.id !== card.id)
+//   cardsTo[to] = []
+//   nextTick(() => (cardsTo[to] = newCards))
+// }
 
 // const isCardTo = (card: Icard, to: ICardTo) => {
 //   const cardsToIds = cardsTo[to].map((c) => c.id)

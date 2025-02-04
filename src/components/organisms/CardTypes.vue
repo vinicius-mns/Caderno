@@ -12,9 +12,7 @@ import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import CardView from '@/components/molecules/CardView.vue'
 import { nextTick, ref } from 'vue'
 import ThemeH1 from '../atoms/ThemeH1.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
-import TagIco from '../atoms/icons/TagIco.vue'
 import TagSelector from '@/components/molecules/TagSelector.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
@@ -23,8 +21,6 @@ import ModalCard from '../atoms/ModalCard.vue'
 import { v4 as uuid } from 'uuid'
 
 const cardStyle = useStylesCard()
-
-const stylePage = useStylesPage()
 
 const cardEmpty: Icard = {
   id: uuid(),

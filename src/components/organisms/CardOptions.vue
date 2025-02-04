@@ -4,7 +4,6 @@ import type { Itag } from '@/stores/tags/Interfaces'
 
 import { computed, ref } from 'vue'
 
-import CardView from '../molecules/CardView.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import ModalCard from '../atoms/ModalCard.vue'

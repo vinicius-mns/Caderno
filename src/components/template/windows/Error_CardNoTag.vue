@@ -3,8 +3,6 @@ import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import ThemeP from '@/components/atoms/ThemeP.vue'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
 import ThemeH1 from '@/components/atoms/ThemeH1.vue'
 
 import tagCreateVideo from '@/components/atoms/videos/criar-tag.mp4'
