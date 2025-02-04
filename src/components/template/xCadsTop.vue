@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
 import TagsFiltredsList from '../organisms/TagsFiltredsList.vue'
 import { useTags } from '@/stores/tags/tags'
@@ -72,9 +72,9 @@ const searTagByName = (text: string) => {
     windowsHandleError(e)
   }
 }
-</script>
+</script> -->
 
-<template>
+<!-- <template>
   <FlexContainer class="cards-header" align-items="center" justify-content="space-between">
     <FlexContainer align-items="center" class="filter-container section">
       <FloatModalSlot>
@@ -114,34 +114,15 @@ const searTagByName = (text: string) => {
     </FlexContainer>
 
     <FlexContainer align-items="center" justify-content="end" class="buttons-container section">
-      <!-- <ButtonSlot
-        content="Criar tag"
-        class="create-tag-button button-x"
-        @click="window.tagCreate.open(null)"
-      >
-        <PencilIco />
-      </ButtonSlot>
-
-      <hr />
-
-      <TagWithOptions
-        :tags="tags.tags"
-        :text-filter="tags.textFilterTags"
-        @search-tag="tags.realAllTagsByName"
-        @update-tag="window.tagEditor.open"
-        @delete-tag="window.tagDelete.open"
-        @delete-cards-withtag="window.tagDeleteCard.open"
-        @open-create-tag="window.tagCreate.open"
-      /> -->
 
       <ButtonCoinSlot content="configurações" class="button-x" @click="window.config.open(null)">
         <GearIco />
       </ButtonCoinSlot>
     </FlexContainer>
   </FlexContainer>
-</template>
+</template> -->
 
-<style scoped lang="scss">
+<!-- <style scoped lang="scss">
 .cards-header {
   width: calc(100% - 150px);
   justify-self: center;
@@ -198,4 +179,4 @@ const searTagByName = (text: string) => {
     margin: 5px 3px;
   }
 }
-</style>
+</style> -->
