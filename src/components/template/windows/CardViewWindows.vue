@@ -181,6 +181,8 @@ const cardDelete = async (card: Icard) => {
           font-size="large"
           class="card"
           type="view"
+          :search-tag="tags.textFilterTags"
+          @read-tags-by-name="tags.readAllTags"
           @emit-open-options="openOptions"
           @update-card="cardUpdate"
           @delete-card="cardDelete"

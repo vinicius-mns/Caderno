@@ -14,6 +14,8 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import { useCardsTags } from '@/stores/cardsTags'
+import GearIco from '../atoms/icons/GearIco.vue'
+import SearchIco from '../atoms/icons/SearchIco.vue'
 
 const tags = useTags()
 
@@ -46,6 +48,8 @@ const cardCreate = async (card: Icard) => {
         type="create"
         :card-props="null"
         :all-tags="tags.tags"
+        :search-tag="tags.textFilterTags"
+        @read-tags-by-name="tags.readAllTags"
         @create-card="cardCreate"
         @cancel-card="cardCreateShow.close"
         @tag-create-open="windows.tagCreate.open"
@@ -53,29 +57,34 @@ const cardCreate = async (card: Icard) => {
     </ModalCard>
 
     <FlexContainer class="filter-view" @click="windows.filterCardsByTags.open(null)">
-      <FlexContainer flex-direction="column" class="tags-filter">
-        <ThemeP class="title" content="com tags" />
-
-        <FlexContainer>
-          <FloatDescription v-for="(tag, i) in tags.includeTags" :content="tag[1]" :key="i">
-            <p class="tag include">{{ tag[0] }}</p>
-          </FloatDescription>
-        </FlexContainer>
+      <FlexContainer>
+        <FloatDescription v-for="(tag, i) in tags.includeTags" :content="tag[1]" :key="i">
+          <p class="tag include">{{ tag[0] }}</p>
+        </FloatDescription>
       </FlexContainer>
 
-      <FlexContainer flex-direction="column" class="tags-filter">
-        <ThemeP class="title" content="sem tags" />
-
-        <FlexContainer>
-          <FloatDescription v-for="(tag, i) in tags.excludeTags" :content="tag[1]" :key="i">
-            <p class="tag exclude">{{ tag[0] }}</p>
-          </FloatDescription>
-        </FlexContainer>
+      <FlexContainer>
+        <FloatDescription v-for="(tag, i) in tags.excludeTags" :content="tag[1]" :key="i">
+          <p class="tag exclude">{{ tag[0] }}</p>
+        </FloatDescription>
       </FlexContainer>
     </FlexContainer>
 
     <ModalCard class="bottom-card" :box-shadow="true">
       <FlexContainer>
+        <ButtonCoinSlot content="Pesquisar card" :border="true" class="button-margin">
+          <SearchIco />
+        </ButtonCoinSlot>
+
+        <ButtonCoinSlot
+          content="Filtrar"
+          :border="true"
+          class="button-margin"
+          @click="windows.filterCardsByTags.open(null)"
+        >
+          <FilterIco />
+        </ButtonCoinSlot>
+
         <ButtonSlot
           border-radius="50px"
           class="button-create-card button-margin"
@@ -96,12 +105,12 @@ const cardCreate = async (card: Icard) => {
         </ButtonCoinSlot>
 
         <ButtonCoinSlot
-          content="Filtrar"
+          content="Configurações"
           :border="true"
           class="button-margin"
-          @click="windows.filterCardsByTags.open(null)"
+          @click="windows.config.open(null)"
         >
-          <FilterIco />
+          <GearIco />
         </ButtonCoinSlot>
       </FlexContainer>
     </ModalCard>
@@ -126,27 +135,25 @@ const cardCreate = async (card: Icard) => {
   & .filter-view {
     cursor: pointer;
 
-    & .tags-filter {
-      margin: 0 4px;
+    & .tag {
+      border: solid 1px;
+      border-radius: 50%;
+      padding: 5px;
+      margin: 0 2px;
+    }
 
-      & .tag {
-        border: solid 1px;
-        border-radius: 50%;
-        padding: 3px;
-        margin: 0 2px;
-      }
+    & .title {
+      margin-left: 4px;
+    }
 
-      & .title {
-        margin-left: 4px;
-      }
+    & .include {
+      border-color: rgba(0, 0, 255, 0.5);
+      background-color: rgba(0, 0, 255, 0.2);
+    }
 
-      & .include {
-        border-color: blue;
-      }
-
-      & .exclude {
-        border-color: red;
-      }
+    & .exclude {
+      border-color: rgba(255, 0, 0, 0.5);
+      background-color: rgba(255, 0, 0, 0.2);
     }
   }
 

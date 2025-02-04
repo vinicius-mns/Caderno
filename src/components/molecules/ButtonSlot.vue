@@ -6,10 +6,10 @@ import FlexContainer from '../atoms/FlexContainer.vue'
 const props = withDefaults(
   defineProps<{
     content: string
+    fontSize?: string
     backgroundColor?: string
     borderColor?: string
     borderRadius?: string
-    fontSize?: string
     invertColor?: boolean
   }>(),
   {
@@ -23,13 +23,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <ThemeButton
-    class="option-button-container"
-    :border-radius="props.borderRadius"
-    :background-color="props.backgroundColor"
-    :border-color="props.borderColor"
-    :invert-color="props.invertColor"
-  >
+  <ThemeButton class="option-button-container" v-bind="props">
     <FlexContainer align-items="center" justify-center="center" class="teste">
       <FlexContainer class="ico" align-items="center" justify-content="center">
         <slot></slot>

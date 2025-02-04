@@ -13,11 +13,32 @@ import SearchImput from '../molecules/SearchImput.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
 import TagView2 from '../molecules/TagView2.vue'
 
-const props = defineProps<{
-  allTags: Itag[]
-  tagsChecked: Itag[]
-  textFilter: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    textButton?: string
+    allTags: Itag[]
+    tagsChecked: Itag[]
+    textFilter: string
+    backgroundColor?: string
+    borderColor?: string
+    borderRadius?: string
+    invertColor?: boolean
+  }>(),
+  {
+    textButton: 'Selecionar tags',
+    backgroundColor: '',
+    borderColor: '',
+    borderRadius: '',
+    invertColor: false
+  }
+)
+
+const propsButtonStyle = computed(() => ({
+  backgroundColor: props.backgroundColor,
+  borderColor: props.borderColor,
+  borderRadius: props.borderRadius,
+  invertColor: props.invertColor
+}))
 
 const emit = defineEmits<{
   (e: 'emitSelected', v: Itag[]): void
@@ -114,7 +135,7 @@ const openCreateTag = () => {
 <template>
   <FloatModalSlot ref="modal">
     <template #button-slot>
-      <ButtonSlot content="Selecionar tags" :style="{ width: 'auto' }" border-radius="50px">
+      <ButtonSlot :content="props.textButton" v-bind="propsButtonStyle">
         <TagIco />
       </ButtonSlot>
     </template>

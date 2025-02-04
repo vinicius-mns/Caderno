@@ -15,7 +15,7 @@ import ThemeH1 from '../atoms/ThemeH1.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
-import TagSelector from './TagSelector.vue'
+import TagSelector from '@/components/molecules/TagSelector.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
@@ -41,6 +41,7 @@ const props = withDefaults(
     type: ICardType
     allTags: Itag[]
     fontSize?: string
+    searchTag: string
   }>(),
   {
     fontSize: ''
@@ -56,6 +57,7 @@ const emit = defineEmits<{
   (e: 'openCard', v: Icard): void
   (e: 'tagCreateOpen', v: null): void
   (e: 'emitOpenOptions', v: null): void
+  (e: 'readTagsByName', v: string): void
 }>()
 
 const viewComponent = ref(true)
@@ -114,7 +116,7 @@ const cardCancel = () => {
 
 const sendCard = () => {
   if (cardType.is('create')) emit('createCard', cardEditor.card.value)
-  if (cardType.is('editor')) {
+  else {
     card.set(cardEditor.card.value)
     cardType.set('view')
     emit('updateCard', cardEditor.card.value)
@@ -143,7 +145,7 @@ defineExpose({ cardType })
     @mouseleave="buttonMoreOptions.close()"
   >
     <FloatModalSlot
-      :closeOnClick="true"
+      :closeOnClick="false"
       v-if="cardType.is('view') && buttonMoreOptions.show.value"
       class="more-options-container"
     >
@@ -170,9 +172,16 @@ defineExpose({ cardType })
               <PencilIco />
             </ButtonSlot>
 
-            <ButtonSlot content="Alterar tags" border-color="transparent" class="button-option">
-              <TagIco />
-            </ButtonSlot>
+            <TagSelector
+              class="button-option"
+              :all-tags="props.allTags"
+              :tags-checked="cardEditor.card.value.tags"
+              border-color="transparent"
+              :text-filter="props.searchTag"
+              @search-tag="emit('readTagsByName', $event)"
+              @emit-selected="sendTags"
+              @open-create-tag="emit('tagCreateOpen', null)"
+            />
 
             <ButtonSlot
               content="Compartir Card"
@@ -224,10 +233,12 @@ defineExpose({ cardType })
       <FlexContainer class="options">
         <TagSelector
           v-if="cardType.isNot('delete')"
-          class="button-option"
+          class="button-option tag-selector-button"
           :all-tags="props.allTags"
           :tags-checked="cardEditor.card.value.tags"
-          text-filter=""
+          border-radius="50px"
+          :text-filter="props.searchTag"
+          @search-tag="emit('readTagsByName', $event)"
           @emit-selected="sendTags"
           @open-create-tag="emit('tagCreateOpen', null)"
         />

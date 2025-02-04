@@ -9,7 +9,7 @@ import type { Icard } from '@/stores/cards/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import CardSlot from '../organisms/CardOptions.vue'
-import TagSelectorWithList from '../organisms/TagSelector.vue'
+import TagSelectorWithList from '../organisms/xTagSelector.vue'
 import CardOptions from '../organisms/xCardOptions.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import CardEditor from '../organisms/CardEditor.vue'
@@ -224,10 +224,6 @@ const handleOpenSharedCard = async () => {
   if (card) openSharedCard(card)
 }
 
-const realAllTagsByName = (text: string) => {
-  tags.realAllTagsByName(text)
-}
-
 // const cardColumns = (cardList: Icard[], columnQuantity: number) => {
 //   const columns = Array.from({ length: columnQuantity }, () => [] as Icard[])
 
@@ -249,32 +245,15 @@ onMounted(async () => {
 
 <template>
   <div class="cards-main-container">
-    <FlexContainer class="header" align-items="center" justify-content="center">
-      <SearchImput
-        key-id="search-card"
-        placeholder="Pesquisar"
-        @search="realAllTagsByName"
-        class="search-card"
-      />
-
-      <ButtonCoinSlot
-        content="Configurações"
-        :circle="true"
-        background-color="transparent"
-        :border="true"
-        @click="window.config.open(null)"
-      >
-        <GearIco />
-      </ButtonCoinSlot>
-    </FlexContainer>
-
     <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
       <div v-for="(card, i) in cardsReverse" :key="i" class="card-with-options-container">
         <CardTypes
+          type="view"
           class="card-w"
           :card-props="card"
-          type="view"
           :all-tags="tags.tags"
+          :search-tag="tags.textFilterTags"
+          @read-tags-by-name="tags.readAllTags"
           @delete-card="cardDelete"
           @update-card="cardUpdate"
           @open-card="window.cardView.open"
@@ -287,21 +266,8 @@ onMounted(async () => {
 <style scoped lang="scss">
 .cards-main-container {
   width: 100%;
-  padding-bottom: 120px;
-
-  & .header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    width: 100%;
-    background-color: v-bind('stylesPage.atualColor.front');
-    height: 50px;
-
-    & .search-card {
-      flex-shrink: 0;
-      width: 40%;
-    }
-  }
+  // padding-bottom: 120px;
+  padding: 40px 0 120px 0;
 
   & .cards-main {
     & .card-w {

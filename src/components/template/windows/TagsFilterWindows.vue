@@ -113,10 +113,6 @@ const sendFilter = async () => {
   })
 }
 
-const searchTags = async (tag: string) => {
-  await tags.realAllTagsByName(tag)
-}
-
 watch([allTags, includeTags, excludeTags], () => {
   tagsFilter.update(allTags.value, includeTags.value, excludeTags.value)
 })
@@ -134,7 +130,7 @@ watch([allTags, includeTags, excludeTags], () => {
           class="search-tags-filter"
           placeholder="Pesquisar tag"
           key-id="search-tag"
-          @emit-content="searchTags"
+          @emit-content="tags.readAllTags"
         />
 
         <ButtonSlot
