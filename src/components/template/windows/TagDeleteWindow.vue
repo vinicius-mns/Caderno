@@ -32,7 +32,13 @@ const tagDelete = async () => {
     <div class="container">
       <TagView :tag="window.tagDelete.props" class="item" />
 
-      <ButtonSlot content="Deletar" @click="tagDelete" class="item">
+      <ButtonSlot
+        content="Deletar"
+        @click="tagDelete"
+        class="item"
+        border-radius="50px"
+        background-color="red"
+      >
         <TrashIco />
       </ButtonSlot>
     </div>

@@ -70,7 +70,12 @@ const tag = useTag()
         @search-emoji="filterEmojiName"
       />
 
-      <ButtonSlot content="Confirmar alteração" class="check-button" @click="tag.updateTag()">
+      <ButtonSlot
+        content="Confirmar alteração"
+        class="check-button"
+        @click="tag.updateTag()"
+        border-radius="50px"
+      >
         <CheckIco />
       </ButtonSlot>
     </FlexContainer>

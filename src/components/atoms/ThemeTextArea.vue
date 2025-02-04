@@ -4,10 +4,16 @@ import { ref, onMounted } from 'vue'
 
 const style = useStylesPage()
 
-const props = defineProps<{
-  content: string
-  id: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    content: string
+    maxHeightPx?: number
+    id: string
+  }>(),
+  {
+    maxHeightPx: 500
+  }
+)
 
 const emit = defineEmits<{
   (e: 'emitContent', vale: string): void
@@ -33,8 +39,8 @@ const autoHeight = () => {
 
     const height = myTextArea.offsetHeight
 
-    if (textHeight >= 500) {
-      myTextArea.style.height = '500px'
+    if (textHeight >= props.maxHeightPx) {
+      myTextArea.style.height = `${props.maxHeightPx}px`
     } else if (textHeight >= height) {
       myTextArea.style.height = `${textHeight}px`
     }
@@ -49,6 +55,7 @@ const clicked = () => {
 defineExpose({ clear })
 
 onMounted(() => {
+  console.log('chamado')
   autoHeight()
 
   textArea.value?.focus()

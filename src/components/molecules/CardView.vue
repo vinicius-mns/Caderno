@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import CalcDate from '@/components/atoms/CalcDate.vue'
 import { marked } from 'marked'
 import ThemeP from '@/components/atoms/ThemeP.vue'
@@ -7,6 +7,7 @@ import FloatDescription from '@/components/atoms/FloatDescription.vue'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import type { Icard } from '@/stores/cards/Interfaces'
 import ThemeMarkown from '../atoms/ThemeMarkown.vue'
+import FlexContainer from '../atoms/FlexContainer.vue'
 
 const styleCard = useStylesCard()
 
@@ -14,25 +15,15 @@ const props = withDefaults(
   defineProps<{
     card: Icard
     textAlign?: 'justify' | 'center' | 'start'
+    fontSize?: string
   }>(),
   {
+    fontSize: '14px',
     textAlign: 'justify'
   }
 )
 
 const emit = defineEmits<{ (e: 'emitCard', v: Icard): void }>()
-
-const showOn = false
-
-const showTags = ref(!showOn)
-
-const showTagsOn = () => {
-  if (showOn) showTags.value = true
-}
-
-const showTagsOff = () => {
-  if (showOn) showTags.value = false
-}
 
 const emitCard = () => emit('emitCard', props.card)
 
@@ -42,20 +33,19 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
 </script>
 
 <template>
-  <div
+  <FlexContainer
     class="card-container"
-    :style="styleCard.atualStyle"
     @click="emitCard"
-    @mouseenter="showTagsOn"
-    @mouseleave="showTagsOff"
+    flex-direction="column"
+    align-items="center"
+    :style="styleCard.atualStyle"
   >
-    <header>
-      <div class="date" v-show="showTags">
-        <FloatDescription :content="cardDate">
-          <CalcDate class="date-text" :date="props.card.date" />
-        </FloatDescription>
-      </div>
-      <div class="tags-container" v-show="showTags">
+    <header class="showHeader">
+      <FloatDescription :content="cardDate">
+        <CalcDate class="date-text" :date="props.card.date" />
+      </FloatDescription>
+
+      <FlexContainer class="tags-container">
         <FloatDescription
           v-for="(tag, i) in props.card.tags"
           :content="`${tag[0]} ${tag[1]}`"
@@ -63,61 +53,64 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
         >
           <ThemeP :key="i" :content="tag[0]" class="tag" />
         </FloatDescription>
-      </div>
+      </FlexContainer>
     </header>
+
     <div class="markdown-container">
       <ThemeMarkown :content="props.card.content" />
-      <!-- <div v-html="marked(props.card.content)"></div> -->
     </div>
-  </div>
+  </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .card-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
   height: auto;
-  cursor: pointer;
+  transition: all 0.3s;
+
   & header {
     width: 100%;
-    margin-top: 8px;
-    height: 20px;
+    box-sizing: border-box;
+    padding: 6px 20px 0;
     display: flex;
     align-items: center;
-    & .date {
-      height: 100%;
-      width: 150px;
+    transition: all 0.3s;
+    margin-top: 8px;
+
+    & .date-text {
+      width: max-content;
       font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       flex-shrink: 0;
-      & .date-text {
-        width: 100%;
-        height: 100%;
-      }
+      padding: 0;
+      margin: 0 10px 0 0;
     }
+
     & .tags-container {
       display: flex;
       width: 100%;
       overflow: hidden;
+
       & .tag {
         cursor: pointer;
-        padding: 0 8px;
-        font-size: 13px;
+        padding: 0 2px;
+        font-size: 12px;
         flex-shrink: 0;
+        // filter: grayscale(100%);
+
+        &:hover {
+          filter: grayscale(0);
+        }
       }
     }
   }
+
   & .markdown-container {
+    font-size: v-bind('props.fontSize');
     text-align: v-bind('props.textAlign');
-    width: 95%;
-    padding: 0 10px 0 10px;
+    width: 100%;
+    padding: 0 20px 4px;
     box-sizing: border-box;
-    font-size: 14px;
     overflow-wrap: break-word;
   }
 }

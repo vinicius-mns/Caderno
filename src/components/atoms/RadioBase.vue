@@ -35,27 +35,32 @@ input {
   height: 0;
   width: 0;
 }
+
 .radio-container {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: v-bind('stylePage.borderRadius.inside');
+  border-radius: 50px;
   border: solid 1px v-bind('stylePage.atualColor.border');
   cursor: pointer;
   transition: all 0.2s;
+
   &:hover {
     background-color: v-bind('stylePage.atualColor.hover');
     animation: hoverAnitation 0.2s;
   }
+
   &:active {
     transform: scale(0.92);
     background-color: v-bind('stylePage.atualColor.back');
   }
 }
+
 .checked {
-  background-color: v-bind('stylePage.atualColor.front');
+  background-color: v-bind('stylePage.atualColor.hover');
 }
+
 @keyframes hoverAnitation {
   0% {
     transform: scale(1);

@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import ApiLocalStylesCard from './ApiLocalStylesCard'
+import type { IStyleCard } from './Interfaces'
+
+const apiStylesCard = new ApiLocalStylesCard()
 
 export const useStylesCard = defineStore('stylesCard', () => {
-  const apiStylesCard = new ApiLocalStylesCard()
+  const atualStyle = ref<IStyleCard>({ name: 'null' })
 
-  const atualStyle = ref({ name: 'null' })
-
-  const allStyles = ref([{ name: 'null' }])
+  const allStyles = ref<IStyleCard[]>([{ name: 'null' }])
 
   const setStyle = async (name: string) => {
     const set = await apiStylesCard.setCardStyle(name)

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import CardsTop from '@/components/template/CadsTop.vue'
+import CardsBottom from '@/components/template/CardsBottom.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
+import CardsSide from '@/components/template/CardsSide.vue'
 import FloatMessage from '@/components/template/FloatMessage.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'
@@ -26,14 +28,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <FlexContainer class="cards-page-container" flex-direction="column-reverse">
-    <div class="main">
-      <CardsMain />
-    </div>
+  <FlexContainer class="cards-page-container">
+    <CardsMain />
 
-    <div class="top">
-      <CardsTop />
-    </div>
+    <CardsBottom />
 
     <WindowsAll class="all-windows" />
 
@@ -43,15 +41,35 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .cards-page-container {
-  height: 100dvh;
+  min-height: 100dvh;
+  background-color: v-bind('style.atualColor.front');
 
-  & .main {
+  & .page {
+    width: calc(100% - 410px);
+    margin-left: 410px;
+    // height: 100%;
+    // padding-top: 10px;
+    // padding-bottom: 100px;
+    // overflow-y: auto;
+  }
+
+  & .side {
+    position: fixed;
+    height: 100dvh;
+    width: 410px;
     background-color: v-bind('style.atualColor.front');
-    width: 100%;
-    height: 100%;
-    padding-top: 10px;
-    padding-bottom: 100px;
-    overflow-y: auto;
+
+    & hr {
+      top: -10px;
+      right: 0;
+      position: absolute;
+      border: none;
+      // background-color: red;
+      background-color: v-bind('style.atualColor.border');
+      height: 100%;
+      width: 1px;
+      position: absolute;
+    }
   }
 
   & .top {

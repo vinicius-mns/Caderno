@@ -60,11 +60,15 @@ export const useTags = defineStore('tags', () => {
     }
   }
 
-  const readAllTags = async () => {
+  const readAllTags = async (name?: string) => {
     try {
-      const allTags = await tagsApi.readAllTags()
+      const db = await tagsApi.readAllTags(name)
 
-      return allTags
+      if (name) textFilterTags.value = name
+
+      tagsDb.filter = db.filter
+      tagsDb.tags = db.tags
+      tags.value = db.tags
     } catch (e) {
       console.error(e)
     }
@@ -83,20 +87,6 @@ export const useTags = defineStore('tags', () => {
       const deleted = await tagsApi.deleteTag(name)
 
       if (deleted) init()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const realAllTagsByName = async (name: string) => {
-    try {
-      textFilterTags.value = name
-
-      const db = await tagsApi.realAllTagsByName(name)
-
-      tagsDb.filter = db.filter
-      tagsDb.tags = db.tags
-      tags.value = db.tags
     } catch (e) {
       console.error(e)
     }
@@ -136,7 +126,6 @@ export const useTags = defineStore('tags', () => {
     updateTag,
     deletedTag,
     setFilter,
-    clearFilter,
-    realAllTagsByName
+    clearFilter
   }
 })

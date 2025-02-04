@@ -41,24 +41,25 @@ input {
   transition: all 0.2s;
   display: flex;
   align-items: center;
+
   &:hover {
     background-color: v-bind('stylePage.atualColor.hover');
-    animation: hoverAnitation 0.2s;
+    // animation: hoverAnitation 0.2s;
   }
-  &:active {
-    transform: scale(0.92);
-    background-color: v-bind('stylePage.atualColor.back');
-  }
+  // &:active {
+  //   transform: scale(0.92);
+  //   background-color: v-bind('stylePage.atualColor.back');
+  // }
 }
-@keyframes hoverAnitation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.94);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
+// @keyframes hoverAnitation {
+//   0% {
+//     transform: scale(1);
+//   }
+//   50% {
+//     transform: scale(0.94);
+//   }
+//   100% {
+//     transform: scale(1);
+//   }
+// }
 </style>

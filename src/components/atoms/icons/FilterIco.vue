@@ -1,4 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    size?: string
+  }>(),
+  {
+    size: '18px'
+  }
+)
+</script>
 
 <template>
   <svg
@@ -15,4 +24,9 @@
   </svg>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+svg {
+  height: v-bind('props.size');
+  width: v-bind('props.size');
+}
+</style>
