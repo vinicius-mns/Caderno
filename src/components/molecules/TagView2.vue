@@ -24,26 +24,28 @@ const props = withDefaults(
 </script>
 
 <template>
-  <FlexContainer :title="props.tag[1]" :class="[type, 'tag-container']" align-items="center">
+  <div class="tag-view-container">
     <FlexContainer
+      :title="props.tag[1]"
+      :class="[props.type, 'tag-container']"
       align-items="center"
-      :style="{ height: '100%' }"
-      class="emoji"
       v-if="!props.mini"
     >
-      <span>{{ props.tag[0] }}</span>
-    </FlexContainer>
+      <FlexContainer align-items="center" :style="{ height: '100%' }" class="emoji">
+        <span>{{ props.tag[0] }}</span>
+      </FlexContainer>
 
-    <ThemeP class="content" :content="props.tag[1]" v-if="!props.mini" />
+      <ThemeP class="content" :content="props.tag[1]" />
+    </FlexContainer>
 
     <FloatDescription
       :content="`${props.tag[0]} ${props.tag[1]}`"
-      class="tag-mini"
+      :class="[props.type, 'tag-mini']"
       v-if="props.mini"
     >
       <span>{{ props.tag[0] }}</span>
     </FloatDescription>
-  </FlexContainer>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -52,7 +54,6 @@ $height: v-bind('props.height');
 .tag-container {
   transition: all 0.16s;
   height: $height;
-  // width: 100%;
   flex-shrink: 0;
   border: solid 1px v-bind('stylesPage.atualColor.border');
   background-color: v-bind('stylesPage.atualColor.front');
@@ -76,6 +77,7 @@ $height: v-bind('props.height');
 
   & .emoji {
     margin-left: 10px;
+    text-shadow: 1px 1px 0px black;
   }
 
   & .content {
@@ -85,20 +87,30 @@ $height: v-bind('props.height');
     text-overflow: ellipsis;
     text-wrap: nowrap;
   }
+}
 
-  & .tag-mini {
-    // font-size: 19px;
-    height: $height;
-    width: $height;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.tag-mini {
+  height: $height;
+  width: $height;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: solid 1px v-bind('stylesPage.atualColor.border');
+  background-color: v-bind('stylesPage.atualColor.front');
+  border-radius: 50px;
+  cursor: pointer;
+  user-select: none;
+
+  & span {
+    font-size: calc($height / 1.8);
+    text-shadow: 1px 1px 0px black;
   }
 }
 
 .include {
-  border-color: rgba(86, 110, 86, 0.5);
-  background-color: rgba(86, 140, 86, 0.2);
+  border-color: rgba(86, 110, 86, 0.9);
+  background-color: rgba(86, 140, 86, 0.4);
 
   &:hover {
     background-color: rgba(86, 140, 86, 0.4);
@@ -107,8 +119,8 @@ $height: v-bind('props.height');
 }
 
 .exclude {
-  border-color: rgb(110, 86, 86, 0.5);
-  background-color: rgb(140, 86, 86, 0.2);
+  border-color: rgb(110, 86, 86, 0.9);
+  background-color: rgb(140, 86, 86, 0.4);
 
   &:hover {
     background-color: rgb(140, 86, 86, 0.4);

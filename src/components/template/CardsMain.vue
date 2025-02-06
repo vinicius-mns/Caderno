@@ -9,6 +9,7 @@ import FlexContainer from '../atoms/FlexContainer.vue'
 import { useRoute } from 'vue-router'
 import { useFloatMessage } from '@/stores/floatMessage'
 import CardTypes from '../organisms/CardTypes.vue'
+import rules from '@/stores/documentRules.json'
 
 const window = useWindows()
 const cards = useCards()
@@ -17,7 +18,14 @@ const route = useRoute()
 const floatMessage = useFloatMessage()
 const tags = useTags()
 
-const width = computed(() => `${config.config.value.cardWidth}px`)
+const width = computed(() => {
+  const windowWidth = document.documentElement.clientWidth
+  const mobileSize = parseInt(rules.window.width.mobile)
+
+  if (windowWidth < mobileSize) return 'calc(100dvw - 24px)'
+
+  return `${config.config.value.cardWidth}px`
+})
 
 const cardsReverse = computed(() => [...cards.cards].reverse())
 
@@ -228,19 +236,19 @@ onMounted(async () => {
 <template>
   <div class="cards-main-container">
     <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
-      <div v-for="(card, i) in cardsReverse" :key="i" class="card-with-options-container">
-        <CardTypes
-          type="view"
-          class="card-w"
-          :card-props="card"
-          :all-tags="tags.tags"
-          :search-tag="tags.textFilterTags"
-          @read-tags-by-name="tags.readAllTags"
-          @delete-card="cardDelete"
-          @update-card="cardUpdate"
-          @open-card="window.cardView.open"
-        />
-      </div>
+      <CardTypes
+        v-for="(card, i) in cardsReverse"
+        type="view"
+        class="card"
+        :key="i"
+        :card-props="card"
+        :all-tags="tags.tags"
+        :search-tag="tags.textFilterTags"
+        @read-tags-by-name="tags.readAllTags"
+        @delete-card="cardDelete"
+        @update-card="cardUpdate"
+        @open-card="window.cardView.open"
+      />
     </FlexContainer>
   </div>
 </template>
@@ -248,117 +256,35 @@ onMounted(async () => {
 <style scoped lang="scss">
 .cards-main-container {
   width: 100%;
-  // padding-bottom: 120px;
   padding: 40px 0 120px 0;
 
   & .cards-main {
-    & .card-w {
+    & .card {
       width: v-bind(width);
-      // z-index: 1;
-    }
-
-    & .card-with-options-container {
-      position: relative;
       margin: 5px;
-
-      & .card-option-button {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-      }
     }
 
-    & .card-create-button {
-      filter: invert(1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 60px;
-      position: sticky;
-      top: 50px;
-      z-index: 1;
-    }
+    // & .card-with-options-container {
+    //   position: relative;
+    //   // margin: 5px;
+
+    //   & .card-option-button {
+    //     position: absolute;
+    //     top: 8px;
+    //     right: 8px;
+    //   }
+    // }
+
+    // & .card-create-button {
+    //   filter: invert(1);
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    //   height: 60px;
+    //   position: sticky;
+    //   top: 50px;
+    //   z-index: 1;
+    // }
   }
 }
-// .card-editor {
-//   background-color: red;
-//   height: 300px;
-//   width: 300px;
-// }
-
-// .cards-main-container {
-//   width: 100%;
-
-//   & .header {
-//     position: sticky;
-//     top: 0;
-//     z-index: 1;
-//     width: 100%;
-//     background-color: v-bind('stylesPage.atualColor.front');
-//     height: 50px;
-
-//     & .search-card {
-//       flex-shrink: 0;
-//       width: 40%;
-//     }
-//   }
-
-//   & .filter-container {
-//     background-color: v-bind('stylesPage.atualColor.front');
-//     z-index: 1;
-//     position: sticky;
-//     top: 50px;
-
-//     & .tags-filter {
-//       margin-left: 30px;
-//     }
-//   }
-
-//   & .card-create-button {
-//     height: 80px;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     background-color: transparent;
-//     border: solid 1px v-bind('stylesPage.atualColor.border');
-//   }
-
-//   & .column-container {
-//     box-sizing: border-box;
-//     padding: 20px;
-
-//     & .column {
-//       width: calc(100% / v-bind(columnNumber));
-//       flex-direction: column;
-//     }
-
-//     & .card-w {
-//       width: v-bind(width);
-//       max-width: 95dvw;
-//       padding: 10px;
-//       box-sizing: border-box;
-//       // margin: 5px;
-//       // margin-bottom: 20px;
-//     }
-//   }
-
-//   & .cards-main {
-//     padding-top: 20px;
-//   }
-// }
-
-// .card-animation {
-//   width: v-bind(width);
-//   max-width: 95dvw;
-//   margin: 5px;
-//   margin-bottom: 20px;
-//   margin-top: 30px;
-//   animation: cardAnimation 0.3s forwards;
-// }
-
-// @keyframes cardAnimation {
-//   to {
-//     margin-top: 0;
-//   }
-// }
 </style>

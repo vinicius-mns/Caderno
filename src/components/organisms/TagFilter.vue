@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/TagView.vue'
+import TagView from '../molecules/xTagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 
 const props = defineProps<{

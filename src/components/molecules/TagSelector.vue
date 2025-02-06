@@ -135,7 +135,7 @@ const openCreateTag = () => {
 <template>
   <FloatModalSlot ref="modal">
     <template #button-slot>
-      <ButtonSlot :content="props.textButton" v-bind="propsButtonStyle">
+      <ButtonSlot :content="props.textButton" v-bind="propsButtonStyle" :style="{ width: '100%' }">
         <TagIco />
       </ButtonSlot>
     </template>

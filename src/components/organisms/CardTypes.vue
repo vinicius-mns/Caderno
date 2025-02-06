@@ -281,7 +281,7 @@ defineExpose({ cardType })
 
 <style scoped lang="scss">
 .card-type-container {
-  margin-bottom: 18px;
+  // margin-bottom: 18px;
   position: relative;
 
   & .more-options-container {
