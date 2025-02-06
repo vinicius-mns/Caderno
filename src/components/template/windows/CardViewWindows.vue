@@ -7,6 +7,7 @@ import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import CardTypes from '@/components/organisms/CardTypes.vue'
 import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
+import { useFloatMessage } from '@/stores/floatMessage'
 import { useTags } from '@/stores/tags/tags'
 import { useWindows } from '@/stores/windows'
 import { computed, reactive, ref } from 'vue'
@@ -18,6 +19,8 @@ const tags = useTags()
 const cards = useCards()
 
 const card = computed(() => windows.cardView.props)
+
+const floatMessage = useFloatMessage()
 
 const useCardPerspective = () => {
   const props = reactive({
@@ -116,6 +119,22 @@ const cardDelete = async (card: Icard) => {
     windowsHandleError(e)
   }
 }
+
+const shareCard = async (card: Icard) => {
+  const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
+  // const local = `http://localhost:5173/#/cards/`
+  const cardString = JSON.stringify(card)
+  const encodedCardString = encodeURIComponent(cardString)
+  const url = `${remote}${encodedCardString}`
+
+  try {
+    await navigator.clipboard.writeText(url)
+
+    floatMessage.openMessage(floatMessage.messages.cardCopySucess)
+  } catch (err) {
+    console.error('Falha ao copiar o URL: ', err)
+  }
+}
 </script>
 
 <template>
@@ -161,6 +180,7 @@ const cardDelete = async (card: Icard) => {
           @emit-open-options="openOptions"
           @update-card="cardUpdate"
           @delete-card="cardDelete"
+          @share-card="shareCard"
         />
       </FlexContainer>
     </FlexContainer>
