@@ -175,21 +175,21 @@ const cardDelete = async (card: Icard) => {
 //   }
 // }
 
-// const copyCard = async (card: Icard) => {
-//   const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
-//   // const local = `http://localhost:5173/#/cards/`
-//   const cardString = JSON.stringify(card)
-//   const encodedCardString = encodeURIComponent(cardString)
-//   const url = `${remote}${encodedCardString}`
+const shareCard = async (card: Icard) => {
+  const remote = `https://vinicius-mns.github.io/Caderno/#/cards/`
+  // const local = `http://localhost:5173/#/cards/`
+  const cardString = JSON.stringify(card)
+  const encodedCardString = encodeURIComponent(cardString)
+  const url = `${remote}${encodedCardString}`
 
-//   try {
-//     await navigator.clipboard.writeText(url)
+  try {
+    await navigator.clipboard.writeText(url)
 
-//     floatMessage.openMessage(floatMessage.messages.cardCopySucess)
-//   } catch (err) {
-//     console.error('Falha ao copiar o URL: ', err)
-//   }
-// }
+    floatMessage.openMessage(floatMessage.messages.cardCopySucess)
+  } catch (err) {
+    console.error('Falha ao copiar o URL: ', err)
+  }
+}
 
 const handleOpenSharedCard = async () => {
   const paramId = route.params.id
@@ -248,6 +248,7 @@ onMounted(async () => {
         @delete-card="cardDelete"
         @update-card="cardUpdate"
         @open-card="window.cardView.open"
+        @share-card="shareCard"
       />
     </FlexContainer>
   </div>
