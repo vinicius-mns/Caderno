@@ -29,6 +29,13 @@ const cardsTags = useCardsTags()
 
 const isMobile = ref(false)
 
+const cardToCreate = computed<Icard>(() => ({
+  id: '',
+  content: '',
+  date: new Date(),
+  tags: tags.includeTags
+}))
+
 const filter = computed(() => {
   const on = tags.includeTags.length > 0 || tags.excludeTags.length > 0
   const both = tags.includeTags.length > 0 && tags.excludeTags.length > 0
@@ -73,7 +80,7 @@ onBeforeUnmount(() => {
       <CardTypes
         class="card"
         type="create"
-        :card-props="null"
+        :card-props="cardToCreate"
         :all-tags="tags.tags"
         :search-tag="tags.textFilterTags"
         @read-tags-by-name="tags.readAllTags"
