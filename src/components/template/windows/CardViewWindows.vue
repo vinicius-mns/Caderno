@@ -7,6 +7,7 @@ import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import CardTypes from '@/components/organisms/CardTypes.vue'
 import { useCards } from '@/stores/cards/cards'
 import type { Icard } from '@/stores/cards/Interfaces'
+import { useCardsTags } from '@/stores/cardsTags'
 import { useTags } from '@/stores/tags/tags'
 import { useWindows } from '@/stores/windows'
 import { computed, reactive, ref } from 'vue'
@@ -18,6 +19,8 @@ const tags = useTags()
 const cards = useCards()
 
 const card = computed(() => windows.cardView.props)
+
+const cardsTags = useCardsTags()
 
 const useCardPerspective = () => {
   const props = reactive({
@@ -161,6 +164,7 @@ const cardDelete = async (card: Icard) => {
           @emit-open-options="openOptions"
           @update-card="cardUpdate"
           @delete-card="cardDelete"
+          @share-card="cardsTags.card.share"
         />
       </FlexContainer>
     </FlexContainer>

@@ -62,10 +62,10 @@ const openCard = (e: MouseEvent) => {
 <style scoped lang="scss">
 .description-text {
   position: fixed;
-  padding: 10px;
+  padding: 6px 12px;
   color: v-bind('stylePage.atualColor.text');
   background-color: v-bind('stylePage.atualColor.front');
-  border-radius: v-bind('stylePage.borderRadius.inside');
+  border-radius: 50px;
   border: solid 1px v-bind('stylePage.atualColor.border');
   text-wrap: nowrap;
   top: v-bind('cursorPosition.y');

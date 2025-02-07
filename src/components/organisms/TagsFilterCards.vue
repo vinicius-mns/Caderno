@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/TagView.vue'
+import TagView from '../molecules/xTagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'

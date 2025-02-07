@@ -4,7 +4,14 @@ import { nextTick, reactive, ref } from 'vue'
 
 const stylePage = useStylesPage()
 
-const props = withDefaults(defineProps<{ closeOnClick?: boolean }>(), { closeOnClick: false })
+const props = withDefaults(
+  defineProps<{
+    closeOnClick?: boolean
+  }>(),
+  {
+    closeOnClick: false
+  }
+)
 
 const emit = defineEmits<{
   (e: 'open', v: void): void
@@ -31,22 +38,27 @@ const cursorPosition = reactive({ x: '0px', y: '0px' })
 
 const setCursorPostion = (e: MouseEvent) => {
   cursorPosition.x = `${e.clientX}px`
-  cursorPosition.y = `${e.clientY}px`
+  cursorPosition.y = `${e.clientY + 10}px`
 }
 
 const cardRepositionX = () => {
-  const screen = window.innerWidth
   const cardWidth = card.value?.clientWidth as number
-  const cardInRightSide = parseInt(cursorPosition.x) > screen / 2
-  const cardTranslateToLeft = `${parseInt(cursorPosition.x) - cardWidth}px`
-  if (screen <= 768) cursorPosition.x = `${screen / 2 - cardWidth / 2}px`
-  else if (cardInRightSide) cursorPosition.x = cardTranslateToLeft
+  const windowWidth = window.innerWidth
+  const xPosition = parseInt(cursorPosition.x)
+
+  const translateToLeft = () => {
+    cursorPosition.x = `${parseInt(cursorPosition.x) - cardWidth / 2}px`
+  }
+
+  if (xPosition >= cardWidth / 2) translateToLeft()
+  if (xPosition + cardWidth / 2 >= windowWidth) translateToLeft()
 }
 
 const cardRepositionY = () => {
   const cardHeight = card.value?.clientHeight as number
   const cardInBottonSide = parseInt(cursorPosition.y) > window.innerHeight / 2
-  const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight}px`
+  const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight - 20}px`
+
   if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
 }
 

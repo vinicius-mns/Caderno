@@ -8,19 +8,40 @@ import { useWindows } from '@/stores/windows'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import CardTypes from '../organisms/CardTypes.vue'
-import { ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import type { Icard } from '@/stores/cards/Interfaces'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import { useCardsTags } from '@/stores/cardsTags'
 import GearIco from '../atoms/icons/GearIco.vue'
 import SearchIco from '../atoms/icons/SearchIco.vue'
+import rules from '@/stores/documentRules.json'
+import PlusIco from '../atoms/icons/PlusIco.vue'
+import FloatModalSlot from '../atoms/FloatModalSlot.vue'
+import TagView2 from '../molecules/TagView2.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+
+const stylePage = useStylesPage()
 
 const tags = useTags()
 
 const windows = useWindows()
 
 const cardsTags = useCardsTags()
+
+const isMobile = ref(false)
+
+const filter = computed(() => {
+  const on = tags.includeTags.length > 0 || tags.excludeTags.length > 0
+  const both = tags.includeTags.length > 0 && tags.excludeTags.length > 0
+  return { on, both }
+})
+
+const updateMobileSize = () => {
+  const windowsWidth = document.documentElement.clientWidth
+  const mobileWidth = parseInt(rules.window.width.mobile)
+  isMobile.value = windowsWidth <= mobileWidth
+}
 
 const cardCreateShow = {
   value: ref(false),
@@ -32,6 +53,15 @@ const cardCreate = async (card: Icard) => {
   const sucess = await cardsTags.card.create(card)
   if (sucess) cardCreateShow.close()
 }
+
+onMounted(() => {
+  updateMobileSize()
+  window.addEventListener('resize', updateMobileSize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateMobileSize)
+})
 </script>
 
 <template>
@@ -55,33 +85,48 @@ const cardCreate = async (card: Icard) => {
       />
     </ModalCard>
 
-    <FlexContainer class="filter-view" @click="windows.filterCardsByTags.open(null)">
-      <FlexContainer>
-        <FloatDescription v-for="(tag, i) in tags.includeTags" :content="tag[1]" :key="i">
-          <p class="tag include">{{ tag[0] }}</p>
-        </FloatDescription>
-      </FlexContainer>
+    <ModalCard class="filter-view" :box-shadow="true" v-show="filter.on">
+      <FlexContainer @click="windows.filterCardsByTags.open(null)" align-items="center">
+        <FlexContainer>
+          <TagView2
+            v-for="(tag, i) in tags.includeTags"
+            type="include"
+            class="tag"
+            height="26px"
+            :tag="tag"
+            :content="tag[1]"
+            :key="i"
+            :mini="true"
+          />
+        </FlexContainer>
 
-      <FlexContainer>
-        <FloatDescription v-for="(tag, i) in tags.excludeTags" :content="tag[1]" :key="i">
-          <p class="tag exclude">{{ tag[0] }}</p>
-        </FloatDescription>
+        <div class="line" v-show="filter.both"></div>
+
+        <FlexContainer>
+          <TagView2
+            v-for="(tag, i) in tags.excludeTags"
+            type="exclude"
+            class="tag"
+            height="26px"
+            :tag="tag"
+            :content="tag[1]"
+            :key="i"
+            :mini="true"
+          />
+        </FlexContainer>
       </FlexContainer>
-    </FlexContainer>
+    </ModalCard>
 
     <ModalCard class="bottom-card" :box-shadow="true">
       <FlexContainer>
-        <ButtonCoinSlot content="Pesquisar card" :border="true" class="button-margin">
-          <SearchIco />
-        </ButtonCoinSlot>
-
         <ButtonCoinSlot
-          content="Filtrar"
+          v-if="!isMobile"
+          content="Tags"
           :border="true"
           class="button-margin"
-          @click="windows.filterCardsByTags.open(null)"
+          @click="windows.tags.open(null)"
         >
-          <FilterIco />
+          <TagIco />
         </ButtonCoinSlot>
 
         <ButtonSlot
@@ -95,22 +140,67 @@ const cardCreate = async (card: Icard) => {
         </ButtonSlot>
 
         <ButtonCoinSlot
-          content="Tags"
+          v-if="!isMobile"
+          content="Filtrar"
           :border="true"
           class="button-margin"
-          @click="windows.tags.open(null)"
+          @click="windows.filterCardsByTags.open(null)"
         >
-          <TagIco />
+          <FilterIco />
         </ButtonCoinSlot>
 
-        <ButtonCoinSlot
-          content="Configurações"
-          :border="true"
-          class="button-margin"
-          @click="windows.config.open(null)"
-        >
-          <GearIco />
-        </ButtonCoinSlot>
+        <FloatModalSlot :closeOnClick="true" :center="true">
+          <template #button-slot>
+            <ButtonCoinSlot content="Mais" :border="true" class="button-margin">
+              <PlusIco />
+            </ButtonCoinSlot>
+          </template>
+
+          <template #container-slot>
+            <ModalCard>
+              <FlexContainer flex-direction="column" class="options-container">
+                <ButtonSlot
+                  content="Criar tag"
+                  class="button-option"
+                  border-color="transparent"
+                  :invert-color="true"
+                  @click="windows.tagCreate.open(null)"
+                >
+                  <PencilIco />
+                </ButtonSlot>
+
+                <ButtonSlot
+                  v-if="isMobile"
+                  content="Tags"
+                  class="button-option"
+                  border-color="transparent"
+                  @click="windows.tags.open(null)"
+                >
+                  <TagIco />
+                </ButtonSlot>
+
+                <ButtonSlot
+                  v-if="isMobile"
+                  content="Filtrar cards"
+                  class="button-option"
+                  border-color="transparent"
+                  @click="windows.filterCardsByTags.open(null)"
+                >
+                  <FilterIco />
+                </ButtonSlot>
+
+                <ButtonSlot
+                  content="Configurações"
+                  class="button-option"
+                  border-color="transparent"
+                  @click="windows.config.open(null)"
+                >
+                  <GearIco />
+                </ButtonSlot>
+              </FlexContainer>
+            </ModalCard>
+          </template>
+        </FloatModalSlot>
       </FlexContainer>
     </ModalCard>
   </FlexContainer>
@@ -120,7 +210,7 @@ const cardCreate = async (card: Icard) => {
 .bottom-container {
   position: fixed;
   width: 100%;
-  bottom: 22px;
+  bottom: 12px;
 
   & .modal-create-card {
     width: 500px;
@@ -133,33 +223,31 @@ const cardCreate = async (card: Icard) => {
 
   & .filter-view {
     cursor: pointer;
+    padding: 4px;
+    border-radius: 100px;
+    margin-bottom: 4px;
 
     & .tag {
-      border: solid 1px;
-      border-radius: 50%;
-      padding: 5px;
       margin: 0 2px;
+    }
+
+    & .line {
+      background-color: v-bind('stylePage.atualColor.text');
+      opacity: 60%;
+      width: 1px;
+      border-radius: 10px;
+      margin: 0 2px;
+      height: 22px;
     }
 
     & .title {
       margin-left: 4px;
-    }
-
-    & .include {
-      border-color: rgba(0, 0, 255, 0.5);
-      background-color: rgba(0, 0, 255, 0.2);
-    }
-
-    & .exclude {
-      border-color: rgba(255, 0, 0, 0.5);
-      background-color: rgba(255, 0, 0, 0.2);
     }
   }
 
   & .bottom-card {
     padding: 8px;
     border-radius: 100px;
-    margin-top: 8px;
 
     & .button-margin {
       margin: 0 4px;
@@ -168,6 +256,15 @@ const cardCreate = async (card: Icard) => {
     & .button-create-card {
       padding: 0 10px;
       justify-content: center;
+    }
+
+    & .options-container {
+      width: 180px;
+
+      & .button-option {
+        width: 100%;
+        margin: 2px 0;
+      }
     }
   }
 }

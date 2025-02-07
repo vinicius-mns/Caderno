@@ -3,9 +3,9 @@ import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
-import TagView from '@/components/molecules/TagView.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
+import TagView2 from '@/components/molecules/TagView2.vue'
 
 const window = useWindows()
 const cards = useCards()
@@ -30,7 +30,7 @@ const tagDelete = async () => {
     @close="window.tagDelete.close"
   >
     <div class="container">
-      <TagView :tag="window.tagDelete.props" class="item" />
+      <TagView2 :tag="window.tagDelete.props" class="item" />
 
       <ButtonSlot
         content="Deletar"

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Itag } from '@/stores/tags/Interfaces'
 import ModalCard from '@/components/atoms/ModalCard.vue'
-import TagView from '../molecules/TagView.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
@@ -32,7 +31,7 @@ const openDeleteTag = (tag: Itag) => emit('openDeleteTag', tag)
 
     <template #container-slot>
       <ModalCard class="options-container" background-color="front">
-        <TagView :tag="props.tag" class="tag-preview" />
+        <TagView2 :tag="props.tag" class="tag-preview" />
 
         <ButtonSlot
           content="Editar Tag"

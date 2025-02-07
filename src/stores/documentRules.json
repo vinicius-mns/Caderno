@@ -1,0 +1,9 @@
+{
+  "lock-3d": true,
+  "window": {
+    "width" : {
+      "mobile": "768px",
+      "tablet": "1024px"
+    }
+  }
+}

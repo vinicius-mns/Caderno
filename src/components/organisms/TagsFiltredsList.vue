@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FlexContainer from '../atoms/FlexContainer.vue'
-import TagView from '../molecules/TagView.vue'
+import TagView from '../molecules/xTagView.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 

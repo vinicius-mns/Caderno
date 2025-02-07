@@ -67,6 +67,22 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     }
   }
 
+  const cardShare = async (card: Icard) => {
+    const baseUrl = window.location.href.split('#')[0]
+    const cardString = JSON.stringify(card)
+    const encodedCardString = encodeURIComponent(cardString)
+    const url = `${baseUrl}#/cards/${encodedCardString}`
+
+    try {
+      await navigator.clipboard.writeText(url)
+
+      floatMessage.openMessage('Card Copiado')
+    } catch (err) {
+      floatMessage.openMessage('Erro ao copiar o card')
+      console.error('Falha ao copiar o URL: ', err)
+    }
+  }
+
   // tags
 
   const tagCreate = async (tag: Itag) => {
@@ -109,7 +125,8 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     card: {
       create: cardCreate,
       update: cardUpdate,
-      delete: cardDelete
+      delete: cardDelete,
+      share: cardShare
     },
     tag: {
       create: tagCreate,
