@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/xTagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import TagView2 from '../molecules/TagView2.vue'
 
 const props = defineProps<{
   tag: Itag
@@ -43,7 +43,7 @@ const slot = useSlot()
     @mouseenter="slot.open()"
     @mouseleave="slot.close()"
   >
-    <TagView :tag="tag" @click="emitTagType" />
+    <TagView2 :tag="tag" @click="emitTagType" />
     <div v-if="slot.show.value" class="slot-options">
       <slot></slot>
     </div>

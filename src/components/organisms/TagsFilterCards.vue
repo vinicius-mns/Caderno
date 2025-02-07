@@ -2,13 +2,13 @@
 import { computed, ref, watch } from 'vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/xTagView.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
+import TagView2 from '../molecules/TagView2.vue'
 
 const stylesPage = useStylesPage()
 
@@ -212,7 +212,7 @@ watch(
             @mouseenter="slot.openSlot()"
             @mouseleave="slot.closeSlot()"
           >
-            <TagView :tag="tag" class="tag" />
+            <TagView2 :tag="tag" class="tag" />
             <div v-if="slot.showSlot.value">
               <slot></slot>
             </div>

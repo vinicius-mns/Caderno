@@ -3,7 +3,6 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
-import TagView from '../molecules/xTagView.vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ButtonSlot from '../molecules/ButtonSlot.vue'
 import PencilIco from '../atoms/icons/PencilIco.vue'
@@ -13,6 +12,7 @@ import TrashIco from '../atoms/icons/TrashIco.vue'
 import SearchImput from '../molecules/SearchImput.vue'
 import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
 import TagIco from '../atoms/icons/TagIco.vue'
+import TagView2 from '../molecules/TagView2.vue'
 
 const props = defineProps<{ tags: Itag[]; textFilter: string }>()
 
@@ -64,14 +64,14 @@ const openCreateTag = () => emit('openCreateTag', null)
               <template #button-slot>
                 <FlexContainer flex-wrap="wrap">
                   <ThemeButton background-color="front" class="tag">
-                    <TagView :tag="tag" />
+                    <TagView2 :tag="tag" />
                   </ThemeButton>
                 </FlexContainer>
               </template>
 
               <template #container-slot>
                 <ModalCard class="options-container" background-color="front">
-                  <TagView :tag="tag" class="tag-preview" />
+                  <TagView2 :tag="tag" class="tag-preview" />
 
                   <ButtonSlot content="Editar Tag" @click="emitUpdate(tag)">
                     <PencilIco />
