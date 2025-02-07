@@ -129,6 +129,10 @@ const sendDelete = () => {
   emit('deleteCard', props.cardProps || cardEditor.card.value)
 }
 
+const handleSendCard = (e: KeyboardEvent) => {
+  if (e.ctrlKey && e.key === 'Enter') sendCard()
+}
+
 defineExpose({ cardType })
 </script>
 
@@ -215,6 +219,7 @@ defineExpose({ cardType })
       :max-height-px="426"
       :style="cardStyle.atualStyle"
       @emit-content="cardEditor.set({ ...cardEditor.card.value, content: $event })"
+      @keydown="handleSendCard"
     />
 
     <CardView
