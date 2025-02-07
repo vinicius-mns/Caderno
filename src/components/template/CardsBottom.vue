@@ -31,6 +31,12 @@ const cardsTags = useCardsTags()
 
 const isMobile = ref(false)
 
+const filter = computed(() => {
+  const on = tags.includeTags.length > 0 || tags.excludeTags.length > 0
+  const both = tags.includeTags.length > 0 && tags.excludeTags.length > 0
+  return { on, both }
+})
+
 const updateMobileSize = () => {
   const windowsWidth = document.documentElement.clientWidth
   const mobileWidth = parseInt(rules.window.width.mobile)
@@ -79,7 +85,7 @@ onBeforeUnmount(() => {
       />
     </ModalCard>
 
-    <ModalCard class="filter-view" :box-shadow="true">
+    <ModalCard class="filter-view" :box-shadow="true" v-show="filter.on">
       <FlexContainer @click="windows.filterCardsByTags.open(null)" align-items="center">
         <FlexContainer>
           <TagView2
@@ -94,7 +100,7 @@ onBeforeUnmount(() => {
           />
         </FlexContainer>
 
-        <div class="line"></div>
+        <div class="line" v-show="filter.both"></div>
 
         <FlexContainer>
           <TagView2
