@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import ThemeP from '../atoms/ThemeP.vue'
 import CheckBoxBase from '../atoms/CheckBoxBase.vue'
-import TagView from '../molecules/xTagView.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
 import RadioBase from '../atoms/RadioBase.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
@@ -15,6 +14,7 @@ import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import FilterIco from '../atoms/icons/FilterIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import TagView2 from '../molecules/TagView2.vue'
 const stylesPage = useStylesPage()
 
 const props = defineProps<{
@@ -163,7 +163,7 @@ const clearFilter = () => {
             :class="[isChecked(tag, 'include') && 'include', 'tag']"
             @select="() => handleAddOrRemove(tag, 'include')"
           >
-            <TagView :tag="tag" />
+            <TagView2 :tag="tag" />
           </CheckBoxBase>
 
           <CheckBoxBase
@@ -175,7 +175,7 @@ const clearFilter = () => {
             :class="[isChecked(tag, 'include') && 'include', 'tag']"
             @select="() => handleAddOrRemove(tag, 'include')"
           >
-            <TagView :tag="tag" />
+            <TagView2 :tag="tag" />
           </CheckBoxBase>
         </FlexContainer>
 
@@ -189,7 +189,7 @@ const clearFilter = () => {
             :class="[isChecked(tag, 'exclude') && 'exclude', 'tag']"
             @select="() => handleAddOrRemove(tag, 'exclude')"
           >
-            <TagView :tag="tag" />
+            <TagView2 :tag="tag" />
           </CheckBoxBase>
         </FlexContainer>
 

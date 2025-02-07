@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import FlexContainer from '../atoms/FlexContainer.vue'
-import TagView from '../molecules/xTagView.vue'
 import ThemeButton from '../atoms/ThemeButton.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import TagView2 from '../molecules/TagView2.vue'
 
 const props = defineProps<{
   includeTags: Itag[]
@@ -29,7 +29,7 @@ const excludeTagRemove = (id: string) => emit('excludeTagRemove', id)
         class="tag include"
         @click="() => includeTagRemove(tag[1])"
       >
-        <TagView :tag="tag" tag-emoji-size="12px" />
+        <TagView2 :tag="tag" tag-emoji-size="12px" />
       </ThemeButton>
     </FlexContainer>
 
@@ -40,7 +40,7 @@ const excludeTagRemove = (id: string) => emit('excludeTagRemove', id)
         class="tag exclude"
         @click="() => excludeTagRemove(tag[1])"
       >
-        <TagView :tag="tag" tag-emoji-size="12px" />
+        <TagView2 :tag="tag" tag-emoji-size="12px" />
       </ThemeButton>
     </FlexContainer>
   </FlexContainer>
