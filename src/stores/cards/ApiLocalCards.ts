@@ -1,11 +1,11 @@
 import LocalStorageApi from '../../myLocalStorage/LocalStorageApi'
 import type { Itag } from '../tags/Interfaces'
-import type { ICardDb, ICardsApi, Icard, IfilterCard } from './Interfaces'
+import type { ICardsApi, Icard, IfilterCard } from './Interfaces'
 import { v4 as uuid } from 'uuid'
 
 const keyLocalStorageCards = 'cards'
 
-const _cardsLocalStorage = new LocalStorageApi<ICardDb>([], keyLocalStorageCards)
+const _cardsLocalStorage = new LocalStorageApi<Icard[]>([], keyLocalStorageCards)
 
 export class CardsApiLocal implements ICardsApi {
   constructor(
@@ -22,11 +22,11 @@ export class CardsApiLocal implements ICardsApi {
   }
 
   private _insetCardOnDb = (card: Icard | Icard[]) => {
-    const storage = this._storage.read()
+    const atualCards = this._storage.read()
 
     Array.isArray(card)
-      ? this._storage.setAndReturn([...storage, ...card])
-      : this._storage.setAndReturn([...storage, card])
+      ? this._storage.setAndReturn([...atualCards, ...card])
+      : this._storage.setAndReturn([...atualCards, card])
   }
 
   public create = (param: { content: string; tags: Itag[] }) => {

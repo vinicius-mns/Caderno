@@ -13,7 +13,7 @@ export interface IfilterCard {
   content: string
 }
 
-export type ICardDb = Icard[]
+// export type ICardDb = Icard[]
 
 export interface ICardsApi {
   create: (param: { content: string; tags: Itag[] }) => Promise<boolean>
