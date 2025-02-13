@@ -15,10 +15,11 @@ import EraserIco from '@/components/atoms/icons/EraserIco.vue'
 import SaveIco from '@/components/atoms/icons/SaveIco.vue'
 import UploadIco from '@/components/atoms/icons/UploadIco.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
+import { useCardsTags } from '@/stores/cardsTags'
 
 const window = useWindows()
 
-const cards = useCards()
+const cardsTags = useCardsTags()
 
 const tags = useTags()
 
@@ -34,8 +35,8 @@ const filterTags = reactive({
 
 const tagsFilterSetNames = computed(() => {
   return {
-    incluTags: new Set(filterTags.includeTags.map((t) => t[1])),
-    excluTags: new Set(filterTags.excludeTags.map((t) => t[1]))
+    incluTags: new Set(tags.getNames(filterTags.includeTags)),
+    excluTags: new Set(tags.getNames(filterTags.excludeTags))
   }
 })
 
@@ -89,18 +90,8 @@ const clear = () => {
   filterTags.excludeTags = []
 }
 
-const sendFilter = async () => {
-  const { includeTags, excludeTags } = filterTags
-
-  await tags.setFilter({
-    includeTags,
-    excludeTags
-  })
-
-  await cards.atualizeReactiveCards({
-    includeTags,
-    excludeTags
-  })
+const sendFilter = () => {
+  cardsTags.tag.filterCard.set(filterTags)
 }
 
 onUpdated(() => {
