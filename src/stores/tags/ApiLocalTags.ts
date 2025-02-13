@@ -156,6 +156,29 @@ export class TagsApiLocal implements ItagsApi {
     })
   }
 
+  private _getOrderedTags = () => {
+    const {
+      filter: { includeTags, excludeTags },
+      tags
+    } = this._storage.read()
+
+    const getName = (tag: Itag) => tag[1]
+
+    const includeTagsNameSet = new Set(includeTags.map(getName))
+
+    const excludeTagsNameSet = new Set(excludeTags.map(getName))
+
+    const isNotIncludedOrExcluded = (tag: Itag) => {
+      const tagName = getName(tag)
+
+      return !includeTagsNameSet.has(tagName) && !excludeTagsNameSet.has(tagName)
+    }
+
+    const reimainingTags = tags.filter(isNotIncludedOrExcluded)
+
+    return [...includeTags, ...excludeTags, ...reimainingTags]
+  }
+
   public readAllTags = (name?: string) => {
     return new Promise<ItagsDb>((resolve, reject) => {
       setTimeout(() => {
@@ -163,7 +186,7 @@ export class TagsApiLocal implements ItagsApi {
           try {
             const store = this._storage.read()
 
-            resolve(store)
+            resolve({ ...store, tags: this._getOrderedTags() })
           } catch (e) {
             if (e instanceof Error) {
               reject(new Error(`Erro ao capturar tags: ${e.message}`))
@@ -175,15 +198,19 @@ export class TagsApiLocal implements ItagsApi {
           try {
             const storage = this._storage.read()
 
-            const filter = (tags: Itag[]) => {
+            const filterByName = (tags: Itag[]) => {
               return tags.filter((tag) => tag[1].toLocaleLowerCase().includes(name))
             }
 
-            const tags = filter(storage.tags)
-            const includeTags = filter(storage.filter.includeTags)
-            const excludeTags = filter(storage.filter.excludeTags)
+            const tags = filterByName(this._getOrderedTags())
 
-            resolve({ tags, filter: { includeTags, excludeTags } })
+            const includeTags = storage.filter.includeTags
+            const excludeTags = storage.filter.excludeTags
+
+            resolve({
+              tags,
+              filter: { includeTags, excludeTags }
+            })
           } catch (e) {
             reject(e)
           }

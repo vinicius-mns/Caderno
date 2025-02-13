@@ -213,7 +213,7 @@ defineExpose({ cardType })
 
     <ThemeTextArea
       v-if="cardType.is(['create', 'editor'])"
-      class="card"
+      class="card text-area"
       :id="cardEditor.card.value.id"
       :content="cardEditor.card.value.content"
       :max-height-px="426"
@@ -314,6 +314,10 @@ defineExpose({ cardType })
   & .card {
     cursor: pointer;
     width: 100%;
+  }
+
+  & .text-area {
+    cursor: text;
   }
 
   & .footer {

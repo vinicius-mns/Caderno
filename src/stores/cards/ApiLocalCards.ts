@@ -1,11 +1,11 @@
 import LocalStorageApi from '../../myLocalStorage/LocalStorageApi'
 import type { Itag } from '../tags/Interfaces'
-import type { ICardDb, ICardsApi, Icard, IfilterCard } from './Interfaces'
+import type { ICardsApi, Icard, IfilterCard } from './Interfaces'
 import { v4 as uuid } from 'uuid'
 
 const keyLocalStorageCards = 'cards'
 
-const _cardsLocalStorage = new LocalStorageApi<ICardDb>([], keyLocalStorageCards)
+const _cardsLocalStorage = new LocalStorageApi<Icard[]>([], keyLocalStorageCards)
 
 export class CardsApiLocal implements ICardsApi {
   constructor(
@@ -22,11 +22,11 @@ export class CardsApiLocal implements ICardsApi {
   }
 
   private _insetCardOnDb = (card: Icard | Icard[]) => {
-    const storage = this._storage.read()
+    const atualCards = this._storage.read()
 
     Array.isArray(card)
-      ? this._storage.setAndReturn([...storage, ...card])
-      : this._storage.setAndReturn([...storage, card])
+      ? this._storage.setAndReturn([...atualCards, ...card])
+      : this._storage.setAndReturn([...atualCards, card])
   }
 
   public create = (param: { content: string; tags: Itag[] }) => {
@@ -155,10 +155,16 @@ export class CardsApiLocal implements ICardsApi {
   public readOne = (id: string) => {
     return new Promise<Icard>((resolve, reject) => {
       setTimeout(() => {
-        const allCards = this._storage.read()
-        const card = allCards.find((card) => card.id === id)
-        if (card) resolve(card)
-        else reject(new Error('not found'))
+        try {
+          const allCards = this._storage.read()
+
+          const card = allCards.find((card) => card.id === id)
+
+          if (card) resolve(card)
+          else reject(new Error('not found'))
+        } catch (e) {
+          reject(new Error(`Failed to read cards: ${e instanceof Error ? e.message : e}`))
+        }
       }, 0)
     })
   }
@@ -189,11 +195,15 @@ export class CardsApiLocal implements ICardsApi {
         try {
           this._validateCard(card)
 
-          const deleteCard = await this.delete(card.id)
+          await this.readOne(card.id)
 
-          if (!deleteCard) reject(new Error('not found'))
+          const allCards = [...this._storage.read()]
 
-          this._insetCardOnDb(card)
+          const index = allCards.findIndex((c) => c.id === card.id)
+
+          allCards[index] = card
+
+          this._storage.setAndReturn(allCards)
 
           resolve(true)
         } catch (e) {

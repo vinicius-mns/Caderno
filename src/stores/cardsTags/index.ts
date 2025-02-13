@@ -18,8 +18,13 @@ export const useCardsTags = defineStore('handle cards tags', () => {
       : windows.errorMessage.open('erro inesperado')
   }
 
-  const updateReactiveCards = async () => {
+  const updateReactiveCards = async (filter?: { includeTags: Itag[]; excludeTags: Itag[] }) => {
     try {
+      if (filter) {
+        cards.atualizeReactiveCards(filter)
+        return
+      }
+
       cards.atualizeReactiveCards({
         includeTags: tags.includeTags,
         excludeTags: tags.excludeTags
@@ -121,6 +126,16 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     }
   }
 
+  const tagFilterSet = async (filter: { includeTags: Itag[]; excludeTags: Itag[] }) => {
+    try {
+      await tags.setFilter(filter)
+      await updateReactiveCards(filter)
+    } catch (e) {
+      windowsHandleError(e)
+      return false
+    }
+  }
+
   return {
     card: {
       create: cardCreate,
@@ -131,7 +146,10 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     tag: {
       create: tagCreate,
       update: tagUpdate,
-      delete: tagDelete
+      delete: tagDelete,
+      filterCard: {
+        set: tagFilterSet
+      }
     }
   }
 })

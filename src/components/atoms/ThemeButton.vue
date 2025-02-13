@@ -10,12 +10,14 @@ const props = withDefaults(
     borderColor?: string
     borderRadius?: string
     invertColor?: boolean
+    blink?: boolean
   }>(),
   {
     backgroundColor: 'back',
     borderColor: '',
     borderRadius: '',
-    invertColor: false
+    invertColor: false,
+    blink: false
   }
 )
 
@@ -40,10 +42,12 @@ const borderColorValue = computed(() =>
 )
 
 const invertClass = computed(() => (props.invertColor ? 'invert' : ''))
+
+const blinkClass = computed(() => (props.blink ? 'blink' : ''))
 </script>
 
 <template>
-  <button :class="['button', invertClass]">
+  <button :class="['button', blinkClass, invertClass]">
     <slot></slot>
   </button>
 </template>
@@ -87,6 +91,17 @@ const invertClass = computed(() => (props.invertColor ? 'invert' : ''))
 
   &:active {
     filter: invert(1);
+  }
+}
+
+.blink {
+  animation: blinkAnimation 0.8s alternate infinite;
+}
+
+@keyframes blinkAnimation {
+  to {
+    box-shadow: blue 0 0 15px;
+    border-color: blue;
   }
 }
 </style>

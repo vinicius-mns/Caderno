@@ -10,13 +10,15 @@ const props = withDefaults(
     borderRadius?: string
     size?: string
     invertColor?: boolean
+    blink?: boolean
   }>(),
   {
     backgroundColor: '',
     borderColor: '',
     borderRadius: '50px',
     size: '40px',
-    invertColor: false
+    invertColor: false,
+    blink: false
   }
 )
 </script>
