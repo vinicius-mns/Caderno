@@ -86,6 +86,22 @@ const clearFilter = () => {
   filterTags.excludeTags = []
 }
 
+// indicador de alteracoes
+
+const blinkButton = computed(() => {
+  const atualFilter = JSON.stringify({
+    includeTags: filterTags.includeTags,
+    excludeTags: filterTags.excludeTags
+  })
+
+  const dbFilter = JSON.stringify({
+    includeTags: tags.includeTags,
+    excludeTags: tags.excludeTags
+  })
+
+  return atualFilter !== dbFilter
+})
+
 // enviando filtro
 
 const sendFilter = () => {
@@ -169,6 +185,7 @@ onUpdated(() => {
           content="Aplicar filtro"
           class="button-filter"
           border-radius="50px"
+          :blink="blinkButton"
           @click="sendFilter"
         >
           <SendIco />
