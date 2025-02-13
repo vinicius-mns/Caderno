@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onUpdated, reactive } from 'vue'
 import { useTags } from '@/stores/tags/tags'
-import { useCards } from '@/stores/cards/cards'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
@@ -28,67 +27,66 @@ interface IFilterTag {
   type: 'include' | 'exclude' | 'none'
 }
 
+// renderizacao das tags
+
 const filterTags = reactive({
   includeTags: [] as Itag[],
   excludeTags: [] as Itag[]
 })
 
-const tagsFilterSetNames = computed(() => {
-  return {
-    incluTags: new Set(tags.getNames(filterTags.includeTags)),
-    excluTags: new Set(tags.getNames(filterTags.excludeTags))
-  }
-})
+const includetagsSetNames = computed(() => new Set(tags.getNames(filterTags.includeTags)))
+const excluTagsSetNames = computed(() => new Set(tags.getNames(filterTags.excludeTags)))
 
-const formatTags = ({ tag, type }: IFilterTag) => {
-  return { tag, type }
-}
-
-const allTags = computed(() => {
+const allTags = computed<IFilterTag[]>(() => {
   return tags.tags.map((tag) => {
-    if (tagsFilterSetNames.value.incluTags.has(tag[1])) {
-      return formatTags({ tag, type: 'include' })
-    }
+    const tagName = tag[1]
 
-    if (tagsFilterSetNames.value.excluTags.has(tag[1])) {
-      return formatTags({ tag, type: 'exclude' })
-    }
-
-    return formatTags({ tag, type: 'none' })
+    if (includetagsSetNames.value.has(tagName)) return { tag, type: 'include' }
+    if (excluTagsSetNames.value.has(tagName)) return { tag, type: 'exclude' }
+    return { tag, type: 'none' }
   })
 })
 
-const filterTagsSet = (type: 'includeTags' | 'excludeTags') => {
-  const add = (tag: Itag) => {
-    filterTags[type] = [...filterTags[type], tag]
+// lidando com manipulacao do filtro
+
+const handleTagsFilter = (
+  tag: Itag,
+  type: 'includeTags' | 'excludeTags',
+  action: 'add' | 'remove'
+) => {
+  const execute = {
+    add: (tag: Itag) => {
+      filterTags[type] = [...filterTags[type], tag]
+    },
+    remove: (tag: Itag) => {
+      filterTags[type] = filterTags[type].filter((t) => t[1] !== tag[1])
+    }
   }
 
-  const remove = (tag: Itag) => {
-    filterTags[type] = filterTags[type].filter((t) => t[1] !== tag[1])
-  }
-
-  return { add, remove }
+  return execute[action](tag)
 }
 
-const clickOnTagFilter = (tagF: IFilterTag) => {
+const clickOnTag = (tagF: IFilterTag) => {
   switch (tagF.type) {
     case 'none':
-      filterTagsSet('includeTags').add(tagF.tag)
+      handleTagsFilter(tagF.tag, 'includeTags', 'add')
       break
     case 'include':
-      filterTagsSet('includeTags').remove(tagF.tag)
-      filterTagsSet('excludeTags').add(tagF.tag)
+      handleTagsFilter(tagF.tag, 'includeTags', 'remove')
+      handleTagsFilter(tagF.tag, 'excludeTags', 'add')
       break
     case 'exclude':
-      filterTagsSet('excludeTags').remove(tagF.tag)
+      handleTagsFilter(tagF.tag, 'excludeTags', 'remove')
       break
   }
 }
 
-const clear = () => {
+const clearFilter = () => {
   filterTags.includeTags = []
   filterTags.excludeTags = []
 }
+
+// enviando filtro
 
 const sendFilter = () => {
   cardsTags.tag.filterCard.set(filterTags)
@@ -133,7 +131,7 @@ onUpdated(() => {
           :tag="tag.tag"
           :type="tag.type"
           class="tag-windows"
-          @click="clickOnTagFilter(tag)"
+          @click="clickOnTag(tag)"
         />
       </FlexContainer>
 
@@ -160,7 +158,7 @@ onUpdated(() => {
 
         <ButtonCoinSlot
           content="Limpar filtro"
-          @click="clear()"
+          @click="clearFilter()"
           background-color="front"
           class="button-margin"
         >
