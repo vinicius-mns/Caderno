@@ -47,7 +47,7 @@ const cardRepositionX = () => {
   const xPosition = parseInt(cursorPosition.x)
 
   const cardStatus = (): 'inLeft' | 'InRight' | 'IsLarge' | 'normal' => {
-    if (cardWidth > windowWidth / 2) return 'IsLarge'
+    if (cardWidth > windowWidth / 1.11) return 'IsLarge'
     if (xPosition + cardWidth / 2 >= windowWidth) return 'InRight'
     if (xPosition - cardWidth / 2 <= 0) return 'inLeft'
     return 'normal'
