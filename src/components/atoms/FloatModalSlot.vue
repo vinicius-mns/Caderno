@@ -46,12 +46,35 @@ const cardRepositionX = () => {
   const windowWidth = window.innerWidth
   const xPosition = parseInt(cursorPosition.x)
 
-  const translateToLeft = () => {
-    cursorPosition.x = `${parseInt(cursorPosition.x) - cardWidth / 2}px`
+  const cardStatus = (): 'inLeft' | 'InRight' | 'IsLarge' | 'normal' => {
+    if (cardWidth > windowWidth / 2) return 'IsLarge'
+    if (xPosition + cardWidth / 2 >= windowWidth) return 'InRight'
+    if (xPosition - cardWidth / 2 <= 0) return 'inLeft'
+    return 'normal'
   }
 
-  if (xPosition >= cardWidth / 2) translateToLeft()
-  if (xPosition + cardWidth / 2 >= windowWidth) translateToLeft()
+  const toLeft = () => {
+    cursorPosition.x = `${xPosition - cardWidth}px`
+  }
+
+  const toCenter = () => {
+    cursorPosition.x = `${windowWidth / 2 - cardWidth / 2}px`
+  }
+
+  const upOnCursor = () => {
+    cursorPosition.x = `${xPosition - cardWidth / 2}px`
+  }
+
+  const execute = () => {
+    const status = cardStatus()
+
+    if (status === 'IsLarge') toCenter()
+    if (status === 'InRight') toLeft()
+    if (status === 'normal') upOnCursor()
+    if (status === 'inLeft') return
+  }
+
+  return execute()
 }
 
 const cardRepositionY = () => {
