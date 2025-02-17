@@ -61,36 +61,6 @@ export class TagsApiLocal implements ItagsApi {
     this._storage.setAndReturn(newDb)
   }
 
-  private _tagUpdate = (param: { tag: Itag; atualName: string }) => {
-    const { tag, atualName } = param
-
-    const allTags = this._storage.read().tags
-
-    const incldeTags = this._storage.read().filter.includeTags
-
-    const excludeTag = this._storage.read().filter.excludeTags
-
-    const newAllTags = [...allTags.filter((tag) => tag[1] !== atualName), tag]
-
-    const newIncludeTags = incldeTags.find((tag) => tag[1] === atualName)
-      ? [...incldeTags.filter((tag) => tag[1] !== atualName), tag]
-      : incldeTags
-
-    const newExcludeTag = excludeTag.find((tag) => tag[1] === atualName)
-      ? [...excludeTag.filter((tag) => tag[1] !== atualName), tag]
-      : excludeTag
-
-    const newDb: ItagsDb = {
-      tags: newAllTags,
-      filter: {
-        includeTags: newIncludeTags,
-        excludeTags: newExcludeTag
-      }
-    }
-
-    this._storage.setAndReturn(newDb)
-  }
-
   public createTag = (param: { emoji: string; name: string }) => {
     return new Promise<boolean>((resolve, reject) => {
       setTimeout(() => {
@@ -227,9 +197,33 @@ export class TagsApiLocal implements ItagsApi {
 
           this._errorValidateTag([emoji, name])
 
-          this._errorExistTag(name)
+          if (name !== atualName) this._errorExistTag(name)
 
-          this._tagUpdate({ tag: [emoji, name], atualName })
+          const tag: Itag = [emoji, name]
+
+          const allTags = this._storage.read().tags
+          const incldeTags = this._storage.read().filter.includeTags
+          const excludeTag = this._storage.read().filter.excludeTags
+
+          const newAllTags = [tag, ...allTags.filter((tag) => tag[1] !== atualName)]
+
+          const newIncludeTags = incldeTags.find((tag) => tag[1] === atualName)
+            ? [tag, ...incldeTags.filter((tag) => tag[1] !== atualName)]
+            : incldeTags
+
+          const newExcludeTag = excludeTag.find((tag) => tag[1] === atualName)
+            ? [tag, ...excludeTag.filter((tag) => tag[1] !== atualName)]
+            : excludeTag
+
+          const newDb: ItagsDb = {
+            tags: newAllTags,
+            filter: {
+              includeTags: newIncludeTags,
+              excludeTags: newExcludeTag
+            }
+          }
+
+          this._storage.setAndReturn(newDb)
 
           resolve(true)
         } catch (e) {
