@@ -30,7 +30,7 @@ const tagDelete = async () => {
     @close="window.tagDelete.close"
   >
     <div class="container">
-      <TagView2 :tag="window.tagDelete.props" class="item" />
+      <TagView2 :tag="window.tagDelete.props" class="item tag" :animation="false" />
 
       <ButtonSlot
         content="Deletar"
@@ -54,7 +54,9 @@ const tagDelete = async () => {
   align-items: center;
   padding: 15px;
   box-sizing: border-box;
+
   & .item {
+    width: 100%;
     margin: 3px;
   }
 }
