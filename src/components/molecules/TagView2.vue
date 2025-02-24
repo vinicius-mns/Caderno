@@ -4,6 +4,7 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import FlexContainer from '../atoms/FlexContainer.vue'
 import FloatDescription from '../atoms/FloatDescription.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import { computed } from 'vue'
 
 const stylesPage = useStylesPage()
 
@@ -13,21 +14,25 @@ const props = withDefaults(
     mini?: boolean
     type?: 'include' | 'exclude' | 'selected' | 'none'
     height?: string
+    animation?: boolean
   }>(),
   {
     tagEmojiSize: '16px',
     mini: false,
     type: 'none',
-    height: '32px'
+    height: '32px',
+    animation: true
   }
 )
+
+const animationClass = computed(() => props.animation && 'animation')
 </script>
 
 <template>
   <div class="tag-view-container">
     <FlexContainer
       :title="props.tag[1]"
-      :class="[props.type, 'tag-container']"
+      :class="[props.type, animationClass, 'tag-container']"
       align-items="center"
       v-if="!props.mini"
     >
@@ -60,20 +65,6 @@ $height: v-bind('props.height');
   border-radius: 50px;
   cursor: pointer;
   user-select: none;
-
-  &:active {
-    filter: invert(1);
-
-    & span {
-      filter: invert(1);
-    }
-  }
-
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    background-color: v-bind('stylesPage.atualColor.hover');
-    transform: scale(0.96);
-  }
 
   & .emoji {
     margin-left: 10px;
@@ -129,7 +120,6 @@ $height: v-bind('props.height');
 }
 
 .selected {
-  // border-color: rgb(110, 86, 86, 0.5);
   background-color: rgba(255, 255, 255, 0.2);
   background-color: v-bind('stylesPage.atualColor.hover');
 
@@ -139,6 +129,22 @@ $height: v-bind('props.height');
 
   &:hover {
     border-color: red;
+  }
+}
+
+.animation {
+  &:active {
+    filter: invert(1);
+
+    & span {
+      filter: invert(1);
+    }
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: v-bind('stylesPage.atualColor.hover');
+    transform: scale(0.96);
   }
 }
 </style>
