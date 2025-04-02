@@ -32,7 +32,7 @@ const animationClass = computed(() => props.animation && 'animation')
   <div class="tag-view-container">
     <FlexContainer
       :title="props.tag[1]"
-      :class="[props.type, animationClass, 'tag-container']"
+      :class="[animationClass, props.type, 'tag-container']"
       align-items="center"
       v-if="!props.mini"
     >
@@ -55,6 +55,20 @@ const animationClass = computed(() => props.animation && 'animation')
 
 <style scoped lang="scss">
 $height: v-bind('props.height');
+
+@mixin animation($border-color, $background-color) {
+  border-color: rgba($border-color, 0.5);
+  background-color: rgba($background-color, 0.2);
+
+  &:active {
+    filter: invert(1);
+  }
+
+  &:hover {
+    background-color: rgba($background-color, 0.4);
+    border-color: $border-color;
+  }
+}
 
 .tag-container {
   transition: all 0.16s;
@@ -80,6 +94,22 @@ $height: v-bind('props.height');
   }
 }
 
+.animation {
+  &:active {
+    filter: invert(1);
+
+    & span {
+      filter: invert(1);
+    }
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: v-bind('stylesPage.atualColor.hover');
+    transform: scale(0.96);
+  }
+}
+
 .tag-mini {
   height: $height;
   width: $height;
@@ -100,23 +130,11 @@ $height: v-bind('props.height');
 }
 
 .include {
-  border-color: rgba(86, 110, 86, 0.9);
-  background-color: rgba(86, 140, 86, 0.4);
-
-  &:hover {
-    background-color: rgba(86, 140, 86, 0.4);
-    border-color: rgba(86, 110, 86);
-  }
+  @include animation(rgb(86, 110, 86, 0.9), rgb(86, 140, 86, 0.4));
 }
 
 .exclude {
-  border-color: rgb(110, 86, 86, 0.9);
-  background-color: rgb(140, 86, 86, 0.4);
-
-  &:hover {
-    background-color: rgb(140, 86, 86, 0.4);
-    border-color: rgb(110, 86, 86);
-  }
+  @include animation(rgb(110, 86, 86, 0.9), rgb(140, 86, 86, 0.4));
 }
 
 .selected {
@@ -129,22 +147,6 @@ $height: v-bind('props.height');
 
   &:hover {
     border-color: red;
-  }
-}
-
-.animation {
-  &:active {
-    filter: invert(1);
-
-    & span {
-      filter: invert(1);
-    }
-  }
-
-  &:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    background-color: v-bind('stylesPage.atualColor.hover');
-    transform: scale(0.96);
   }
 }
 </style>

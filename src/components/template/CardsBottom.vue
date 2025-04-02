@@ -18,6 +18,11 @@ import PlusIco from '../atoms/icons/PlusIco.vue'
 import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import TagView2 from '../molecules/TagView2.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import TagsContainer from '../organisms/xTagsContainer.vue'
+import type { Itag } from '@/stores/tags/Interfaces'
+import TagsFilterContainer from '../organisms/TagsFilter.vue'
+import TagsOptionsContainer from '../organisms/TagsOptions.vue'
+import type { isJSDocNonNullableType } from 'typescript'
 
 const stylePage = useStylesPage()
 
@@ -59,6 +64,26 @@ const cardCreate = async (card: Icard) => {
   if (sucess) cardCreateShow.close()
 }
 
+const tagCreateOpen = () => {
+  windows.tagCreate.open(null)
+}
+
+const tagUpdateOpen = (tag: Itag) => {
+  windows.tagEditor.open(tag)
+}
+
+const tagDeleteOpen = (tag: Itag) => {
+  windows.tagDelete.open(tag)
+}
+
+const defNewFilter = (v: { includeTags: Itag[]; excludeTags: Itag[] }) => {
+  cardsTags.tag.filterCard.set(v)
+}
+
+const searchTags = (v: string) => {
+  tags.readAllTags(v)
+}
+
 onMounted(() => {
   updateMobileSize()
   window.addEventListener('resize', updateMobileSize)
@@ -91,122 +116,170 @@ onBeforeUnmount(() => {
     </ModalCard>
 
     <ModalCard class="filter-view" :box-shadow="true" v-show="filter.on">
-      <FlexContainer @click="windows.filterCardsByTags.open(null)" align-items="center">
-        <FlexContainer>
-          <TagView2
-            v-for="(tag, i) in tags.includeTags"
-            type="include"
-            class="tag"
-            height="26px"
-            :tag="tag"
-            :content="tag[1]"
-            :key="i"
-            :mini="true"
-          />
-        </FlexContainer>
+      <TagsFilterContainer
+        :all-tags="tags.tags"
+        :include-tags="tags.includeTags"
+        :exclude-tags="tags.excludeTags"
+        :text-filter-tags="tags.textFilterTags"
+        @open-create-tag="tagCreateOpen"
+        @filter-emitted="defNewFilter"
+        @search-tag="searchTags"
+      >
+        <FlexContainer align-items="center">
+          <FlexContainer>
+            <TagView2
+              v-for="(tag, i) in tags.includeTags"
+              type="include"
+              class="tag"
+              height="26px"
+              :tag="tag"
+              :content="tag[1]"
+              :key="i"
+              :mini="true"
+            />
+          </FlexContainer>
 
-        <div class="line" v-show="filter.both"></div>
+          <div class="line" v-show="filter.both"></div>
 
-        <FlexContainer>
-          <TagView2
-            v-for="(tag, i) in tags.excludeTags"
-            type="exclude"
-            class="tag"
-            height="26px"
-            :tag="tag"
-            :content="tag[1]"
-            :key="i"
-            :mini="true"
-          />
+          <FlexContainer>
+            <TagView2
+              v-for="(tag, i) in tags.excludeTags"
+              type="exclude"
+              class="tag"
+              height="26px"
+              :tag="tag"
+              :content="tag[1]"
+              :key="i"
+              :mini="true"
+            />
+          </FlexContainer>
         </FlexContainer>
-      </FlexContainer>
+      </TagsFilterContainer>
+
+      <!-- <TagsContainer
+        type="filter"
+        :filter="{ includeTags: tags.includeTags, excludeTags: tags.excludeTags }"
+        :all-tags="tags.tags"
+        :tags-checked="tags.includeTags"
+        text-filter=""
+        @open-create-tag="openCreateTag"
+        @get-filter="defNewFilter"
+      >
+      </TagsContainer> -->
     </ModalCard>
 
     <ModalCard class="bottom-card" :box-shadow="true">
-      <FlexContainer>
-        <ButtonCoinSlot
-          v-if="!isMobile"
-          content="Tags"
-          :border="true"
-          class="button-margin"
-          @click="windows.tags.open(null)"
-        >
+      <ButtonSlot
+        content="Criar card"
+        border-radius="50px"
+        class="button-create-card button-margin"
+        @click="windows.cardCreate.open(null)"
+        :invert-color="true"
+      >
+        <PencilIco />
+      </ButtonSlot>
+
+      <TagsOptionsContainer
+        :all-tags="tags.tags"
+        :text-filter-tags="tags.textFilterTags"
+        @search-tag="searchTags"
+        @open-create-tag="tagCreateOpen"
+        @tag-updated="tagUpdateOpen"
+        @tag-to-delete="tagDeleteOpen"
+      >
+        <ButtonCoinSlot content="Tags" v-if="!isMobile" :border="true" class="button-margin">
           <TagIco />
         </ButtonCoinSlot>
+      </TagsOptionsContainer>
 
-        <ButtonSlot
-          border-radius="50px"
-          class="button-create-card button-margin"
-          content="Criar card"
-          @click="cardCreateShow.open"
-          :invert-color="true"
+      <!-- <TagsContainer
+          type="tagsOptions"
+          text-filter=""
+          :all-tags="tags.tags"
+          :tags-checked="tags.includeTags"
+          @open-update-tag="openUpdateTag($event)"
+          @open-delete-tag="openDeleteTag($event)"
+          @open-create-tag="openCreateTag"
         >
-          <PencilIco />
-        </ButtonSlot>
+        </TagsContainer> -->
 
-        <ButtonCoinSlot
-          v-if="!isMobile"
-          content="Filtrar"
-          :border="true"
-          class="button-margin"
-          @click="windows.filterCardsByTags.open(null)"
-        >
+      <TagsFilterContainer
+        :all-tags="tags.tags"
+        :include-tags="tags.includeTags"
+        :exclude-tags="tags.excludeTags"
+        :text-filter-tags="tags.textFilterTags"
+        @open-create-tag="tagCreateOpen"
+        @filter-emitted="defNewFilter"
+        @search-tag="searchTags"
+      >
+        <ButtonCoinSlot content="Filtrar" v-if="!isMobile" :border="true" class="button-margin">
           <FilterIco />
         </ButtonCoinSlot>
+      </TagsFilterContainer>
 
-        <FloatModalSlot :closeOnClick="true" :center="true">
-          <template #button-slot>
-            <ButtonCoinSlot content="Mais" :border="true" class="button-margin">
-              <PlusIco />
-            </ButtonCoinSlot>
-          </template>
+      <!-- <TagsContainer
+          type="filter"
+          :filter="{ includeTags: tags.includeTags, excludeTags: tags.excludeTags }"
+          :all-tags="tags.tags"
+          :tags-checked="tags.includeTags"
+          text-filter=""
+          @get-filter="defNewFilter($event)"
+          @open-create-tag="openCreateTag"
+        >
+        </TagsContainer> -->
 
-          <template #container-slot>
-            <ModalCard>
-              <FlexContainer flex-direction="column" class="options-container">
-                <ButtonSlot
-                  content="Criar tag"
-                  class="button-option"
-                  border-color="transparent"
-                  :invert-color="true"
-                  @click="windows.tagCreate.open(null)"
-                >
-                  <PencilIco />
-                </ButtonSlot>
+      <!-- <FloatModalSlot :closeOnClick="true" :center="true">
+        <template #button-slot>
+          <ButtonCoinSlot content="Mais" :border="true" class="button-margin">
+            <PlusIco />
+          </ButtonCoinSlot>
+        </template>
 
-                <ButtonSlot
-                  v-if="isMobile"
-                  content="Tags"
-                  class="button-option"
-                  border-color="transparent"
-                  @click="windows.tags.open(null)"
-                >
-                  <TagIco />
-                </ButtonSlot>
+        <template #container-slot>
+          <ModalCard>
+            <FlexContainer flex-direction="column" class="options-container">
+              <ButtonSlot
+                content="Criar tag"
+                class="button-option"
+                border-color="transparent"
+                :invert-color="true"
+                @click="windows.tagCreate.open(null)"
+              >
+                <PencilIco />
+              </ButtonSlot>
 
-                <ButtonSlot
-                  v-if="isMobile"
-                  content="Filtrar cards"
-                  class="button-option"
-                  border-color="transparent"
-                  @click="windows.filterCardsByTags.open(null)"
-                >
-                  <FilterIco />
-                </ButtonSlot>
+              <ButtonSlot
+                v-if="isMobile"
+                content="Tags"
+                class="button-option"
+                border-color="transparent"
+                @click="windows.tags.open(null)"
+              >
+                <TagIco />
+              </ButtonSlot>
 
-                <ButtonSlot
-                  content="Configurações"
-                  class="button-option"
-                  border-color="transparent"
-                  @click="windows.config.open(null)"
-                >
-                  <GearIco />
-                </ButtonSlot>
-              </FlexContainer>
-            </ModalCard>
-          </template>
-        </FloatModalSlot>
-      </FlexContainer>
+              <ButtonSlot
+                v-if="isMobile"
+                content="Filtrar cards"
+                class="button-option"
+                border-color="transparent"
+                @click="windows.filterCardsByTags.open(null)"
+              >
+                <FilterIco />
+              </ButtonSlot>
+
+              <ButtonSlot
+                content="Configurações"
+                class="button-option"
+                border-color="transparent"
+                @click="windows.config.open(null)"
+              >
+                <GearIco />
+              </ButtonSlot>
+            </FlexContainer>
+          </ModalCard>
+        </template>
+      </FloatModalSlot> -->
     </ModalCard>
   </FlexContainer>
 </template>
@@ -251,6 +324,7 @@ onBeforeUnmount(() => {
   }
 
   & .bottom-card {
+    display: flex;
     padding: 8px;
     border-radius: 100px;
 

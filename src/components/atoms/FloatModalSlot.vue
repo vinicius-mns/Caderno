@@ -7,9 +7,11 @@ const stylePage = useStylesPage()
 const props = withDefaults(
   defineProps<{
     closeOnClick?: boolean
+    clickStop?: boolean
   }>(),
   {
-    closeOnClick: false
+    closeOnClick: false,
+    clickStop: false
   }
 )
 
@@ -106,7 +108,11 @@ defineExpose({
 
 <template>
   <div class="container-float-modal">
-    <div class="button-slot" @click="openCard">
+    <div v-if="clickStop" class="button-slot" @click.stop="openCard">
+      <slot name="button-slot"></slot>
+    </div>
+
+    <div v-else class="button-slot" @click="openCard">
       <slot name="button-slot"></slot>
     </div>
 
@@ -129,10 +135,9 @@ defineExpose({
     margin: 0;
     width: 100dvw;
     height: 100dvh;
-    // border-radius: 16px;
-    // backdrop-filter: blur(3px);
-    // background-color: rgba(1, 7, 27, 0.2);
-    // -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    background-color: rgba(1, 7, 27, 0.2);
+    -webkit-backdrop-filter: blur(3px);
   }
 
   & .float-card {
@@ -142,10 +147,10 @@ defineExpose({
     top: v-bind('cursorPosition.y');
     animation: initModal 0.3s forwards;
     margin-top: 20px;
-    border-radius: v-bind('stylePage.borderRadius.outside');
-    box-shadow:
-      rgba(17, 17, 26, 0.5) 0px 4px 16px,
-      rgba(17, 17, 26, 0.2) 0px 8px 32px;
+    // border-radius: v-bind('stylePage.borderRadius.outside');
+    // box-shadow:
+    //   rgba(17, 17, 26, 0.5) 0px 4px 16px,
+    //   rgba(17, 17, 26, 0.2) 0px 8px 32px;
   }
 }
 @keyframes initModal {

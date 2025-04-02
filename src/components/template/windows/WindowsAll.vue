@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CardCreateWindows from './CardCreateWindows.vue'
 import CardShareWindows from './CardShareWindows.vue'
 import CardViewWindows from './CardViewWindows.vue'
 import ConfigWindow from './ConfigWindow.vue'
@@ -15,6 +16,7 @@ import TagsWindows from './TagsWindows.vue'
 <template>
   <div>
     <CardViewWindows />
+    <CardCreateWindows />
     <TagsFilterWindows />
     <TagsWindows />
     <CardShareWindows />

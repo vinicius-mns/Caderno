@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindows } from '@/stores/windows'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, reactive, watch, watchEffect } from 'vue'
 import { useTags } from '@/stores/tags/tags'
 import { useCards } from '@/stores/cards/cards'
 import { useConfig } from '@/stores/config'
@@ -11,7 +11,12 @@ import { useFloatMessage } from '@/stores/floatMessage'
 import CardTypes from '../organisms/CardTypes.vue'
 import rules from '@/stores/documentRules.json'
 import { useCardsTags } from '@/stores/cardsTags'
+import CardGroup from '../organisms/card/CardGroup.vue'
+import CardEditor from '../organisms/card/CardEditor.vue'
+import PlusIco from '../atoms/icons/PlusIco.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
+const stylesPage = useStylesPage()
 const window = useWindows()
 const cards = useCards()
 const config = useConfig()
@@ -84,19 +89,19 @@ const cardUpdate = async (cardParam: Icard) => {
     windowsHandleError(e)
   }
 }
-const cardDelete = async (card: Icard) => {
-  console.log('deletando card')
+// const cardDelete = async (card: Icard) => {
+//   console.log('deletando card')
 
-  try {
-    await cards.deleteCard(card.id)
+//   try {
+//     await cards.deleteCard(card.id)
 
-    await cardsUpdateReactive()
+//     await cardsUpdateReactive()
 
-    floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
-  } catch (e) {
-    windowsHandleError(e)
-  }
-}
+//     floatMessage.openMessage(floatMessage.messages.cardDeleteSucess)
+//   } catch (e) {
+//     windowsHandleError(e)
+//   }
+// }
 
 // type ICardTo = 'edit' | 'delete' | 'create'
 
@@ -214,64 +219,134 @@ const handleOpenSharedCard = async () => {
 
 // const columnNumber = 4
 
+// type ITypeCard = 'view' | 'editor'
+
+// interface IcardType extends Icard {
+//   type: 'view' | 'editor'
+// }
+
+// const x: IcardType = {
+//   id: '1',
+//   date: new Date(),
+//   content: 'content',
+//   tags: [],
+//   type: 'view'
+// }
+
+// const cardsParsed = computed<IcardType[]>(() => {
+//   return cards.cards.map((card) => ({ ...card, type: 'view' }))
+// })
+
+const cardsList = reactive<Icard[]>([])
+
+// const cardSetType = (card: Icard, type: ITypeCard) => {
+//   cardsList.find((c) => c.id === card.id)!.type = type
+// }
+
+watchEffect(() => {
+  const create: Icard = {
+    id: 'create',
+    date: new Date(),
+    content: '',
+    tags: []
+  }
+
+  const reverseCards = [...cards.cards].reverse()
+
+  console.log('cardsy', reverseCards)
+
+  cardsList.splice(0, cardsList.length, ...reverseCards)
+})
+
 onMounted(async () => {
   await handleOpenSharedCard()
 })
+
+const columns = 4
+
+const cardColumns = computed(() => {
+  const cardInColumns = Array.from({ length: columns }, () => []) as Icard[][]
+
+  for (let i = 0; i < cardsList.length; i += 1) {
+    const indexColumn = i % columns
+    cardInColumns[indexColumn].push(cardsList[i])
+  }
+
+  return cardInColumns
+})
+
+const updateCard = async (card: Icard) => {
+  await cardsTags.card.update(card)
+}
+
+const cardDelete = async (card: Icard) => {
+  await cardsTags.card.delete(card)
+}
+
+const searchTag = (tag: string) => {
+  tags.readAllTags(tag)
+}
+
+const openCreateTag = () => {
+  window.tagCreate.open(null)
+}
 </script>
 
 <template>
-  <div class="cards-main-container">
-    <FlexContainer flex-wrap="wrap" align-items="start" justify-content="center" class="cards-main">
-      <CardTypes
-        v-for="(card, i) in cardsReverse"
-        type="view"
+  <FlexContainer class="cards-main-container">
+    <FlexContainer
+      class="column"
+      v-for="(column, i) in cardColumns"
+      :key="i"
+      flex-direction="column"
+    >
+      <!-- <button class="create-card-button"><PlusIco /></button> -->
+
+      <CardGroup
+        v-for="(card, i) in column"
         class="card"
         :key="i"
-        :card-props="card"
-        :all-tags="tags.tags"
-        :search-tag="tags.textFilterTags"
-        @read-tags-by-name="tags.readAllTags"
+        :card="card"
+        :tags="tags.tags"
+        :text-filter-tags="tags.textFilterTags"
         @delete-card="cardDelete"
-        @update-card="cardUpdate"
-        @open-card="window.cardView.open"
-        @share-card="cardsTags.card.share"
+        @updated-card="updateCard"
+        @search-tag="searchTag"
+        @open-create-tag="openCreateTag"
       />
     </FlexContainer>
-  </div>
+  </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .cards-main-container {
-  width: 100%;
-  padding: 40px 0 120px 0;
+  width: 94%;
+  padding: 54px 0 120px 0;
 
-  & .cards-main {
-    & .card {
-      width: v-bind(width);
-      margin: 5px;
+  .create-card-button {
+    height: 40px;
+    border-radius: 50px;
+    // border: none;
+    background-color: transparent;
+    border: solid 1px v-bind('stylesPage.atualColor.border');
+    width: 90%;
+    margin-left: 5%;
+    position: sticky;
+    top: 90px;
+    z-index: 1;
+
+    &:hover {
+      background-color: red;
     }
+  }
 
-    // & .card-with-options-container {
-    //   position: relative;
-    //   // margin: 5px;
+  .column {
+    width: 0;
+    flex-grow: 1;
 
-    //   & .card-option-button {
-    //     position: absolute;
-    //     top: 8px;
-    //     right: 8px;
-    //   }
-    // }
-
-    // & .card-create-button {
-    //   filter: invert(1);
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
-    //   height: 60px;
-    //   position: sticky;
-    //   top: 50px;
-    //   z-index: 1;
-    // }
+    & .card {
+      margin: 6px;
+    }
   }
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import CardsBottom from '@/components/template/CardsBottom.vue'
+import CardsHeader from '@/components/template/CardsHeader.vue'
 import CardsMain from '@/components/template/CardsMain.vue'
 import FloatMessage from '@/components/template/FloatMessage.vue'
 import WindowsAll from '@/components/template/windows/WindowsAll.vue'
@@ -26,10 +27,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <FlexContainer class="cards-page-container">
+  <FlexContainer class="cards-page-container" flex-direction="column" align-items="center">
     <CardsMain />
 
     <CardsBottom />
+
+    <CardsHeader />
 
     <WindowsAll class="all-windows" />
 

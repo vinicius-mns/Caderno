@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import { useTags } from '@/stores/tags/tags'
-import { useCards } from '@/stores/cards/cards'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import TrashIco from '@/components/atoms/icons/TrashIco.vue'
 import TagView2 from '@/components/molecules/TagView2.vue'
+import { useCardsTags } from '@/stores/cardsTags'
 
 const window = useWindows()
-const cards = useCards()
-const tags = useTags()
+
+const cardsTags = useCardsTags()
 
 const tagDelete = async () => {
-  await tags.deletedTag(window.tagDelete.props[1])
+  const tag = window.tagDelete.props
 
-  await cards.atualizeReactiveCards({
-    includeTags: tags.includeTags,
-    excludeTags: tags.excludeTags
-  })
+  await cardsTags.tag.delete(tag)
 
   window.tagDelete.close()
 }

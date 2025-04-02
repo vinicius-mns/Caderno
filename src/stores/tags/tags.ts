@@ -60,6 +60,20 @@ export const useTags = defineStore('tags', () => {
     }
   }
 
+  const getTags = async (name: string) => {
+    try {
+      const db = await tagsApi.readAllTags(name)
+
+      return {
+        tags: db.tags,
+        includeTags: db.filter.includeTags,
+        excludeTags: db.filter.excludeTags
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const readAllTags = async (name?: string) => {
     try {
       const db = await tagsApi.readAllTags(name)
@@ -121,6 +135,7 @@ export const useTags = defineStore('tags', () => {
     getNames,
     createTag,
     createManyTags,
+    getTags,
     readAllTags,
     readTag,
     updateTag,

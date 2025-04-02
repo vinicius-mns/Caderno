@@ -56,8 +56,8 @@ onUnmounted(() => {
   position: fixed;
   left: 0;
   top: 0;
-  // background-color: rgba(1, 7, 27, 0.2);
-  // backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
   // -webkit-backdrop-filter: blur(3px);
 
   & .windows {

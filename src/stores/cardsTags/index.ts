@@ -101,9 +101,13 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     }
   }
 
-  const tagUpdate = async (tag: Itag) => {
+  const tagUpdate = async (props: { tag: Itag; currName: string }) => {
+    const { tag, currName } = props
+
+    console.log('valores', props)
+
     try {
-      await tags.updateTag({ emoji: tag[0], name: tag[1], atualName: tag[1] })
+      await tags.updateTag({ emoji: tag[0], name: tag[1], atualName: currName })
       await cards.updateAllTags({ tag, name: tag[1] })
       await updateReactiveCards()
       floatMessage.openMessage('Tag atualizada')
@@ -130,6 +134,8 @@ export const useCardsTags = defineStore('handle cards tags', () => {
     try {
       await tags.setFilter(filter)
       await updateReactiveCards(filter)
+      floatMessage.openMessage('Filtro aplicado')
+      return true
     } catch (e) {
       windowsHandleError(e)
       return false
