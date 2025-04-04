@@ -1,94 +1,114 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import { ref } from 'vue'
+import type { Icard } from '@/stores/cards/Interfaces'
+import type { Itag } from '@/stores/tags/Interfaces'
+import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
+import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import PlusIco from '@/components/atoms/icons/PlusIco.vue'
+import PencilIco from '@/components/atoms/icons/PencilIco.vue'
+import TrashIco from '@/components/atoms/icons/TrashIco.vue'
+import ShareIco from '@/components/atoms/icons/ShareIco.vue'
+import TagsSelectable from '@/components/organisms/card/partials/TagsSelectable.vue'
+import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
+import ModalCard from '@/components/atoms/ModalCard.vue'
+import TagIco from '@/components/atoms/icons/TagIco.vue'
 
-const stylesPage = useStylesPage()
+const props = withDefaults(
+  defineProps<{
+    textFilterTags: string
+    card: Icard
+    tags: Itag[]
+    hideButtonPlush?: boolean
+  }>(),
+  {
+    hideButtonPlush: false
+  }
+)
 
-const showOptions = ref(false)
+const emit = defineEmits<{
+  (e: 'tagsUpdated', v: Icard): void
+  (e: 'openEditor', v: null): void
+  (e: 'openDelete', v: null): void
+  (e: 'searchTag', v: string): void
+  (e: 'openCreateTag', v: null): void
+  (e: 'clear', v: null): void
+}>()
 
-const showOptionsOn = () => (showOptions.value = true)
+const floatModal = ref<InstanceType<typeof FloatModalSlot>>()
+const viewButtonPlush = ref(false)
 
-const showOptionsOff = () => (showOptions.value = false)
+const closeFloatModal = () => floatModal.value.close()
 
-const optionsClass = computed(() => {
-  return showOptions.value ? '' : 'hidden'
-})
+const updatedTags = (newTags: Itag[]) => {
+  const newCard = { ...props.card, tags: newTags }
+  emit('tagsUpdated', newCard)
+  closeFloatModal()
+}
+
+const openEditor = () => emit('openEditor', null)
+const openDelete = () => emit('openDelete', null)
+const searchTag = (tag: string) => emit('searchTag', tag)
+const openCreateTag = (v: null) => emit('openCreateTag', v)
+const clear = (v: null) => emit('clear', v)
 </script>
 
 <template>
-  <FlexContainer
-    class="card-options-slot"
-    flex-direction="column"
-    align-items="center"
-    justify-content="center"
-    @mouseenter="showOptionsOn"
-    @mouseleave="showOptionsOff"
-    @click="showOptionsOn"
-  >
-    <slot name="container" />
-
-    <FlexContainer
-      :class="['options-section', optionsClass]"
-      align-items="center"
-      justify-content="space-between"
-    >
-      <slot name="options" />
-    </FlexContainer>
-
-    <!-- <ButtonCoinSlot content="Cancelar" class="button-margin" @click="emit('remove', props.id)">
-        <CrossIco />
+  <FloatModalSlot :closeOnClick="true" :clickStop="true" ref="floatModal">
+    <template #button-slot>
+      <ButtonCoinSlot content="Mais" :circle="true" class="button-plus">
+        <PlusIco />
       </ButtonCoinSlot>
+    </template>
 
-      <FlexContainer>
-        <TagSelector
-          class="tag-selector"
-          text-filter-tags=""
-          :all-tags="props.tags"
-          :tags-checked="props.checkedTags"
-          @tags-updated="emit('emitTags', $event)"
+    <template #container-slot>
+      <ModalCard class="card-options" background-color="front" flex-direction="column">
+        <ButtonSlot
+          content="Editar Card"
+          border-color="transparent"
+          class="button-option"
+          @click="openEditor"
         >
-          <ButtonCoinSlot content="Selecionar tags" class="button-margin">
+          <PencilIco />
+        </ButtonSlot>
+
+        <TagsSelectable
+          :all-tags="props.tags"
+          :tags-checked="props.card.tags"
+          :text-filter-tags="textFilterTags"
+          @tags-updated="updatedTags"
+          @search-tag="searchTag"
+          @clear="clear"
+          @open-create-tag="openCreateTag"
+        >
+          <ButtonSlot content="Selecionar tags" border-color="transparent" class="button-option">
             <TagIco />
-          </ButtonCoinSlot>
-        </TagSelector>
+          </ButtonSlot>
+        </TagsSelectable>
+
+        <ButtonSlot content="Compartir Card" border-color="transparent" class="button-option">
+          <ShareIco />
+        </ButtonSlot>
 
         <ButtonSlot
-          content="Criar card"
-          class="button-margin"
-          border-radius="10px"
-          :invert-color="true"
+          content="Deletar Card"
+          border-color="transparent"
+          class="button-option"
+          @click="openDelete"
         >
-          <PlusIco />
-        </ButtonSlot> 
-      </FlexContainer> -->
-  </FlexContainer>
+          <TrashIco />
+        </ButtonSlot>
+      </ModalCard>
+    </template>
+  </FloatModalSlot>
 </template>
 
 <style scoped lang="scss">
-.card-options-slot {
-  width: 100%;
+.card-options {
+  width: 200px;
+  height: fit-content;
 
-  & .options-section {
-    z-index: 1;
-    transition: all 0.3s;
-    height: 60px;
-    padding: 0px 8px;
-    box-sizing: border-box;
-    background-color: v-bind('stylesPage.atualColor.border');
-    margin-top: -6px;
+  & .button-option {
     width: 100%;
-    border-radius: 0 0 8px 8px;
-
-    & .button-margin {
-      margin-right: 4px;
-    }
-  }
-
-  & .hidden {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
   }
 }
 </style>

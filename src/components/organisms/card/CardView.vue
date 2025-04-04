@@ -19,6 +19,7 @@ import ShareIco from '@/components/atoms/icons/ShareIco.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import TagsSelectable from './partials/TagsSelectable.vue'
+import ExpandableControls from './partials/ExpandableControls.vue'
 import MoreOptions from './partials/MoreOptions.vue'
 
 const styleCard = useStylesCard()
@@ -89,7 +90,7 @@ const clear = (v: null) => emit('clear', v)
 </script>
 
 <template>
-  <MoreOptions>
+  <ExpandableControls show-on="click">
     <template #container>
       <FlexContainer
         class="card-container"
@@ -128,74 +129,37 @@ const clear = (v: null) => emit('clear', v)
         <div class="markdown-container">
           <ThemeMarkown :content="props.card.content" />
         </div>
-
-        <FloatModalSlot
-          :closeOnClick="true"
-          v-if="viewButtonPlush && !hideButtonPlush"
-          ref="floatModal"
-        >
-          <template #button-slot>
-            <ButtonCoinSlot content="Mais" :circle="true" class="button-plus">
-              <PlusIco />
-            </ButtonCoinSlot>
-          </template>
-
-          <template #container-slot>
-            <ModalCard class="card-options" background-color="front" flex-direction="column">
-              <ButtonSlot
-                content="Editar Card"
-                border-color="transparent"
-                class="button-option"
-                @click="openEditor"
-              >
-                <PencilIco />
-              </ButtonSlot>
-
-              <TagsSelectable
-                :all-tags="props.tags"
-                :tags-checked="props.card.tags"
-                :text-filter-tags="textFilterTags"
-                @tags-updated="updatedTags"
-                @search-tag="searchTag"
-                @clear="clear"
-                @open-create-tag="openCreateTag"
-              >
-                <ButtonSlot
-                  content="Selecionar tags"
-                  border-color="transparent"
-                  class="button-option"
-                >
-                  <TagIco />
-                </ButtonSlot>
-              </TagsSelectable>
-
-              <ButtonSlot content="Compartir Card" border-color="transparent" class="button-option">
-                <ShareIco />
-              </ButtonSlot>
-
-              <ButtonSlot
-                content="Deletar Card"
-                border-color="transparent"
-                class="button-option"
-                @click="openDelete"
-              >
-                <TrashIco />
-              </ButtonSlot>
-            </ModalCard>
-          </template>
-        </FloatModalSlot>
       </FlexContainer>
     </template>
 
     <template #options>
-      <ButtonCoinSlot content="Mais">
-        <PlusIco />
-      </ButtonCoinSlot>
+      <FlexContainer justify-content="space-between" class="container">
+        <FlexContainer>
+          <ButtonSlot content="Editar Card" @click="openEditor">
+            <PencilIco />
+          </ButtonSlot>
+
+          <TagsSelectable
+            :all-tags="props.tags"
+            :tags-checked="props.card.tags"
+            :text-filter-tags="props.textFilterTags"
+          >
+            <ButtonCoinSlot content="Selecionar tags">
+              <TagIco />
+            </ButtonCoinSlot>
+          </TagsSelectable>
+        </FlexContainer>
+
+        <MoreOptions :text-filter-tags="textFilterTags" :card="props.card" :tags="props.tags" />
+      </FlexContainer>
     </template>
-  </MoreOptions>
+  </ExpandableControls>
 </template>
 
 <style scoped lang="scss">
+.container {
+  width: 100%;
+}
 .card-container {
   width: 100%;
   height: 100%;
