@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import CardView from './CardView.vue'
 import CardDelete from './CardDelete.vue'
 import CardEditor from './CardEditor.vue'
 import type { Icard } from '@/stores/cards/Interfaces'
 import type { Itag } from '@/stores/tags/Interfaces'
-import CardCreate from './CardCreate.vue'
 
 const props = defineProps<{
   textFilterTags: string
@@ -21,7 +20,7 @@ const emit = defineEmits<{
   (e: 'openCreateTag', v: null): void
 }>()
 
-type cardType = 'view' | 'editor' | 'create' | 'delete'
+type cardType = 'view' | 'editor' | 'delete'
 
 // valores
 
@@ -48,7 +47,7 @@ const focusOn = (v: boolean) => {
 }
 
 const focusOff = () => {
-  if (!cardTypeIs('view') && !cardTypeIs('create')) return
+  if (!cardTypeIs('view')) return
   focusOn(false)
 }
 
@@ -81,10 +80,6 @@ const clear = (v: null) => emit('clear', v)
 // onUpdated(() => {
 //   props.card.id === 'create' && cardTypeSet('create')
 // })
-
-onMounted(() => {
-  props.card.id === 'create' && cardTypeSet('create')
-})
 </script>
 
 <template>
@@ -107,18 +102,6 @@ onMounted(() => {
 
         <CardEditor
           v-else-if="cardTypeIs('editor')"
-          :card="cardReactive"
-          :tags="props.tags"
-          :text-filter-tags="props.textFilterTags"
-          @cancel="cardTypeSet('view')"
-          @updated-card="handleUpdated"
-          @search-tag="searchTag"
-          @clear="clear"
-          @open-create-tag="openCreateTag"
-        />
-
-        <CardCreate
-          v-else-if="cardTypeIs('create')"
           :card="cardReactive"
           :tags="props.tags"
           :text-filter-tags="props.textFilterTags"

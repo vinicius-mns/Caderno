@@ -304,7 +304,7 @@ const openCreateTag = () => {
 
       <CardGroup
         v-for="(card, i) in column"
-        class="card"
+        class="card-group-xxssc"
         :key="i"
         :card="card"
         :tags="tags.tags"
@@ -344,7 +344,7 @@ const openCreateTag = () => {
     width: 0;
     flex-grow: 1;
 
-    & .card {
+    & .card-group-xxssc {
       margin: 6px;
     }
   }

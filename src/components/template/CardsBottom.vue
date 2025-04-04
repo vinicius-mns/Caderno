@@ -228,7 +228,7 @@ onBeforeUnmount(() => {
         >
         </TagsContainer> -->
 
-      <!-- <FloatModalSlot :closeOnClick="true" :center="true">
+      <FloatModalSlot :closeOnClick="true" :center="true">
         <template #button-slot>
           <ButtonCoinSlot content="Mais" :border="true" class="button-margin">
             <PlusIco />
@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
             </FlexContainer>
           </ModalCard>
         </template>
-      </FloatModalSlot> -->
+      </FloatModalSlot>
     </ModalCard>
   </FlexContainer>
 </template>

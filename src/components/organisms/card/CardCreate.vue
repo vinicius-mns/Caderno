@@ -1,175 +1,155 @@
 <script setup lang="ts">
-import type { Icard } from '@/stores/cards/Interfaces'
+import { computed, reactive, ref } from 'vue'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import CheckIco from '@/components/atoms/icons/CheckIco.vue'
-import CrossIco from '@/components/atoms/icons/CrossIco.vue'
-import { useStylesCard } from '@/stores/stylesCard/stylesCard'
-import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import { nextTick, ref } from 'vue'
+import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
+import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
-import type { Itag } from '@/stores/tags/Interfaces'
+import CrossIco from '@/components/atoms/icons/CrossIco.vue'
+import CheckIco from '@/components/atoms/icons/CheckIco.vue'
+import TagView2 from '@/components/molecules/TagView2.vue'
+import type { Itag, ItagsApi } from '@/stores/tags/Interfaces'
+import TagSelector from '@/components/organisms/tag/TagSelector.vue'
+import PlusIco from '@/components/atoms/icons/PlusIco.vue'
 import TagIco from '@/components/atoms/icons/TagIco.vue'
-import TagsSelectable from './partials/TagsSelectable.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
-const cardStyle = useStylesCard()
-
-export type ICardType = 'create' | 'editor' | 'view' | 'delete'
+const stylesPage = useStylesPage()
+const styleCard = useStylesCard()
 
 const props = defineProps<{
-  card: Icard
+  content: string
   tags: Itag[]
-  textFilterTags: string
+  checkedTags: Itag[]
+  id: number
 }>()
 
 const emit = defineEmits<{
-  (e: 'updatedCard', v: Icard): void
-  (e: 'cancel', v: null): void
-  (e: 'searchTag', v: string): void
-  (e: 'openCreateTag', v: null): void
-  (e: 'clear', v: null): void
+  (e: 'emitContent', v: string): void
+  (e: 'emitTags', v: Itag[]): void
+  (e: 'remove', v: number): void
 }>()
 
-// valores
+const showOptions = ref(false)
 
-const cardContent = ref(props.card.content)
+const showOptionsOn = () => (showOptions.value = true)
 
-const cardTags = ref(props.card.tags)
+const showOptionsOff = () => (showOptions.value = false)
 
-// metodos
+// const sliceBoderStyle = computed(() => {
+//   return showOptions.value ? { borderRadius: '8px 8px 0 0' } : {}
+// })
 
-const cardContentSet = (newContent: string) => {
-  cardContent.value = newContent
-}
-
-const cardTagsSet = (newTags: Itag[]) => {
-  cardTags.value = newTags
-}
-
-const cancel = () => emit('cancel', null)
-
-const handleSendCard = (e: KeyboardEvent) => {
-  if (e.ctrlKey && e.key === 'Enter') updatedCard()
-}
-
-const handleSendTags = (tags: Itag[]) => {
-  cardTagsSet(tags)
-
-  const isEmptyContent = cardContent.value.length <= 0
-  const isSameContent = cardContent.value === props.card.content
-
-  if (isEmptyContent || isSameContent) return
-
-  nextTick(updatedCard)
-}
-
-// emicoes
-
-const updatedCard = () => {
-  emit('updatedCard', {
-    ...props.card,
-    content: cardContent.value,
-    tags: cardTags.value
-  })
-}
-
-const searchTag = (tag: string) => emit('searchTag', tag)
-
-const openCreateTag = (v: null) => emit('openCreateTag', v)
-
-const clear = (v: null) => emit('clear', v)
+const optionsClass = computed(() => {
+  return showOptions.value ? '' : 'hidden'
+})
 </script>
 
 <template>
-  <FlexContainer class="card-type-container" flex-direction="column">
+  <FlexContainer
+    class="card-create-container"
+    flex-direction="column"
+    align-items="center"
+    justify-content="center"
+    @mouseenter="showOptionsOn"
+    @mouseleave="showOptionsOff"
+    @click="showOptionsOn"
+  >
     <ThemeTextArea
-      class="card text-area"
-      :id="props.card.id"
-      :content="cardContent"
-      :max-height-px="426"
-      :style="cardStyle.atualStyle"
-      @emit-content="cardContentSet"
-      @keydown="handleSendCard"
+      :style="styleCard.atualStyle"
+      class="text-area-create-card"
+      :id="`card-create-${props.id}`"
+      :content="props.content"
+      @emit-content="emit('emitContent', $event)"
+      @keydown="() => {}"
     />
 
-    <FlexContainer class="footer">
-      <FlexContainer class="options">
-        <TagsSelectable
-          :all-tags="props.tags"
-          :tags-checked="props.card.tags"
-          :text-filter-tags="props.textFilterTags"
-          @tags-updated="handleSendTags"
-          @search-tag="searchTag"
-          @open-create-tag="openCreateTag"
-          @clear="clear"
-        >
-          <ButtonSlot
-            class="button-option"
-            content="Selecionar tags"
-            border-radius="50px"
-            :invert-color="true"
-          >
-            <TagIco />
-          </ButtonSlot>
-        </TagsSelectable>
+    <FlexContainer
+      :class="['botton-section', optionsClass]"
+      align-items="center"
+      justify-content="space-between"
+    >
+      <ButtonCoinSlot content="Cancelar" class="button-margin" @click="emit('remove', props.id)">
+        <CrossIco />
+      </ButtonCoinSlot>
 
-        <ButtonCoinSlot
-          content="Confirmar"
-          class="button-option"
-          border-radius="50px"
-          @click="updatedCard"
+      <FlexContainer>
+        <TagSelector
+          class="tag-selector"
+          text-filter-tags=""
+          :all-tags="props.tags"
+          :tags-checked="props.checkedTags"
+          @tags-updated="emit('emitTags', $event)"
+        >
+          <ButtonCoinSlot content="Selecionar tags" class="button-margin">
+            <TagIco />
+          </ButtonCoinSlot>
+        </TagSelector>
+
+        <ButtonSlot
+          content="Criar card"
+          class="button-margin"
+          border-radius="10px"
           :invert-color="true"
         >
-          <CheckIco />
-        </ButtonCoinSlot>
-      </FlexContainer>
-
-      <FlexContainer class="tags-container" flex-wrap="wrap">
-        <span class="tag" v-for="(tag, i) in cardTags" :key="i">{{ tag[0] }}</span>
+          <PlusIco />
+        </ButtonSlot>
       </FlexContainer>
     </FlexContainer>
+
+    <FlexContainer class="tags-section" flex-wrap="wrap">
+      <TagView2
+        v-for="(tag, i) in props.checkedTags"
+        class="tag"
+        :tag="tag"
+        :key="i"
+        :mini="true"
+      />
+    </FlexContainer>
+
+    <!-- <Transition name="appear">
+      <ButtonCoinSlot
+        v-if="showOptions"
+        class="remove"
+        content="Remover"
+        @click="emit('remove', props.id)"
+        background-color="red"
+        size="30px"
+      >
+        <CrossIco />
+      </ButtonCoinSlot>
+    </Transition> -->
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
-.card-type-container {
-  & .title {
+.card-create-container {
+  width: 100%;
+
+  & .botton-section {
+    transition: all 0.3s;
+    height: 60px;
+    padding: 0px 8px;
+    box-sizing: border-box;
+    background-color: v-bind('stylesPage.atualColor.border');
+    margin-top: -6px;
     width: 100%;
-    margin-left: 20px;
-  }
+    border-radius: 0 0 8px 8px;
 
-  & .card {
-    cursor: pointer;
-    width: 100%;
-  }
-
-  & .text-area {
-    cursor: text;
-  }
-
-  & .footer {
-    width: 100%;
-
-    & .tags-container {
-      margin-top: 6px;
-      word-wrap: wrap;
-
-      & .tag {
-        margin: 4px;
-      }
+    & .button-margin {
+      margin-right: 4px;
     }
+  }
 
-    & .options {
-      position: sticky;
-      z-index: 1;
-      bottom: 0;
-      margin-top: 6px;
+  & .hidden {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
 
-      & .button-option {
-        width: auto;
-        margin-right: 8px;
-      }
-    }
+  & .tags-section {
+    margin-top: 4px;
+    width: 100%;
   }
 }
 </style>

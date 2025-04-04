@@ -19,6 +19,7 @@ import ShareIco from '@/components/atoms/icons/ShareIco.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
 import TagsSelectable from './partials/TagsSelectable.vue'
+import MoreOptions from './partials/MoreOptions.vue'
 
 const styleCard = useStylesCard()
 
@@ -88,65 +89,20 @@ const clear = (v: null) => emit('clear', v)
 </script>
 
 <template>
-  <FlexContainer
-    class="card-container"
-    flex-direction="column"
-    align-items="center"
-    :style="styleCard.atualStyle"
-    @mouseenter="bottonPlush.show"
-    @mouseleave="bottonPlush.hide"
-  >
-    <header class="showHeader">
-      <FloatDescription :content="cardDate">
-        <CalcDate class="date-text" :date="props.card.date" />
-      </FloatDescription>
-
-      <TagsSelectable
-        :all-tags="props.tags"
-        :tags-checked="props.card.tags"
-        :text-filter-tags="textFilterTags"
-        @tags-updated="updatedTags"
-        @search-tag="searchTag"
-        @clear="clear"
-        @open-create-tag="openCreateTag"
+  <MoreOptions>
+    <template #container>
+      <FlexContainer
+        class="card-container"
+        flex-direction="column"
+        align-items="center"
+        :style="styleCard.atualStyle"
+        @mouseenter="bottonPlush.show"
+        @mouseleave="bottonPlush.hide"
       >
-        <FlexContainer class="tags-list-container">
-          <FloatDescription
-            v-for="(tag, i) in props.card.tags"
-            :content="`${tag[0]} ${tag[1]}`"
-            :key="i"
-          >
-            <ThemeP :key="i" :content="tag[0]" class="tag" />
+        <header class="showHeader">
+          <FloatDescription :content="cardDate">
+            <CalcDate class="date-text" :date="props.card.date" />
           </FloatDescription>
-        </FlexContainer>
-      </TagsSelectable>
-    </header>
-
-    <div class="markdown-container">
-      <ThemeMarkown :content="props.card.content" />
-    </div>
-
-    <FloatModalSlot
-      :closeOnClick="true"
-      v-if="viewButtonPlush && !hideButtonPlush"
-      ref="floatModal"
-    >
-      <template #button-slot>
-        <ButtonCoinSlot content="Mais" :circle="true" class="button-plus">
-          <PlusIco />
-        </ButtonCoinSlot>
-      </template>
-
-      <template #container-slot>
-        <ModalCard class="card-options" background-color="front" flex-direction="column">
-          <ButtonSlot
-            content="Editar Card"
-            border-color="transparent"
-            class="button-option"
-            @click="openEditor"
-          >
-            <PencilIco />
-          </ButtonSlot>
 
           <TagsSelectable
             :all-tags="props.tags"
@@ -157,27 +113,86 @@ const clear = (v: null) => emit('clear', v)
             @clear="clear"
             @open-create-tag="openCreateTag"
           >
-            <ButtonSlot content="Selecionar tags" border-color="transparent" class="button-option">
-              <TagIco />
-            </ButtonSlot>
+            <FlexContainer class="tags-list-container">
+              <FloatDescription
+                v-for="(tag, i) in props.card.tags"
+                :content="`${tag[0]} ${tag[1]}`"
+                :key="i"
+              >
+                <ThemeP :key="i" :content="tag[0]" class="tag" />
+              </FloatDescription>
+            </FlexContainer>
           </TagsSelectable>
+        </header>
 
-          <ButtonSlot content="Compartir Card" border-color="transparent" class="button-option">
-            <ShareIco />
-          </ButtonSlot>
+        <div class="markdown-container">
+          <ThemeMarkown :content="props.card.content" />
+        </div>
 
-          <ButtonSlot
-            content="Deletar Card"
-            border-color="transparent"
-            class="button-option"
-            @click="openDelete"
-          >
-            <TrashIco />
-          </ButtonSlot>
-        </ModalCard>
-      </template>
-    </FloatModalSlot>
-  </FlexContainer>
+        <FloatModalSlot
+          :closeOnClick="true"
+          v-if="viewButtonPlush && !hideButtonPlush"
+          ref="floatModal"
+        >
+          <template #button-slot>
+            <ButtonCoinSlot content="Mais" :circle="true" class="button-plus">
+              <PlusIco />
+            </ButtonCoinSlot>
+          </template>
+
+          <template #container-slot>
+            <ModalCard class="card-options" background-color="front" flex-direction="column">
+              <ButtonSlot
+                content="Editar Card"
+                border-color="transparent"
+                class="button-option"
+                @click="openEditor"
+              >
+                <PencilIco />
+              </ButtonSlot>
+
+              <TagsSelectable
+                :all-tags="props.tags"
+                :tags-checked="props.card.tags"
+                :text-filter-tags="textFilterTags"
+                @tags-updated="updatedTags"
+                @search-tag="searchTag"
+                @clear="clear"
+                @open-create-tag="openCreateTag"
+              >
+                <ButtonSlot
+                  content="Selecionar tags"
+                  border-color="transparent"
+                  class="button-option"
+                >
+                  <TagIco />
+                </ButtonSlot>
+              </TagsSelectable>
+
+              <ButtonSlot content="Compartir Card" border-color="transparent" class="button-option">
+                <ShareIco />
+              </ButtonSlot>
+
+              <ButtonSlot
+                content="Deletar Card"
+                border-color="transparent"
+                class="button-option"
+                @click="openDelete"
+              >
+                <TrashIco />
+              </ButtonSlot>
+            </ModalCard>
+          </template>
+        </FloatModalSlot>
+      </FlexContainer>
+    </template>
+
+    <template #options>
+      <ButtonCoinSlot content="Mais">
+        <PlusIco />
+      </ButtonCoinSlot>
+    </template>
+  </MoreOptions>
 </template>
 
 <style scoped lang="scss">
