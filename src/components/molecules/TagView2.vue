@@ -10,17 +10,20 @@ const stylesPage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
+    emojiSize?: string
     tag: Itag
     mini?: boolean
     type?: 'include' | 'exclude' | 'selected' | 'none'
     height?: string
     animation?: boolean
+    borderRadius?: string
   }>(),
   {
-    tagEmojiSize: '16px',
+    emojiSize: '32px',
     mini: false,
     type: 'none',
     height: '32px',
+    borderRadius: '50px',
     animation: true
   }
 )
@@ -76,7 +79,7 @@ $height: v-bind('props.height');
   flex-shrink: 0;
   border: solid 1px v-bind('stylesPage.atualColor.border');
   background-color: v-bind('stylesPage.atualColor.front');
-  border-radius: 50px;
+  border-radius: v-bind('props.borderRadius');
   cursor: pointer;
   user-select: none;
 

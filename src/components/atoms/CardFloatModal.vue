@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 import { nextTick, onMounted, reactive, ref } from 'vue'
-
-const stylePage = useStylesPage()
 
 const props = withDefaults(
   defineProps<{
     closeOnClick?: boolean
     clickStop?: boolean
+    cursorX: number
+    cursorY: number
   }>(),
   {
     closeOnClick: false,
@@ -16,36 +15,23 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'open', v: void): void
-  (e: 'close', v: void): void
+  (e: 'close', v: null): void
 }>()
 
 const card = ref<HTMLElement>()
 
-const showFlotModal = ref(false)
-
-const open = () => {
-  showFlotModal.value = true
-  emit('open')
-}
-
-const close = () => {
-  showFlotModal.value = false
-  emit('close')
-}
-
-const toggleShowModal = () => (showFlotModal.value = !showFlotModal.value)
-
 const cursorPosition = reactive({ x: '0px', y: '0px' })
 
-const setCursorPostion = (e: MouseEvent) => {
-  cursorPosition.x = `${e.clientX}px`
-  cursorPosition.y = `${e.clientY + 10}px`
+const setCursorPostion = () => {
+  cursorPosition.x = `${props.cursorX}px`
+  cursorPosition.y = `${props.cursorY + 10}px`
 }
 
 const cardRepositionX = () => {
   const cardWidth = card.value?.clientWidth as number
+
   const windowWidth = window.innerWidth
+
   const xPosition = parseInt(cursorPosition.x)
 
   const cardStatus = (): 'inLeft' | 'InRight' | 'IsLarge' | 'normal' => {
@@ -70,6 +56,8 @@ const cardRepositionX = () => {
   const execute = () => {
     const status = cardStatus()
 
+    console.log(status)
+
     if (status === 'IsLarge') toCenter()
     if (status === 'InRight') toLeft()
     if (status === 'normal') upOnCursor()
@@ -87,13 +75,17 @@ const cardRepositionY = () => {
   if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
 }
 
-const openCard = (e: MouseEvent) => {
-  setCursorPostion(e)
-  toggleShowModal()
+const openCard = () => {
+  setCursorPostion()
+
   nextTick(() => {
     cardRepositionX()
     cardRepositionY()
   })
+}
+
+const close = () => {
+  emit('close', null)
 }
 
 const closeIfCloseOnClick = () => {
@@ -101,62 +93,46 @@ const closeIfCloseOnClick = () => {
 }
 
 defineExpose({
-  open,
   close
 })
 
 onMounted(() => {
-  console.log('float modal montado')
+  openCard()
 })
 </script>
 
 <template>
-  <div class="container-float-modal">
-    <div v-if="clickStop" class="button-slot" @click.stop="openCard">
-      <slot name="button-slot"></slot>
-    </div>
-
-    <div v-else class="button-slot" @click="openCard">
-      <slot name="button-slot"></slot>
-    </div>
-
-    <div class="glass" v-if="showFlotModal" @click="close">
-      <div class="float-card" @click.stop ref="card" @click="closeIfCloseOnClick">
-        <slot class="slot" name="container-slot"></slot>
-      </div>
+  <div class="glass" @click="close">
+    <div class="float-card" @click.stop ref="card" @click="closeIfCloseOnClick">
+      <slot class="slot" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.container-float-modal {
-  & .glass {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 3;
-    padding: 0;
-    margin: 0;
-    width: 100dvw;
-    height: 100dvh;
-    backdrop-filter: blur(3px);
-    background-color: rgba(1, 7, 27, 0.2);
-    -webkit-backdrop-filter: blur(3px);
-  }
-
-  & .float-card {
-    position: fixed;
-    opacity: 0;
-    left: v-bind('cursorPosition.x');
-    top: v-bind('cursorPosition.y');
-    animation: initModal 0.3s forwards;
-    margin-top: 20px;
-    // border-radius: v-bind('stylePage.borderRadius.outside');
-    // box-shadow:
-    //   rgba(17, 17, 26, 0.5) 0px 4px 16px,
-    //   rgba(17, 17, 26, 0.2) 0px 8px 32px;
-  }
+.glass {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 0;
+  margin: 0;
+  width: 100dvw;
+  height: 100dvh;
+  backdrop-filter: blur(3px);
+  background-color: rgba(1, 7, 27, 0.2);
+  -webkit-backdrop-filter: blur(3px);
 }
+
+.float-card {
+  position: fixed;
+  opacity: 0;
+  left: v-bind('cursorPosition.x');
+  top: v-bind('cursorPosition.y');
+  animation: initModal 0.3s forwards;
+  margin-top: 20px;
+}
+
 @keyframes initModal {
   to {
     opacity: 100%;

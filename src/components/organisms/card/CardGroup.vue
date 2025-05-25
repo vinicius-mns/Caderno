@@ -139,8 +139,8 @@ const clear = (v: null) => emit('clear', v)
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   background-color: rgba(0, 0, 0, 0.63);

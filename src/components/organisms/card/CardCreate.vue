@@ -1,155 +1,231 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import ThemeTextArea from '@/components/atoms/ThemeTextArea.vue'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import CrossIco from '@/components/atoms/icons/CrossIco.vue'
-import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import TagView2 from '@/components/molecules/TagView2.vue'
-import type { Itag, ItagsApi } from '@/stores/tags/Interfaces'
+import type { Itag } from '@/stores/tags/Interfaces'
 import TagSelector from '@/components/organisms/tag/TagSelector.vue'
-import PlusIco from '@/components/atoms/icons/PlusIco.vue'
 import TagIco from '@/components/atoms/icons/TagIco.vue'
+import SendIco from '@/components/atoms/icons/SendIco.vue'
+import ExpandableControls from './partials/ExpandableControls.vue'
+import type { Icard } from '@/stores/cards/Interfaces'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import PlusIco from '@/components/atoms/icons/PlusIco.vue'
+
+const styleCard = useStylesCard()
 
 const stylesPage = useStylesPage()
-const styleCard = useStylesCard()
 
 const props = defineProps<{
   content: string
   tags: Itag[]
   checkedTags: Itag[]
-  id: number
+  id: string
 }>()
 
 const emit = defineEmits<{
   (e: 'emitContent', v: string): void
   (e: 'emitTags', v: Itag[]): void
-  (e: 'remove', v: number): void
+  (e: 'remove', v: string): void
+  (e: 'emitCard', v: Icard): void
 }>()
 
-const showOptions = ref(false)
+// valores
 
-const showOptionsOn = () => (showOptions.value = true)
-
-const showOptionsOff = () => (showOptions.value = false)
-
-// const sliceBoderStyle = computed(() => {
-//   return showOptions.value ? { borderRadius: '8px 8px 0 0' } : {}
-// })
-
-const optionsClass = computed(() => {
-  return showOptions.value ? '' : 'hidden'
+const card = reactive({
+  id: String(props.id),
+  content: '',
+  date: new Date(),
+  tags: props.checkedTags
 })
+
+const errorMessage = reactive({
+  show: false,
+  message: ''
+})
+
+// metodos
+
+const cardSet = {
+  content: (content: string) => (card.content = content),
+  tags: (tags: Itag[]) => (card.tags = tags)
+}
+
+const cardSend = {
+  content: (content: string) => emit('emitContent', content),
+  tags: (tags: Itag[]) => emit('emitTags', tags),
+  card: (card: Icard) => {
+    try {
+      validateContent(card.content)
+      validateTags(card.tags)
+
+      emit('emitCard', card)
+    } catch (error) {
+      if (error instanceof Error) {
+        openErrorMessage(error.message)
+      }
+    }
+  }
+}
+
+const cardSetAndSend = {
+  content: (content: string) => {
+    cardSet.content(content)
+    cardSend.content(content)
+  },
+  tags: (tags: Itag[]) => {
+    cardSet.tags(tags)
+    cardSend.tags(tags)
+  }
+}
+
+const openErrorMessage = (message: string) => {
+  errorMessage.message = message
+  errorMessage.show = true
+
+  setTimeout(() => (errorMessage.show = false), 1200)
+}
+
+const validateContent = (content: string) => {
+  if (content.length < 3) {
+    throw new Error('Escreva no card')
+  }
+}
+
+const validateTags = (tags: Itag[]) => {
+  if (tags.length <= 0) {
+    throw new Error('Selecione alguma tag')
+  }
+}
+
+const sendByEnter = (e: KeyboardEvent) => {
+  if (e.ctrlKey && e.key === 'Enter') cardSend.card(card)
+}
 </script>
 
 <template>
-  <FlexContainer
-    class="card-create-container"
-    flex-direction="column"
-    align-items="center"
-    justify-content="center"
-    @mouseenter="showOptionsOn"
-    @mouseleave="showOptionsOff"
-    @click="showOptionsOn"
-  >
-    <ThemeTextArea
-      :style="styleCard.atualStyle"
-      class="text-area-create-card"
-      :id="`card-create-${props.id}`"
-      :content="props.content"
-      @emit-content="emit('emitContent', $event)"
-      @keydown="() => {}"
-    />
+  <FlexContainer flex-direction="column" class="card-create-container">
+    <ExpandableControls show-on="always">
+      <template #container>
+        <ThemeTextArea
+          :style="styleCard.atualStyle"
+          class="text-area-create-card"
+          :id="`card-create-${props.id}`"
+          :content="props.content"
+          :max-height-px="226"
+          @emit-content="cardSetAndSend.content"
+          @keydown="sendByEnter"
+        />
+      </template>
 
-    <FlexContainer
-      :class="['botton-section', optionsClass]"
-      align-items="center"
-      justify-content="space-between"
-    >
-      <ButtonCoinSlot content="Cancelar" class="button-margin" @click="emit('remove', props.id)">
-        <CrossIco />
-      </ButtonCoinSlot>
+      <template #options>
+        <div class="button-section">
+          <div class="tags-section">
+            <TagView2
+              v-for="(tag, i) in card.tags"
+              class="tag"
+              :tag="tag"
+              :key="i"
+              :mini="true"
+              height="23px"
+            />
+          </div>
 
-      <FlexContainer>
-        <TagSelector
-          class="tag-selector"
-          text-filter-tags=""
-          :all-tags="props.tags"
-          :tags-checked="props.checkedTags"
-          @tags-updated="emit('emitTags', $event)"
-        >
-          <ButtonCoinSlot content="Selecionar tags" class="button-margin">
-            <TagIco />
-          </ButtonCoinSlot>
-        </TagSelector>
+          <FlexContainer class="buttons">
+            <ButtonCoinSlot content="Remover" @click="emit('remove', props.id)">
+              <CrossIco />
+            </ButtonCoinSlot>
 
-        <ButtonSlot
-          content="Criar card"
-          class="button-margin"
-          border-radius="10px"
-          :invert-color="true"
-        >
-          <PlusIco />
-        </ButtonSlot>
-      </FlexContainer>
-    </FlexContainer>
+            <TagSelector
+              class="tag-selector"
+              text-filter-tags=""
+              :all-tags="props.tags"
+              :tags-checked="card.tags"
+              @tags-updated="cardSetAndSend.tags"
+            >
+              <ButtonCoinSlot content="Selecionar tags">
+                <TagIco />
+              </ButtonCoinSlot>
+            </TagSelector>
 
-    <FlexContainer class="tags-section" flex-wrap="wrap">
-      <TagView2
-        v-for="(tag, i) in props.checkedTags"
-        class="tag"
-        :tag="tag"
-        :key="i"
-        :mini="true"
-      />
-    </FlexContainer>
+            <ButtonSlot
+              content="Criar card"
+              :invert-color="true"
+              border-radius="50px"
+              @click="cardSend.card(card)"
+            >
+              <SendIco />
+            </ButtonSlot>
+          </FlexContainer>
+        </div>
+      </template>
+    </ExpandableControls>
 
-    <!-- <Transition name="appear">
-      <ButtonCoinSlot
-        v-if="showOptions"
-        class="remove"
-        content="Remover"
-        @click="emit('remove', props.id)"
-        background-color="red"
-        size="30px"
-      >
-        <CrossIco />
-      </ButtonCoinSlot>
-    </Transition> -->
+    <p :class="['message-error', errorMessage.show && 'appear']">{{ errorMessage.message }}</p>
   </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .card-create-container {
   width: 100%;
+  position: relative;
 
-  & .botton-section {
-    transition: all 0.3s;
-    height: 60px;
-    padding: 0px 8px;
-    box-sizing: border-box;
-    background-color: v-bind('stylesPage.atualColor.border');
-    margin-top: -6px;
+  & .button-section {
     width: 100%;
-    border-radius: 0 0 8px 8px;
+    height: 100%;
+    display: flex;
+    margin-top: 8px;
+    & svg {
+      height: 15px;
+      aspect-ratio: 1;
+    }
 
-    & .button-margin {
-      margin-right: 4px;
+    & .tags-section {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    & .buttons {
+      gap: 8px;
     }
   }
 
-  & .hidden {
+  & .message-error {
+    transition: all 0.2s;
+    color: white;
+    position: absolute;
+    left: 50%;
+    background-color: red;
+    transform: translate(-50%, -30%);
+    padding: 6px 16px;
+    border-radius: 8px;
+    bottom: calc(50% - 10px);
     opacity: 0;
-    height: 0;
-    overflow: hidden;
+    text-wrap: nowrap;
   }
 
-  & .tags-section {
-    margin-top: 4px;
-    width: 100%;
+  & .appear {
+    opacity: 1;
+    bottom: 50%;
+  }
+
+  animation: init 0.3s;
+}
+
+@keyframes init {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 </style>

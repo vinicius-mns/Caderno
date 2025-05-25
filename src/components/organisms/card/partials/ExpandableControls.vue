@@ -5,10 +5,11 @@ import { useStylesPage } from '@/stores/stylesPage/stylesPage'
 
 const props = withDefaults(
   defineProps<{
-    showOn?: 'click' | 'hover'
+    showOn?: 'click' | 'hover' | 'always'
+    height?: string
   }>(),
   {
-    showOn: 'hover'
+    showOn: 'always'
   }
 )
 
@@ -16,15 +17,17 @@ const stylesPage = useStylesPage()
 
 const showOptions = ref(false)
 
+const optionsClass = computed(() => {
+  if (props.showOn === 'always') return ''
+  if (showOptions.value) return ''
+  return 'hidden'
+})
+
 const showOptionsOn = () => (showOptions.value = true)
 
 const showOptionsOff = () => (showOptions.value = false)
 
 const toggleOptions = () => (showOptions.value = !showOptions.value)
-
-const optionsClass = computed(() => {
-  return showOptions.value ? '' : 'hidden'
-})
 </script>
 
 <template>
@@ -81,19 +84,20 @@ const optionsClass = computed(() => {
   width: 100%;
 
   & .options-section {
-    z-index: 1;
-    transition: all 0.3s;
-    height: 60px;
-    padding: 0px 8px;
-    box-sizing: border-box;
-    background-color: v-bind('stylesPage.atualColor.border');
-    margin-top: -6px;
+    // background-color: v-bind('stylesPage.atualColor.border');
+    // background-color: transparent;
+    // height: auto;
+    // height: 60px;
+    // transition: all 0.3s;
+    // margin-top: -6px;
+    // border-radius: 0 0 8px 8px;
+    // box-sizing: border-box;
+    // background-color: red;
     width: 100%;
-    border-radius: 0 0 8px 8px;
 
-    & .button-margin {
-      margin-right: 4px;
-    }
+    // & .button-margin {
+    //   margin-right: 4px;
+    // }
   }
 
   & .hidden {

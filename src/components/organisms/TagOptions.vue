@@ -6,8 +6,9 @@ import PencilIco from '../atoms/icons/PencilIco.vue'
 import EraserIco from '../atoms/icons/EraserIco.vue'
 import CardCrossIco from '../atoms/icons/CardCrossIco.vue'
 import TrashIco from '../atoms/icons/TrashIco.vue'
-import FloatModalSlot from '../atoms/FloatModalSlot.vue'
+// import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import TagView2 from '../molecules/TagView2.vue'
+import NewFloatModal from '../molecules/NewFloatModal.vue'
 
 const props = defineProps<{ tag: Itag }>()
 
@@ -24,7 +25,7 @@ const openDeleteTag = (tag: Itag) => emit('openDeleteTag', tag)
 </script>
 
 <template>
-  <FloatModalSlot :closeOnClick="true">
+  <NewFloatModal :closeOnClick="true">
     <template #button-slot>
       <TagView2 :tag="props.tag" />
     </template>
@@ -64,7 +65,7 @@ const openDeleteTag = (tag: Itag) => emit('openDeleteTag', tag)
         </ButtonSlot>
       </ModalCard>
     </template>
-  </FloatModalSlot>
+  </NewFloatModal>
 </template>
 
 <style scoped lang="scss">

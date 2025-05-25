@@ -33,6 +33,11 @@ export const useWindows = defineStore('windows', () => {
 
   const cardShare = newWindow({ title: 'Compartilhar card', props: initCard })
 
+  const tagSelector = newWindow({
+    title: 'Tags',
+    props: { selected: [] as Itag[] }
+  })
+
   const tags = newWindow({ title: 'Tags', props: null })
 
   const filterCardsByTags = newWindow({ title: 'Filtrar cards', props: null })
@@ -65,6 +70,7 @@ export const useWindows = defineStore('windows', () => {
     errorMessage,
     errorCardNoTag,
     tags,
-    filterCardsByTags
+    filterCardsByTags,
+    tagSelector
   }
 })

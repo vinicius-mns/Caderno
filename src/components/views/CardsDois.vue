@@ -34,16 +34,6 @@ onMounted(async () => {
   <FlexContainer class="cards-page-container" flex-direction="column" align-items="center">
     <CardsMain />
 
-    <!-- <BottomBar>
-      <ButtonSlot content="Criar card" :invert-color="true" border-radius="50px">
-        <PencilIco />
-      </ButtonSlot>
-
-      <ButtonCoinSlot content="Criar tags">
-        <TagIco />
-      </ButtonCoinSlot>
-    </BottomBar> -->
-
     <!-- <CardsBottom /> -->
 
     <!-- <CardsHeader /> -->

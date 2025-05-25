@@ -23,11 +23,18 @@ import TagView2 from '@/components/molecules/TagView2.vue'
 import TagSelector from '@/components/organisms/tag/TagSelector.vue'
 import TagIco from '@/components/atoms/icons/TagIco.vue'
 import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import { useCardsTags } from '@/stores/cardsTags'
+import SendIco from '@/components/atoms/icons/SendIco.vue'
+import ThemeH1 from '@/components/atoms/ThemeH1.vue'
+import ThemeH2 from '@/components/atoms/ThemeH2.vue'
+import RangeImput from '@/components/molecules/RangeImput.vue'
+import BackIco from '@/components/atoms/icons/BackIco.vue'
 
 const stylesPage = useStylesPage()
 const styleCard = useStylesCard()
 const window = useWindows()
 const cards = useCards()
+const cardTags = useCardsTags()
 const tags = useTags()
 
 interface ISimpleCard {
@@ -52,13 +59,13 @@ const emptyCard = (type?: 'card' | 'add-button'): ISimpleCard => ({
 
 const cardList = reactive<ISimpleCard[]>([emptyCard('add-button')])
 
-const columns = 4
+const columns = ref(4)
 
 const cardColumns = computed(() => {
-  const cardInColumns = Array.from({ length: columns }, () => []) as ISimpleCard[][]
+  const cardInColumns = Array.from({ length: columns.value }, () => []) as ISimpleCard[][]
 
   for (let i = 0; i < cardList.length; i += 1) {
-    const indexColumn = i % columns
+    const indexColumn = i % columns.value
     cardInColumns[indexColumn].push(cardList[i])
   }
 
@@ -66,6 +73,8 @@ const cardColumns = computed(() => {
 })
 
 // metodos
+
+const columnsSet = (v: number) => (columns.value = v)
 
 const showOptionsOn = () => (showOptions.value = true)
 
@@ -104,6 +113,22 @@ const setTagsSelected = (tags: Itag[]) => {
   tagsSelected.push(...tags)
 }
 
+// api
+
+const createCard = async (card: Icard) => {
+  try {
+    await cardTags.card.create(card)
+
+    removeCard(Number(card.id))
+
+    nextTick(() => {
+      if (cardList.length <= 1) pushCard()
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 // ciclo de vida
 
 watchEffect(() => {
@@ -117,100 +142,150 @@ onMounted(() => {
 </script>
 
 <template>
-  <WindowsSlot :title="window.cardCreate.title" @close="window.cardCreate.close">
-    <FlexContainer class="window-create-card" flex-direction="column">
-      <FlexContainer class="left-header">
-        <TagSelector
-          text-filter-tags=""
-          :all-tags="tags.tags"
-          :tags-checked="tagsSelected"
-          @tags-updated="setTagsSelected"
-        >
-          <ButtonSlot class="tag" content="Selecionar tags" border-radius="50px">
-            <TagIco />
-          </ButtonSlot>
-        </TagSelector>
+  <FlexContainer class="window-create-card" flex-direction="column">
+    <FlexContainer
+      class="top-side margin-left"
+      align-items="center"
+      justify-content="space-between"
+    >
+      <ButtonSlot content="Voltar" border-radius="50px" @click="window.cardCreate.close()">
+        <BackIco />
+      </ButtonSlot>
 
-        <TagView2 v-for="(tag, i) in tagsSelected" :tag="tag" :key="i" class="tag" />
-      </FlexContainer>
-
-      <FlexContainer class="cards-list">
-        <FlexContainer
-          class="column-cards"
-          v-for="(column, index) in cardColumns"
-          :key="index"
-          flex-direction="column"
-        >
-          <FlexContainer
-            v-for="(card, i) in column"
-            :key="i"
-            class="card-container"
-            flex-direction="column"
-            align-items="center"
-            justify-content="center"
-            @mouseenter="showOptionsOn"
-            @mouseleave="showOptionsOff"
-          >
-            <button
-              class="button-add"
-              content="Adicionar"
-              @click="pushCard"
-              v-if="card.type === 'add-button'"
-            >
-              <PlusIco />
-            </button>
-
-            <CardCreate
-              v-else
-              :id="card.id"
-              :content="card.content"
-              :tags="tags.tags"
-              :checked-tags="card.tags"
-              @emit-content="setCardContent($event, card.id)"
-              @emit-tags="setCardTags($event, card.id)"
-              @remove="removeCard"
-            />
-          </FlexContainer>
-        </FlexContainer>
-      </FlexContainer>
-
-      <!-- <FlexContainer class="right">
-        <FlexContainer class="right-container"> </FlexContainer>
-
-        <FlexContainer class="right-main">
-          <TagSelector text-filter-tags="" :all-tags="tags.tags" :tags-checked="tagsSelected" />
-        </FlexContainer>
-      </FlexContainer> -->
+      <RangeImput
+        class="columns-selector"
+        :title="{ content: 'Colunas', visible: true }"
+        :init-value="columns"
+        :limit="{ min: 1, max: 6 }"
+        @emit-value="columnsSet"
+      />
     </FlexContainer>
-  </WindowsSlot>
+
+    <ThemeH1 content="Criar card" class="title margin-text" />
+
+    <FlexContainer class="tags-list margin-left" flex-wrap="wrap">
+      <!-- <TagSelector
+        text-filter-tags=""
+        :all-tags="tags.tags"
+        :tags-checked="tagsSelected"
+        @tags-updated="setTagsSelected"
+      >
+    </TagSelector> -->
+      <ButtonSlot
+        content="Selecionar tags aqui"
+        class="button-tag"
+        border-radius="10px"
+        @click="window.tagSelector.open({ selected: tagsSelected })"
+      >
+        <PlusIco />
+      </ButtonSlot>
+
+      <TagView2
+        v-for="(tag, i) in tagsSelected"
+        :tag="tag"
+        :key="i"
+        class="tag"
+        border-radius="10px"
+        height="32px"
+      />
+    </FlexContainer>
+
+    <FlexContainer class="cards-list">
+      <FlexContainer
+        class="column-cards"
+        v-for="(column, index) in cardColumns"
+        :key="index"
+        flex-direction="column"
+      >
+        <FlexContainer
+          v-for="(card, i) in column"
+          :key="i"
+          class="card-container"
+          flex-direction="column"
+          align-items="center"
+          justify-content="center"
+          @mouseenter="showOptionsOn"
+          @mouseleave="showOptionsOff"
+        >
+          <button
+            class="button-add"
+            content="Adicionar"
+            @click="pushCard"
+            v-if="card.type === 'add-button'"
+          >
+            <PlusIco />
+          </button>
+
+          <CardCreate
+            v-else
+            :id="card.id"
+            :content="card.content"
+            :tags="tags.tags"
+            :checked-tags="card.tags"
+            @emit-content="setCardContent($event, card.id)"
+            @emit-tags="setCardTags($event, card.id)"
+            @remove="removeCard"
+            @emit-card="createCard"
+          />
+        </FlexContainer>
+      </FlexContainer>
+    </FlexContainer>
+  </FlexContainer>
 </template>
 
 <style scoped lang="scss">
 .window-create-card {
-  width: 95dvw;
-  height: calc(95dvh - 50px);
-  padding: 2px 25px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-color: v-bind('stylesPage.atualColor.front');
+  padding: 26px 100px 0;
   box-sizing: border-box;
 
-  & .left-header {
+  & .margin-left {
+    margin-left: 10px;
+  }
+
+  & .title {
+    font-size: 50px;
+    font-weight: 100;
+  }
+
+  & .columns-selector {
+    width: 300px;
+  }
+
+  & .margin-text {
+    margin: 20px 10px 10px;
+  }
+
+  & .tags-list {
     width: 100%;
-    height: 60px;
     box-sizing: border-box;
     border-radius: 60px;
     align-items: center;
 
+    & .button-tag {
+      height: 34px;
+    }
+
     & .tag {
-      margin: 2px;
+      margin: 6px;
     }
   }
 
   & .cards-list {
     width: 100%;
+    height: 100%;
     overflow-y: auto;
 
     & .column-cards {
       width: 0;
       flex-grow: 1;
+      height: fit-content;
+      padding-bottom: 200px;
 
       & .card-container {
         // background-color: v-bind('stylesPage.atualColor.border');
@@ -229,29 +304,19 @@ onMounted(() => {
       }
 
       & .button-add {
+        align-self: start;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 80px;
-        width: 100%;
-        border-radius: 8px;
+        aspect-ratio: 1;
+        // width: 100%;
+        border-radius: 50%;
         background-color: rgba(124, 124, 124, 0.1);
         border: none;
         cursor: pointer;
       }
     }
   }
-
-  // & .right {
-  //   width: 40%;
-  //   // background-color: red;
-  //   padding: 10px 52px;
-  //   box-sizing: border-box;
-
-  //   & .right-main {
-  //     overflow-y: auto;
-  //     width: 100%;
-  //   }
-  // }
 }
 </style>

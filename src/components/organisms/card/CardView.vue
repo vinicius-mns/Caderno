@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import CalcDate from '@/components/atoms/CalcDate.vue'
 import { marked } from 'marked'
 import ThemeP from '@/components/atoms/ThemeP.vue'
@@ -55,16 +55,15 @@ marked.setOptions({ breaks: true })
 
 const floatModal = ref<InstanceType<typeof FloatModalSlot>>()
 
-const viewButtonPlush = ref(false)
+const showTags = ref(false)
 
 // metodos
 
-const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateString()))
+const openTags = () => (showTags.value = true)
 
-const bottonPlush = {
-  show: () => (viewButtonPlush.value = true),
-  hide: () => (viewButtonPlush.value = false)
-}
+const closeTags = () => (showTags.value = false)
+
+const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateString()))
 
 const closeFloatModal = () => floatModal.value.close()
 
@@ -97,8 +96,8 @@ const clear = (v: null) => emit('clear', v)
         flex-direction="column"
         align-items="center"
         :style="styleCard.atualStyle"
-        @mouseenter="bottonPlush.show"
-        @mouseleave="bottonPlush.hide"
+        @mouseenter="openTags"
+        @mouseleave="closeTags"
       >
         <header class="showHeader">
           <FloatDescription :content="cardDate">
@@ -114,7 +113,7 @@ const clear = (v: null) => emit('clear', v)
             @clear="clear"
             @open-create-tag="openCreateTag"
           >
-            <FlexContainer class="tags-list-container">
+            <FlexContainer class="tags-list-container" v-show="showTags">
               <FloatDescription
                 v-for="(tag, i) in props.card.tags"
                 :content="`${tag[0]} ${tag[1]}`"
@@ -188,7 +187,7 @@ const clear = (v: null) => emit('clear', v)
       font-size: 12px;
       flex-shrink: 0;
       padding: 0;
-      margin: 0 10px 0 0;
+      margin: 6px 10px 0 0;
 
       cursor: default;
     }
@@ -215,7 +214,7 @@ const clear = (v: null) => emit('clear', v)
     font-size: v-bind('props.fontSize');
     text-align: v-bind('props.textAlign');
     width: 100%;
-    padding: 0 20px 4px;
+    padding: 0 20px 1px;
     box-sizing: border-box;
     overflow-wrap: break-word;
   }

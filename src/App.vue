@@ -1,14 +1,35 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useStylesCard } from '@/stores/stylesCard/stylesCard'
-import { onMounted } from 'vue'
+import { computed, onMounted, onUpdated, watch } from 'vue'
 import { useStylesPage } from './stores/stylesPage/stylesPage'
+import ButtonSlot from './components/molecules/ButtonSlot.vue'
+import ButtonCoinSlot from './components/molecules/ButtonCoinSlot.vue'
+import TagIco from './components/atoms/icons/TagIco.vue'
+import BackIco from './components/atoms/icons/BackIco.vue'
+import BottomView from './components/views/BottomView.vue'
+import { useTags } from './stores/tags/tags'
+
+const tags = useTags()
 
 const stylesPage = useStylesPage()
 
 const stylesCard = useStylesCard()
 
+const router = useRouter()
+
+const route = useRoute()
+
+const routeIs = (v: string) => {
+  return route.path === v
+}
+
+const routerPush = (routerName: string) => {
+  router.push({ name: routerName })
+}
+
 onMounted(async () => {
+  tags.init()
   stylesCard.init()
   stylesPage.init()
 })
@@ -16,6 +37,8 @@ onMounted(async () => {
 
 <template>
   <RouterView />
+
+  <BottomView />
 </template>
 
 <style lang="scss">

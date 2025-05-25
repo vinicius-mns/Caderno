@@ -11,6 +11,10 @@ import ModalCard from '../atoms/ModalCard.vue'
 import TagsFilterContainer from '../organisms/TagsFilter.vue'
 import { computed } from 'vue'
 import TagView2 from '../molecules/TagView2.vue'
+import RangeImput from '../molecules/RangeImput.vue'
+import ThemeH1 from '../atoms/ThemeH1.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import GearIco from '../atoms/icons/GearIco.vue'
 
 const cardTags = useCardsTags()
 const tags = useTags()
@@ -22,77 +26,33 @@ const filter = computed(() => {
   const both = tags.includeTags.length > 0 && tags.excludeTags.length > 0
   return { on, both }
 })
+
+const columns = 3
 </script>
 
 <template>
-  <FlexContainer
-    class="cards-header-container"
-    align-items="center"
-    flex-direction="column"
-    justify-content="center"
-  >
-    <FlexContainer class="top-header" align-items="center" justify-content="center">
-      <FlexContainer>
-        <ButtonSlot
-          content="Criar Tag"
-          class="button-create-tag"
-          border-radius="50px"
-          @click="() => windows.tagCreate.open(null)"
-          :invert-color="true"
-        >
-          <TagIco />
-        </ButtonSlot>
-      </FlexContainer>
+  <FlexContainer class="cards-header-container" justify-content="space-between">
+    <div class="item">
+      <ThemeH1 content="Logo foda" />
+    </div>
 
+    <div class="item">
       <SearchImput class="search" placeholder="pesquisar" key-id="search-card" />
+    </div>
 
-      <FlexContainer> </FlexContainer>
-    </FlexContainer>
+    <div class="item">
+      <RangeImput
+        class="columns-cards-imput"
+        :title="{ content: 'Colunas', visible: true }"
+        :init-value="columns"
+        :limit="{ min: 1, max: 6 }"
+        @emit-value="() => {}"
+      />
 
-    <!-- <FlexContainer class="bottom-header" align-items="center">
-    </FlexContainer> -->
-
-    <!-- <ModalCard class="filter-view" :box-shadow="true" v-show="filter.on">
-      <TagsFilterContainer
-        :all-tags="tags.tags"
-        :include-tags="tags.includeTags"
-        :exclude-tags="tags.excludeTags"
-        :text-filter-tags="tags.textFilterTags"
-        @open-create-tag="windows.tagCreate.open(null)"
-        @filter-emitted="cardTags.tag.filterCard.set"
-        @search-tag="tags.readAllTags"
-      >
-        <FlexContainer align-items="center">
-          <FlexContainer>
-            <TagView2
-              v-for="(tag, i) in tags.includeTags"
-              type="include"
-              class="tag"
-              height="26px"
-              :tag="tag"
-              :content="tag[1]"
-              :key="i"
-              :mini="true"
-            />
-          </FlexContainer>
-
-          <div class="line" v-show="filter.both"></div>
-
-          <FlexContainer>
-            <TagView2
-              v-for="(tag, i) in tags.excludeTags"
-              type="exclude"
-              class="tag"
-              height="26px"
-              :tag="tag"
-              :content="tag[1]"
-              :key="i"
-              :mini="true"
-            />
-          </FlexContainer>
-        </FlexContainer>
-      </TagsFilterContainer>
-    </ModalCard> -->
+      <ButtonCoinSlot content="configurações">
+        <GearIco />
+      </ButtonCoinSlot>
+    </div>
   </FlexContainer>
 </template>
 
@@ -103,12 +63,28 @@ const filter = computed(() => {
   position: fixed;
   top: 0;
   left: 0;
-  height: 50px;
-  width: 100dvw;
+  height: 52px;
+  width: 100%;
+  padding: 0 88px;
+  box-sizing: border-box;
 
-  & .search {
-    width: 400px;
-    margin: 0 8px;
+  .item {
+    width: 300px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .search {
+      width: 400px;
+      justify-self: center;
+      // margin: 0 8px;
+    }
+
+    & .columns-cards-imput {
+      width: 100%;
+      margin-right: 18px;
+    }
   }
 
   & .filter-view {
