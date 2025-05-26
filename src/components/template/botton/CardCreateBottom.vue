@@ -36,6 +36,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close', v: null): void
+  (e: 'cardCreate', v: Icard): void
 }>()
 
 // valores
@@ -91,7 +92,13 @@ const createAllCards = () => {
   console.log('create all cards', cards)
 }
 
+// emits
+
 const emitClose = () => emit('close', null)
+
+const cardCreate = (card: Icard) => {
+  emit('cardCreate', card)
+}
 
 // ciclo de vida
 
@@ -136,8 +143,9 @@ const emitClose = () => emit('close', null)
         :tags="props.allTags"
         :checked-tags="card.tags"
         @emit-tags="handleTags(card, $event)"
-        @remove="handleCard(card, 'remove')"
         @emit-content="handleContent(card, $event)"
+        @emit-card="cardCreate"
+        @remove="handleCard(card, 'remove')"
       />
 
       <ButtonSlot content="Adicionar" @click="handleCard(emptyCard(), 'add')" border-radius="50px">

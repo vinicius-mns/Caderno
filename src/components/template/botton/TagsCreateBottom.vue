@@ -137,13 +137,13 @@ const sendtag = () => {
           </ButtonSlot>
         </div>
       </div>
-    </div>
 
-    <div class="actions-to-create">
       <ButtonSlot content="Adicionar" border-radius="50px" @click="pushTagToCreate">
         <PlusIco />
       </ButtonSlot>
+    </div>
 
+    <div class="actions-to-create">
       <ButtonSlot
         content="Criar todos"
         border-radius="50px"
@@ -166,7 +166,7 @@ const sendtag = () => {
   gap: 12px;
   padding: 8px;
   box-sizing: border-box;
-  position: relative;
+  // position: relative;
 
   & header {
     width: 100%;
@@ -176,8 +176,10 @@ const sendtag = () => {
 
   & .container-tags-area {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     overflow-y: auto;
     gap: 12px;
     padding: 8px;
@@ -265,14 +267,7 @@ const sendtag = () => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    // gap: 8px;
-
-    & .create-all {
-      position: absolute;
-      bottom: 6px;
-      right: 6px;
-    }
+    align-items: flex-end;
   }
 }
 </style>

@@ -13,6 +13,7 @@ import { useEmoji } from '@/stores/emojis'
 import ConfigBottom from '../template/botton/ConfigBottom.vue'
 import TagsCreateBottom from '../template/botton/TagsCreateBottom.vue'
 import TagDeleteBottom from '../template/botton/TagDeleteBottom.vue'
+import type { Icard } from '@/stores/cards/Interfaces'
 
 const tags = useTags()
 const emojis = useEmoji()
@@ -32,8 +33,7 @@ const view = ref<View>('nav')
 
 const currentSize = ref({
   width: '281.58px',
-  height: '58px',
-  type: 'bottom'
+  height: '58px'
 })
 
 // A vírgula após <T,> é um truque válido em TypeScript que evita conflito de parsing com JSX/HTML.
@@ -42,7 +42,6 @@ const mountComponent = <T,>(v: {
   props: () => T
   width: string
   height: string
-  type: 'bottomBlur' | 'center' | ''
 }) => {
   return v
 }
@@ -52,8 +51,7 @@ const components = {
     component: NavBottom,
     props: () => ({}),
     width: '281.58px',
-    height: '58px',
-    type: ''
+    height: '58px'
   }),
   cardCreate: mountComponent<InstanceType<typeof CardCreateBottom>['$props']>({
     component: CardCreateBottom,
@@ -62,8 +60,7 @@ const components = {
       globalTags: tags.includeTags
     }),
     width: '500px',
-    height: '55dvh',
-    type: 'bottomBlur'
+    height: '55dvh'
   }),
   tagsBottom: mountComponent<InstanceType<typeof TagsBottom>['$props']>({
     component: TagsBottom,
@@ -72,8 +69,7 @@ const components = {
       tagsTextFilter: ''
     }),
     width: '500px',
-    height: '50dvh',
-    type: 'bottomBlur'
+    height: '50dvh'
   }),
   filter: mountComponent<InstanceType<typeof TagsFilterBottom>['$props']>({
     component: TagsFilterBottom,
@@ -84,8 +80,7 @@ const components = {
       excludeTags: tags.excludeTags
     }),
     width: '580px',
-    height: '64dvh',
-    type: 'bottomBlur'
+    height: '64dvh'
   }),
   tagUpdate: mountComponent<InstanceType<typeof TagUpdateBottom>['$props']>({
     component: TagUpdateBottom,
@@ -95,8 +90,7 @@ const components = {
       type: 'update'
     }),
     width: '360px',
-    height: '180px',
-    type: 'center'
+    height: '180px'
   }),
   tagCreate: mountComponent<InstanceType<typeof TagsCreateBottom>['$props']>({
     component: TagsCreateBottom,
@@ -104,8 +98,7 @@ const components = {
       emojis: emojis.allEmojis
     }),
     width: '420px',
-    height: '580px',
-    type: 'bottomBlur'
+    height: '580px'
   }),
   tagDelete: mountComponent<InstanceType<typeof TagDeleteBottom>['$props']>({
     component: TagDeleteBottom,
@@ -113,15 +106,13 @@ const components = {
       tag: ['', ''] as Itag
     }),
     width: '360px',
-    height: '180px',
-    type: 'center'
+    height: '180px'
   }),
   config: mountComponent<InstanceType<typeof ConfigBottom>['$props']>({
     component: ConfigBottom,
     props: () => ({}),
     width: '540px',
-    height: '65dvh',
-    type: 'bottomBlur'
+    height: '65dvh'
   })
 }
 
@@ -141,12 +132,28 @@ const filterCardsByTags = (p: { includeTags: Itag[]; excludeTags: Itag[] }) => {
   cardTags.tag.filterCard.set(p)
 }
 
+// api sei la deve ser isso (fake api)
+
+const cardCreate = async (card: Icard) => {
+  await cardTags.card.create(card)
+  setView('nav')
+}
+
+const tagDelete = async (tag: Itag) => {
+  await cardTags.tag.delete(tag)
+  setView('nav')
+}
+
+// atualizacoes
+
 watch(
   () => view.value,
   () => {
     currentSize.value = components[view.value as View]
   }
 )
+
+// hooks
 
 onMounted(() => {
   const screen = window.innerWidth
@@ -159,7 +166,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="['bottom-container', currentSize.type]">
+  <div class="bottom-container">
     <ModalCard class="bottom" :box-shadow="true">
       <component
         :is="components[view].component"
@@ -173,6 +180,8 @@ onMounted(() => {
         @openTagUpdate="openUpdateTag"
         @openTagDelete="openDeleteTag"
         @sendFilter="filterCardsByTags"
+        @cardCreate="cardCreate"
+        @tagDelete="tagDelete"
       />
     </ModalCard>
   </div>
@@ -181,11 +190,10 @@ onMounted(() => {
 <style scoped lang="scss">
 .bottom-container {
   position: fixed;
-  bottom: 15px;
-  transition: all 0.3s;
   width: 100dvw;
   height: auto;
-
+  bottom: 15px;
+  transition: all 0.3s;
   display: flex;
   justify-content: center;
 
@@ -195,26 +203,6 @@ onMounted(() => {
     width: v-bind('currentSize.width');
     padding: 8px;
     border-radius: 30px;
-  }
-}
-
-.center {
-  transition: all 0.3s;
-  bottom: 0;
-  height: 100%;
-  align-items: center;
-  backdrop-filter: blur(3px);
-}
-
-.bottomBlur {
-  transition: all 0.3s;
-  bottom: 0;
-  height: 100%;
-  align-items: end;
-  backdrop-filter: blur(3px);
-
-  & .bottom {
-    margin-bottom: 15px;
   }
 }
 </style>

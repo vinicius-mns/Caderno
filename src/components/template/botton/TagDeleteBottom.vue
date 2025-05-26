@@ -12,7 +12,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'deleteTag', v: Itag): void
+  (e: 'tagDelete', v: Itag): void
   (e: 'close', v: null): void
 }>()
 </script>
@@ -34,7 +34,7 @@ const emit = defineEmits<{
         content="Confirmar exclusão"
         border-radius="50px"
         :invert-color="true"
-        @click="emit('deleteTag', props.tag)"
+        @click="emit('tagDelete', props.tag)"
       >
         <TrashIco />
       </ButtonSlot>
