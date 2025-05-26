@@ -8,21 +8,32 @@ import TagsBottom from '../template/botton/TagsBottom.vue'
 import TagsFilterBottom from '../template/botton/TagsFilterBottom.vue'
 import { useCardsTags } from '@/stores/cardsTags'
 import type { Itag } from '@/stores/tags/Interfaces'
-import TagEditorBottom from '../template/botton/TagEditorBottom.vue'
+import TagUpdateBottom from '../template/botton/TagUpdateBottom.vue'
 import { useEmoji } from '@/stores/emojis'
 import ConfigBottom from '../template/botton/ConfigBottom.vue'
+import TagsCreateBottom from '../template/botton/TagsCreateBottom.vue'
+import TagDeleteBottom from '../template/botton/TagDeleteBottom.vue'
 
 const tags = useTags()
 const emojis = useEmoji()
 const cardTags = useCardsTags()
 
-type View = 'nav' | 'cardCreate' | 'tagsBottom' | 'filter' | 'tagUpdate' | 'config'
+type View =
+  | 'nav'
+  | 'cardCreate'
+  | 'tagsBottom'
+  | 'filter'
+  | 'tagUpdate'
+  | 'config'
+  | 'tagCreate'
+  | 'tagDelete'
 
 const view = ref<View>('nav')
 
 const currentSize = ref({
   width: '281.58px',
-  height: '58px'
+  height: '58px',
+  type: 'bottom'
 })
 
 // A vírgula após <T,> é um truque válido em TypeScript que evita conflito de parsing com JSX/HTML.
@@ -31,6 +42,7 @@ const mountComponent = <T,>(v: {
   props: () => T
   width: string
   height: string
+  type: 'bottomBlur' | 'center' | ''
 }) => {
   return v
 }
@@ -40,7 +52,8 @@ const components = {
     component: NavBottom,
     props: () => ({}),
     width: '281.58px',
-    height: '58px'
+    height: '58px',
+    type: ''
   }),
   cardCreate: mountComponent<InstanceType<typeof CardCreateBottom>['$props']>({
     component: CardCreateBottom,
@@ -49,7 +62,8 @@ const components = {
       globalTags: tags.includeTags
     }),
     width: '500px',
-    height: '55dvh'
+    height: '55dvh',
+    type: 'bottomBlur'
   }),
   tagsBottom: mountComponent<InstanceType<typeof TagsBottom>['$props']>({
     component: TagsBottom,
@@ -58,7 +72,8 @@ const components = {
       tagsTextFilter: ''
     }),
     width: '500px',
-    height: '50dvh'
+    height: '50dvh',
+    type: 'bottomBlur'
   }),
   filter: mountComponent<InstanceType<typeof TagsFilterBottom>['$props']>({
     component: TagsFilterBottom,
@@ -69,28 +84,55 @@ const components = {
       excludeTags: tags.excludeTags
     }),
     width: '580px',
-    height: '64dvh'
+    height: '64dvh',
+    type: 'bottomBlur'
   }),
-  tagUpdate: mountComponent<InstanceType<typeof TagEditorBottom>['$props']>({
-    component: TagEditorBottom,
+  tagUpdate: mountComponent<InstanceType<typeof TagUpdateBottom>['$props']>({
+    component: TagUpdateBottom,
     props: () => ({
       tag: ['', ''] as Itag,
+      emojis: emojis.allEmojis,
+      type: 'update'
+    }),
+    width: '360px',
+    height: '180px',
+    type: 'center'
+  }),
+  tagCreate: mountComponent<InstanceType<typeof TagsCreateBottom>['$props']>({
+    component: TagsCreateBottom,
+    props: () => ({
       emojis: emojis.allEmojis
     }),
-    width: '500px',
-    height: '55dvh'
+    width: '420px',
+    height: '580px',
+    type: 'bottomBlur'
+  }),
+  tagDelete: mountComponent<InstanceType<typeof TagDeleteBottom>['$props']>({
+    component: TagDeleteBottom,
+    props: () => ({
+      tag: ['', ''] as Itag
+    }),
+    width: '360px',
+    height: '180px',
+    type: 'center'
   }),
   config: mountComponent<InstanceType<typeof ConfigBottom>['$props']>({
     component: ConfigBottom,
     props: () => ({}),
     width: '540px',
-    height: '65dvh'
+    height: '65dvh',
+    type: 'bottomBlur'
   })
 }
 
 const openUpdateTag = (tag: Itag) => {
-  components.tagUpdate.props = () => ({ tag, emojis: emojis.allEmojis })
+  components.tagUpdate.props = () => ({ tag, emojis: emojis.allEmojis, type: 'update' })
   setView('tagUpdate')
+}
+
+const openDeleteTag = (tag: Itag) => {
+  components.tagDelete.props = () => ({ tag })
+  setView('tagDelete')
 }
 
 const setView = (param: View) => (view.value = param)
@@ -117,7 +159,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bottom-container">
+  <div :class="['bottom-container', currentSize.type]">
     <ModalCard class="bottom" :box-shadow="true">
       <component
         :is="components[view].component"
@@ -127,7 +169,9 @@ onMounted(() => {
         @openFilter="setView('filter')"
         @openTags="setView('tagsBottom')"
         @openConfig="setView('config')"
+        @openTagCreate="setView('tagCreate')"
         @openTagUpdate="openUpdateTag"
+        @openTagDelete="openDeleteTag"
         @sendFilter="filterCardsByTags"
       />
     </ModalCard>
@@ -139,10 +183,8 @@ onMounted(() => {
   position: fixed;
   bottom: 15px;
   transition: all 0.3s;
-
   width: 100dvw;
   height: auto;
-  min-height: 20px;
 
   display: flex;
   justify-content: center;
@@ -151,15 +193,28 @@ onMounted(() => {
     transition: all 0.3s;
     height: v-bind('currentSize.height');
     width: v-bind('currentSize.width');
-    // min-height: 40px;
-    // min-width: 200px;
     padding: 8px;
     border-radius: 30px;
+  }
+}
 
-    .buttons-container {
-      display: flex;
-      gap: 8px;
-    }
+.center {
+  transition: all 0.3s;
+  bottom: 0;
+  height: 100%;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.bottomBlur {
+  transition: all 0.3s;
+  bottom: 0;
+  height: 100%;
+  align-items: end;
+  backdrop-filter: blur(3px);
+
+  & .bottom {
+    margin-bottom: 15px;
   }
 }
 </style>

@@ -17,7 +17,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close', v: null): void
   (e: 'openFilter', v: null): void
+  (e: 'openTagCreate', v: null): void
   (e: 'openTagUpdate', v: Itag): void
+  (e: 'openTagDelete', v: Itag): void
 }>()
 </script>
 
@@ -38,11 +40,17 @@ const emit = defineEmits<{
         class="tag"
         :tag="tag"
         @open-update-tag="emit('openTagUpdate', tag)"
+        @open-delete-tag="emit('openTagDelete', tag)"
       />
     </div>
 
     <div class="options">
-      <ButtonSlot content="Criar tag" border-radius="50px" :invert-color="true">
+      <ButtonSlot
+        content="Criar tag"
+        border-radius="50px"
+        :invert-color="true"
+        @click="emit('openTagCreate', null)"
+      >
         <PencilIco />
       </ButtonSlot>
 
