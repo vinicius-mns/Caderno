@@ -82,7 +82,7 @@ const emit = defineEmits<{
     margin: 2px;
   }
 
-  .options-container {
+  .tag-options-container {
     width: 260px;
     display: flex;
     flex-direction: column;

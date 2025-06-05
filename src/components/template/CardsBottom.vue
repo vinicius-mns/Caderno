@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
       justify-content: center;
     }
 
-    & .options-container {
+    & .tag-options-container {
       width: 180px;
 
       & .button-option {

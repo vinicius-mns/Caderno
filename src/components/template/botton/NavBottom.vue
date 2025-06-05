@@ -20,9 +20,9 @@ const emit = defineEmits<{
 
 <template>
   <div class="bottom-nav">
-    <ButtonCoinSlot content="Filter" @click="emit('openFilter', null)" :invert-color="true">
+    <!-- <ButtonCoinSlot content="Filter" @click="emit('openFilter', null)" :invert-color="true">
       <FilterIco />
-    </ButtonCoinSlot>
+    </ButtonCoinSlot> -->
 
     <ButtonSlot
       content="Criar card"

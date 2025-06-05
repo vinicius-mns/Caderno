@@ -1,24 +1,47 @@
 <script setup lang="ts">
-import FlexContainer from '@/components/atoms/FlexContainer.vue'
-import PencilIco from '@/components/atoms/icons/PencilIco.vue'
-import TagIco from '@/components/atoms/icons/TagIco.vue'
-import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
-import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
-import CardsBottom from '@/components/template/CardsBottom.vue'
-import CardsHeader from '@/components/template/CardsHeader.vue'
-import CardsMain from '@/components/template/CardsMain.vue'
-import FloatMessage from '@/components/template/FloatMessage.vue'
-import WindowsAll from '@/components/template/windows/WindowsAll.vue'
 import { useCards } from '@/stores/cards/cards'
-import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import type { Icard } from '@/stores/cards/Interfaces'
 import { useTags } from '@/stores/tags/tags'
-import { onMounted } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch, watchEffect } from 'vue'
+import CardView from '../template/card/CardView.vue'
+import { useStylesPage } from '@/stores/stylesPage/stylesPage'
+import SearchImput from '../molecules/SearchImput.vue'
+import ButtonCoinSlot from '../molecules/ButtonCoinSlot.vue'
+import FilterIco from '../atoms/icons/FilterIco.vue'
+import TagView2 from '../molecules/TagView2.vue'
+import ButtonSlot from '../molecules/ButtonSlot.vue'
+import ThemeH1 from '../atoms/ThemeH1.vue'
+import RangeImput from '../molecules/RangeImput.vue'
+import NewFloatModal from '../molecules/NewFloatModal.vue'
+import { useFloatModal } from '@/stores/floatModal'
 
-const style = useStylesPage()
-
+const stylesPage = useStylesPage()
 const cards = useCards()
-
 const tags = useTags()
+const floatModal = useFloatModal()
+
+const tagsFilterModalOpen = () => {
+  floatModal.tagsFilter.open(null, document.getElementById('tags-filter-button')!)
+}
+
+const columns = ref(4)
+
+const cardsInColumns = computed(() => {
+  const cardsList = [...cards.cards].reverse()
+
+  const cardInColumns = Array.from({ length: columns.value }, () => []) as Icard[][]
+
+  for (let i = 0; i < cardsList.length; i += 1) {
+    const indexColumn = i % columns.value
+    cardInColumns[indexColumn].push(cardsList[i])
+  }
+
+  return cardInColumns
+})
+
+const setColumns = (value: number) => {
+  columns.value = value
+}
 
 onMounted(async () => {
   await tags.init()
@@ -27,78 +50,164 @@ onMounted(async () => {
     includeTags: tags.includeTags,
     excludeTags: tags.excludeTags
   })
+
+  if (window.innerWidth <= 768) {
+    columns.value = 1
+  }
 })
 </script>
 
 <template>
-  <FlexContainer class="cards-page-container" flex-direction="column" align-items="center">
-    <CardsMain />
+  <div class="cards-page-container">
+    <header class="header-cards">
+      <ThemeH1 content="Cards" />
 
-    <!-- <CardsBottom /> -->
+      <SearchImput class="search" placeholder="pesquisar" key-id="search-card" />
 
-    <!-- <CardsHeader /> -->
+      <RangeImput
+        class="columns-cards"
+        :title="{ content: 'Colunas', visible: true }"
+        :init-value="columns"
+        :limit="{ min: 1, max: 6 }"
+        @emit-value="setColumns"
+      />
+    </header>
 
-    <WindowsAll class="all-windows" />
+    <div class="current-filter">
+      <ButtonSlot
+        content="Filtro"
+        border-radius="50px"
+        id="tags-filter-button"
+        :invert-color="true"
+        @click="tagsFilterModalOpen"
+      >
+        <FilterIco />
+      </ButtonSlot>
+      <!-- <NewFloatModal>
+        <template #button-slot>
+        </template>
 
-    <FloatMessage class="float-message" />
-  </FlexContainer>
+        <template #container-slot>
+          <div class="red"></div>
+        </template>
+      </NewFloatModal> -->
+
+      <TagView2
+        class="tag"
+        v-for="(tag, i) in tags.includeTags"
+        :key="i"
+        :tag="tag"
+        type="include"
+      />
+
+      <TagView2
+        class="tag"
+        v-for="(tag, i) in tags.excludeTags"
+        :key="i"
+        :tag="tag"
+        type="exclude"
+      />
+    </div>
+
+    <div class="cards-container">
+      <div class="column" v-for="(column, i) in cardsInColumns" :key="i">
+        <!-- <div class="fake-card" v-for="(card, ii) in column" :key="ii" /> -->
+        <CardView class="card" v-for="(card, ii) in column" :key="ii" :card="card" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .cards-page-container {
-  min-height: 100dvh;
-  background-color: v-bind('style.atualColor.front');
+  $gap: 14px;
+  background-color: v-bind('stylesPage.atualColor.front');
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // overflow-y: auto;
+  // overflow-x: hidden;
 
-  & .page {
-    width: calc(100% - 410px);
-    margin-left: 410px;
-    // height: 100%;
-    // padding-top: 10px;
-    // padding-bottom: 100px;
-    // overflow-y: auto;
-  }
+  & .header-cards {
+    width: calc(100% - 210px);
+    min-height: 40px;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
 
-  & .side {
-    position: fixed;
-    height: 100dvh;
-    width: 410px;
-    background-color: v-bind('style.atualColor.front');
+    & h1 {
+      width: 300px;
+      text-align: center;
+    }
 
-    & hr {
-      top: -10px;
-      right: 0;
-      position: absolute;
-      border: none;
-      // background-color: red;
-      background-color: v-bind('style.atualColor.border');
-      height: 100%;
-      width: 1px;
-      position: absolute;
+    & .search {
+      width: 300px;
+      height: 40px;
+    }
+
+    & .columns-cards {
+      width: 300px;
+    }
+
+    @media screen and (max-width: 768px) {
+      justify-content: center;
+
+      & h1,
+      .columns-cards {
+        display: none;
+      }
     }
   }
 
-  & .top {
-    background-color: v-bind('style.atualColor.front');
-    height: 60px;
+  & .current-filter {
+    width: calc(100% - 200px);
+    padding: 10px 0;
+    box-sizing: border-box;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    gap: 8px;
+
+    & .red {
+      width: 400px;
+      height: 500px;
+      background-color: red;
+    }
+
+    @media screen and (max-width: 768px) {
+      width: calc(100% - 40px);
+    }
+  }
+
+  & .cards-container {
     width: 100%;
-    flex-shrink: 0;
-  }
+    height: 100%;
+    padding: 20px 110px 200px;
+    box-sizing: border-box;
+    display: flex;
+    gap: $gap;
+    overflow: auto;
 
-  & .all-windows {
-    z-index: 999;
-  }
+    & .column {
+      width: calc(100% / v-bind('columns'));
+      height: max-content;
+      display: flex;
+      flex-direction: column;
+      gap: $gap;
 
-  & .bottom {
-    background-color: transparent;
-    position: fixed;
-    bottom: 0;
-    height: 80px;
-    width: 100%;
-    flex-shrink: 0;
-  }
+      & .card {
+        width: 100%;
+        flex-shrink: 1;
+      }
+    }
 
-  & .float-message {
-    z-index: 9999;
+    @media screen and (max-width: 768px) {
+      padding: 20px 20px 200px;
+    }
   }
 }
 </style>

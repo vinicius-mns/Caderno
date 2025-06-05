@@ -32,7 +32,7 @@ type View =
 const view = ref<View>('nav')
 
 const currentSize = ref({
-  width: '281.58px',
+  width: '235.58px',
   height: '58px'
 })
 
@@ -50,7 +50,7 @@ const components = {
   nav: mountComponent<InstanceType<typeof NavBottom>['$props']>({
     component: NavBottom,
     props: () => ({}),
-    width: '281.58px',
+    width: '235.58px',
     height: '58px'
   }),
   cardCreate: mountComponent<InstanceType<typeof CardCreateBottom>['$props']>({
@@ -136,6 +136,10 @@ const filterCardsByTags = (p: { includeTags: Itag[]; excludeTags: Itag[] }) => {
 
 const cardCreate = async (card: Icard) => {
   await cardTags.card.create(card)
+}
+
+const cardCreateMany = async (cards: Icard[]) => {
+  await Promise.all(cards.map((card) => cardTags.card.create(card)))
   setView('nav')
 }
 
@@ -181,6 +185,7 @@ onMounted(() => {
         @openTagDelete="openDeleteTag"
         @sendFilter="filterCardsByTags"
         @cardCreate="cardCreate"
+        @cardCreateMany="cardCreateMany"
         @tagDelete="tagDelete"
       />
     </ModalCard>

@@ -9,6 +9,7 @@ import TagIco from './components/atoms/icons/TagIco.vue'
 import BackIco from './components/atoms/icons/BackIco.vue'
 import BottomView from './components/views/BottomView.vue'
 import { useTags } from './stores/tags/tags'
+import FloatView from './components/views/FloatView.vue'
 
 const tags = useTags()
 
@@ -39,6 +40,8 @@ onMounted(async () => {
   <RouterView />
 
   <BottomView />
+
+  <FloatView />
 </template>
 
 <style lang="scss">

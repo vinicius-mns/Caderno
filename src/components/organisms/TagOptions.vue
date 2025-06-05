@@ -31,7 +31,7 @@ const openDeleteTag = (tag: Itag) => emit('openDeleteTag', tag)
     </template>
 
     <template #container-slot>
-      <ModalCard class="options-container" background-color="front">
+      <ModalCard class="tag-options-container" background-color="front">
         <TagView2 :tag="props.tag" class="tag-preview" />
 
         <ButtonSlot
@@ -69,7 +69,7 @@ const openDeleteTag = (tag: Itag) => emit('openDeleteTag', tag)
 </template>
 
 <style scoped lang="scss">
-.options-container {
+.tag-options-container {
   width: 260px;
   display: flex;
   flex-direction: column;

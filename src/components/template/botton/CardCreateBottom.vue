@@ -37,6 +37,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close', v: null): void
   (e: 'cardCreate', v: Icard): void
+  (e: 'cardCreateMany', v: Icard[]): void
 }>()
 
 // valores
@@ -88,16 +89,16 @@ const setGlobalTags = (tags: Itag[]) => {
   globalTagsRef.push(...tags)
 }
 
-const createAllCards = () => {
-  console.log('create all cards', cards)
-}
-
 // emits
 
 const emitClose = () => emit('close', null)
 
 const cardCreate = (card: Icard) => {
   emit('cardCreate', card)
+}
+
+const cardCreateMany = () => {
+  emit('cardCreateMany', cards)
 }
 
 // ciclo de vida
@@ -158,7 +159,7 @@ const cardCreate = (card: Icard) => {
       content="Criar todos"
       border-radius="50px"
       :invert-color="true"
-      @click="createAllCards"
+      @click="cardCreateMany"
     >
       <PencilIco />
     </ButtonSlot>

@@ -140,7 +140,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.glass {
+.glass-float-card {
   position: fixed;
   top: 0;
   left: 0;

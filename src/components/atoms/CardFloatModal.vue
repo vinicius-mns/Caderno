@@ -5,8 +5,12 @@ const props = withDefaults(
   defineProps<{
     closeOnClick?: boolean
     clickStop?: boolean
-    cursorX: number
-    cursorY: number
+    position: {
+      cursorX: string
+      cursorY: string
+      positionX: 'left' | 'center' | 'right'
+      positionY: 'top' | 'bottom'
+    }
   }>(),
   {
     closeOnClick: false,
@@ -23,56 +27,36 @@ const card = ref<HTMLElement>()
 const cursorPosition = reactive({ x: '0px', y: '0px' })
 
 const setCursorPostion = () => {
-  cursorPosition.x = `${props.cursorX}px`
-  cursorPosition.y = `${props.cursorY + 10}px`
+  cursorPosition.x = props.position.cursorX
+  cursorPosition.y = props.position.cursorY
 }
 
 const cardRepositionX = () => {
   const cardWidth = card.value?.clientWidth as number
 
-  const windowWidth = window.innerWidth
-
-  const xPosition = parseInt(cursorPosition.x)
-
-  const cardStatus = (): 'inLeft' | 'InRight' | 'IsLarge' | 'normal' => {
-    if (cardWidth > windowWidth / 1.11) return 'IsLarge'
-    if (xPosition + cardWidth / 2 >= windowWidth) return 'InRight'
-    if (xPosition - cardWidth / 2 <= 0) return 'inLeft'
-    return 'normal'
+  if (props.position.positionX === 'left') {
+    cursorPosition.x = props.position.cursorX
   }
 
-  const toLeft = () => {
-    cursorPosition.x = `${xPosition - cardWidth}px`
+  if (props.position.positionX === 'center') {
+    cursorPosition.x = `${parseFloat(props.position.cursorX) - cardWidth / 2}px`
   }
 
-  const toCenter = () => {
-    cursorPosition.x = `${windowWidth / 2 - cardWidth / 2}px`
+  if (props.position.positionX === 'right') {
+    cursorPosition.x = `${parseFloat(props.position.cursorX) - cardWidth}px`
   }
-
-  const upOnCursor = () => {
-    cursorPosition.x = `${xPosition - cardWidth / 2}px`
-  }
-
-  const execute = () => {
-    const status = cardStatus()
-
-    console.log(status)
-
-    if (status === 'IsLarge') toCenter()
-    if (status === 'InRight') toLeft()
-    if (status === 'normal') upOnCursor()
-    if (status === 'inLeft') return
-  }
-
-  return execute()
 }
 
 const cardRepositionY = () => {
   const cardHeight = card.value?.clientHeight as number
-  const cardInBottonSide = parseInt(cursorPosition.y) > window.innerHeight / 2
-  const cardTranslateToTop = `${parseInt(cursorPosition.y) - cardHeight - 20}px`
 
-  if (cardInBottonSide) cursorPosition.y = cardTranslateToTop
+  if (props.position.positionY === 'bottom') {
+    cursorPosition.y = `${parseFloat(cursorPosition.y) - cardHeight}px`
+  }
+
+  if (props.position.positionY === 'top') {
+    cursorPosition.y = `${parseFloat(cursorPosition.y)}px`
+  }
 }
 
 const openCard = () => {
@@ -97,12 +81,13 @@ defineExpose({
 })
 
 onMounted(() => {
+  console.log('montado')
   openCard()
 })
 </script>
 
 <template>
-  <div class="glass" @click="close">
+  <div class="glass-float-card" @click="close">
     <div class="float-card" @click.stop ref="card" @click="closeIfCloseOnClick">
       <slot class="slot" />
     </div>
@@ -110,7 +95,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.glass {
+.glass-float-card {
   position: fixed;
   left: 0;
   top: 0;
@@ -119,9 +104,10 @@ onMounted(() => {
   margin: 0;
   width: 100dvw;
   height: 100dvh;
-  backdrop-filter: blur(3px);
-  background-color: rgba(1, 7, 27, 0.2);
-  -webkit-backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.2);
+  // backdrop-filter: blur(3px);
+  // background-color: rgba(1, 7, 27, 0.2);
+  // -webkit-backdrop-filter: blur(3px);
 }
 
 .float-card {

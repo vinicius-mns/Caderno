@@ -130,7 +130,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .container-float-modal {
-  & .glass {
+  & .glass-float-card {
     position: fixed;
     left: 0;
     top: 0;

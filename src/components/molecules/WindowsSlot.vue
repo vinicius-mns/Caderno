@@ -47,7 +47,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-.glass {
+.glass-float-card {
   height: 100dvh;
   width: 100dvw;
   display: flex;

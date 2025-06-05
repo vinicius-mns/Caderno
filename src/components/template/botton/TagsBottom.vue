@@ -6,8 +6,12 @@ import TagIco from '@/components/atoms/icons/TagIco.vue'
 import ThemeH1 from '@/components/atoms/ThemeH1.vue'
 import ButtonCoinSlot from '@/components/molecules/ButtonCoinSlot.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
+import TagView2 from '@/components/molecules/TagView2.vue'
 import TagOptions from '@/components/organisms/TagOptions.vue'
+import { useFloatModal } from '@/stores/floatModal'
 import type { Itag } from '@/stores/tags/Interfaces'
+
+const floatModal = useFloatModal()
 
 const props = defineProps<{
   tagsTextFilter: string
@@ -21,6 +25,10 @@ const emit = defineEmits<{
   (e: 'openTagUpdate', v: Itag): void
   (e: 'openTagDelete', v: Itag): void
 }>()
+
+const openTagOptions = (tag: Itag, id: number) => {
+  floatModal.tagOptions.open(tag, document.getElementById(`tag-${id}`)!)
+}
 </script>
 
 <template>
@@ -34,14 +42,22 @@ const emit = defineEmits<{
     </header>
 
     <div class="tags-area">
-      <TagOptions
+      <TagView2
+        v-for="(tag, i) in props.tags"
+        :key="i"
+        :tag="tag"
+        :id="`tag-${i}`"
+        class="tag"
+        @click="openTagOptions(tag, i)"
+      />
+      <!-- <TagOptions
         v-for="(tag, i) in props.tags"
         :key="i"
         class="tag"
         :tag="tag"
         @open-update-tag="emit('openTagUpdate', tag)"
         @open-delete-tag="emit('openTagDelete', tag)"
-      />
+      /> -->
     </div>
 
     <div class="options">
