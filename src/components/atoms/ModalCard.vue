@@ -12,6 +12,10 @@ const props = withDefaults(
     borderRadius?: 'inside' | 'outside'
     boxShadow?: boolean
     introAnimation?: boolean
+    flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
+    flexWrap?: 'wrap' | 'nowrap'
+    justifyContent?: 'flex-start' | 'space-evenly' | 'space-between' | 'center' | 'end'
+    alignItems?: 'stretch' | 'start' | 'end' | 'center'
   }>(),
   {
     backgroundColor: 'front',
@@ -42,6 +46,12 @@ const introAnimationClass = computed(() => props.introAnimation && 'introAnimati
   box-sizing: border-box;
   border-radius: v-bind('stylePage.borderRadius[props.borderRadius]');
   background-color: v-bind('stylePage.atualColor[props.backgroundColor]');
+
+  display: flex;
+  flex-direction: v-bind('props.flexDirection');
+  flex-wrap: v-bind('props.flexWrap');
+  justify-content: v-bind('props.justifyContent');
+  align-items: v-bind('props.alignItems');
 
   // box-shadow: v-bind('stylePage.atualColor.back') 0px 8px 28px;
 }

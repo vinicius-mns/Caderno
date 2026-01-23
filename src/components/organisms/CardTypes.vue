@@ -19,6 +19,9 @@ import FloatModalSlot from '../atoms/FloatModalSlot.vue'
 import PlusIco from '../atoms/icons/PlusIco.vue'
 import ModalCard from '../atoms/ModalCard.vue'
 import { v4 as uuid } from 'uuid'
+import TagIco from '../atoms/icons/TagIco.vue'
+import TagsSelectable from '../molecules/TagsSelectable.vue'
+import TagsConstainer2 from '@/components/molecules/TagsConstainer2.vue'
 
 const cardStyle = useStylesCard()
 
@@ -172,16 +175,26 @@ defineExpose({ cardType })
               <PencilIco />
             </ButtonSlot>
 
-            <TagSelector
-              class="button-option"
+            <TagsConstainer2
               :all-tags="props.allTags"
-              :tags-checked="cardEditor.card.value.tags"
-              border-color="transparent"
               :text-filter="props.searchTag"
-              @search-tag="emit('readTagsByName', $event)"
-              @emit-selected="sendTags"
               @open-create-tag="emit('tagCreateOpen', null)"
-            />
+              @search-tag="emit('readTagsByName', $event)"
+            >
+              <template #button-slot>
+                <ButtonSlot content="Selecionar tags" border-color="transparent">
+                  <TagIco />
+                </ButtonSlot>
+              </template>
+
+              <template #tags-slot>
+                <TagsSelectable
+                  :all-tags="props.allTags"
+                  :tags-checked="cardEditor.card.value.tags"
+                  @emit-selected="sendTags"
+                />
+              </template>
+            </TagsConstainer2>
 
             <ButtonSlot
               content="Compartir Card"

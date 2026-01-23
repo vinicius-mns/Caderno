@@ -95,13 +95,12 @@ const blinkClass = computed(() => (props.blink ? 'blink' : ''))
 }
 
 .blink {
-  animation: blinkAnimation 0.8s alternate infinite;
+  animation: blinkAnimation 0.3s alternate infinite;
 }
 
 @keyframes blinkAnimation {
   to {
-    box-shadow: blue 0 0 15px;
-    border-color: blue;
+    transform: scale(0.95);
   }
 }
 </style>

@@ -9,6 +9,9 @@ import type { Itag } from '@/stores/tags/Interfaces'
 import SearchImput from '@/components/molecules/SearchImput.vue'
 import TagOptions from '@/components/organisms/TagOptions.vue'
 import PencilIco from '@/components/atoms/icons/PencilIco.vue'
+import SwitchButton from '@/components/atoms/SwitchButton.vue'
+import RadioBase from '@/components/atoms/RadioBase.vue'
+import ThemeP from '@/components/atoms/ThemeP.vue'
 
 const window = useWindows()
 
@@ -147,10 +150,10 @@ watch([allTags, includeTags, excludeTags], () => {
 <style scoped lang="scss">
 .tags-windows-container {
   width: 95dvw;
-  max-width: 644px;
+  max-width: 844px;
   max-height: 68dvh;
   box-sizing: border-box;
-  padding: 0 15px 20px;
+  padding: 0 25px 20px;
   overflow: hidden;
 
   & .header {

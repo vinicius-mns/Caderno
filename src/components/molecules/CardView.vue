@@ -19,7 +19,7 @@ const props = withDefaults(
   }>(),
   {
     fontSize: '14px',
-    textAlign: 'justify'
+    textAlign: 'start'
   }
 )
 
@@ -72,7 +72,7 @@ const cardDate = computed(() => String(new Date(props.card.date).toLocaleDateStr
   & header {
     width: 100%;
     box-sizing: border-box;
-    padding: 6px 20px 0;
+    padding: 2px 20px 0;
     display: flex;
     align-items: center;
     transition: all 0.3s;

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import type { Itag } from '@/stores/tags/Interfaces'
 import FloatModalSlot from '@/components/atoms/FloatModalSlot.vue'
 import ModalCard from '@/components/atoms/ModalCard.vue'
@@ -37,7 +37,7 @@ const openCreateTag = () => emit('openCreateTag', null)
 </script>
 
 <template>
-  <FloatModalSlot>
+  <FloatModalSlot> s
     <template #button-slot>
       <ButtonCoinSlot content="Tags" class="button-x">
         <TagIco />
@@ -143,4 +143,4 @@ const openCreateTag = () => emit('openCreateTag', null)
     }
   }
 }
-</style>
+</style> -->

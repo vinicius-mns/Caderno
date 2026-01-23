@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import TagEditor from '@/components/organisms/TagEditor.vue'
-import { useTags } from '@/stores/tags/tags'
-import { useCards } from '@/stores/cards/cards'
 import { useEmoji } from '@/stores/emojis'
 import WindowsSlot from '@/components/molecules/WindowsSlot.vue'
 import { useWindows } from '@/stores/windows'
@@ -10,50 +8,32 @@ import FlexContainer from '@/components/atoms/FlexContainer.vue'
 import ButtonSlot from '@/components/molecules/ButtonSlot.vue'
 import CheckIco from '@/components/atoms/icons/CheckIco.vue'
 import type { Itag } from '@/stores/tags/Interfaces'
+import { useCardsTags } from '@/stores/cardsTags'
 
 const window = useWindows()
-const cards = useCards()
-const tags = useTags()
 const emojis = useEmoji()
+
+const cardsTags = useCardsTags()
 
 const filterEmojiName = (name: string) => {
   emojis.filterEmojiByName(name)
 }
 
-const useTag = () => {
-  const tagRef = ref<Itag>(window.tagEditor.props)
+const tagUpdated = ref(window.tagEditor.props)
 
-  const setTag = (tag: Itag) => (tagRef.value = tag)
-
-  const sendUpdateTag = async () => {
-    try {
-      const atualName = window.tagEditor.props[1]
-
-      await tags.updateTag({ emoji: tagRef.value[0], name: tagRef.value[1], atualName })
-
-      await cards.updateAllTags({ tag: tagRef.value, name: atualName })
-
-      await cards.atualizeReactiveCards({
-        includeTags: tags.includeTags,
-        excludeTags: tags.excludeTags
-      })
-
-      window.tagEditor.close()
-    } catch (e) {
-      e instanceof Error
-        ? window.errorMessage.open(e.message)
-        : window.errorMessage.open('erro inesperado')
-    }
-  }
-
-  return {
-    tagRef,
-    setTag,
-    updateTag: sendUpdateTag
-  }
+const tagUpdateSet = (newTag: Itag) => {
+  tagUpdated.value = newTag
 }
 
-const tag = useTag()
+const tagUpdatedSend = async () => {
+  const values = { tag: tagUpdated.value, currName: window.tagEditor.props[1] }
+
+  console.log('enviando valores', values)
+
+  await cardsTags.tag.update(values)
+
+  window.tagEditor.close()
+}
 </script>
 
 <template>
@@ -66,14 +46,14 @@ const tag = useTag()
       <TagEditor
         :tag="window.tagEditor.props"
         :emojis="emojis.allEmojis"
-        @sendtag="tag.setTag"
+        @sendtag="tagUpdateSet"
         @search-emoji="filterEmojiName"
       />
 
       <ButtonSlot
         content="Confirmar alteração"
         class="check-button"
-        @click="tag.updateTag()"
+        @click="tagUpdatedSend"
         border-radius="50px"
       >
         <CheckIco />

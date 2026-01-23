@@ -198,10 +198,11 @@ onUpdated(() => {
 <style scoped lang="scss">
 .tags-windows-container {
   width: 95dvw;
-  max-width: 644px;
+  max-width: 844px;
   max-height: 68dvh;
   box-sizing: border-box;
-  padding: 0 15px;
+  // padding: 0 15px;
+  padding: 5px 30px 0px;
   overflow: hidden;
 
   & .main-tags {

@@ -55,7 +55,6 @@ const clicked = () => {
 defineExpose({ clear })
 
 onMounted(() => {
-  console.log('chamado')
   autoHeight()
 
   textArea.value?.focus()
